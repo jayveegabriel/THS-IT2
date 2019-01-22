@@ -1,0 +1,869 @@
+{% extends 'admin/bedsbase.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<style>button {
+  font-family: 'Open Sans';
+
+}
+.bt {
+
+	width: 225px;
+}
+
+	[data-draggable="target"]
+{
+
+    list-style-type:none;
+    margin: auto;
+    width:60%;
+    height:7.5em;
+    overflow-y:auto;
+
+    margin:0 0.5em 0.5em 0;
+    padding:0.5em;
+
+    border:1px solid #d6d6d6;
+    border-radius:0.2em;
+
+    background:#fff;
+
+}
+
+/* draggable items */
+[data-draggable="item"]
+{
+    float:center;
+    display:block;
+    list-style-type:none;
+
+    margin:0 0 2px 0;
+    padding:0.2em 0.4em;
+
+    border-radius:0.2em;
+
+    line-height:1.3;
+}
+.cen {
+    margin: auto;
+    width: 60%;
+		border-radius: 10px;
+    border: 1px solid #d6d6d6;
+    padding: 10px;
+}
+{
+    box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 48%;
+    padding: 10px;
+    height: 125px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.table-wrapper-scroll-y {
+display: block;
+max-height: 150%;
+max-width: 100%;
+overflow-y: auto;
+-ms-overflow-style: -ms-autohiding-scrollbar;
+}
+</style>
+<div class="main">
+	<div class="main-inner">
+	    <div class="container">
+	      <div class="row">
+	      	<div class="span12">
+	      		<div class="widget ">
+	      			<div class="widget-header">
+	      				<i class="icon-medkit"></i>
+	      				<h3>Manage Beds</h3>
+	  					</div> <!-- /widget-header -->
+					<div class="widget-content">
+						<div class="tabbable">
+              <ul class="nav nav-tabs">
+  							  <li class="active">
+  							    <a href="#viewbeds" data-toggle="tab">View Beds</a>
+  							  </li>
+  							  <li><a href="#editbeds" data-toggle="tab">Edit Beds</a></li>
+                  <li><a href="#addbed" data-toggle="tab">Add Bed</a></li>
+  							</ul>
+
+							<br>
+
+							<div class="tab-content" >
+                <!--Add patient --->
+                <!---View Patients -->
+                <div class="tab-pane active" id="viewbeds" align ="center"  >
+
+                    <fieldset>
+                      <div class="row" style ="margin: auto;">
+
+                        <h4>List of Beds</h4>
+
+                        <div id="big_stats" class="cf">
+
+                          <div class="stat"> <i class="icon-ok-circle"></i> <span class="value" id="availableSpan">{{availableBedsSize}}</span><h3>VACANT</h3>
+
+
+
+ </div>
+
+                          <div class="stat"> <i class="icon-ban-circle"></i> <span class="value">{{occupiedBedsSize}}<h3>OCCUPIED</h3></span> </div>
+
+                          <div class="stat"> <i class="icon-remove-circle"></i> <span class="value" id="unavailableSpan">{{unavailableBedsSize}}</span><h3>DAMAGED</h3> </div>
+                        </div>
+                        <div id="big_stats" class="cf">
+
+                          <div class="stat" align ="center">
+
+                            <div class="table-wrapper-scroll-y">
+
+                            <table class="table table-bordered ">
+
+                              <tbody id = "availableBedsTable">
+                                {% if availableBedsSize == 0%}
+                                <tr>
+                                  <td style="text-align: center;">
+                                      <h3>NO BEDS</h3>
+                                  </td>
+                                </tr>
+                                {% endif %}
+                                {% if availableBedsSize > 0 %}
+                                  {% for bed in availableBeds %}
+
+                                    <tr>
+                                      <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                                      <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
+
+                                    </tr>
+                                  {% endfor %}
+                                {% endif%}
+
+                              </tbody>
+                            </table>
+
+
+                          </div>
+
+
+
+                           </div>
+
+                          <div class="stat">
+                            <div class="table-wrapper-scroll-y">
+
+                            <table class="table table-bordered ">
+
+                              <tbody>
+                                {% if occupiedBedsSize == 0%}
+                                <tr>
+
+                                  <td style="text-align: center;">
+                                      <h3>NO BEDS</h3>
+                                  </td>
+                                </tr>
+                                {% endif %}
+                                {% if occupiedBedsSize > 0 %}
+                                  {% for bed in occupiedBeds %}
+
+                                    <tr>
+                                      <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                                      <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
+
+                                    </tr>
+                                  {% endfor %}
+                                {% endif%}
+                              </tbody>
+                            </table>
+
+
+                          </div>
+                          </div>
+
+                          <div class="stat"> <div class="table-wrapper-scroll-y">
+
+                          <table class="table table-bordered ">
+
+                            <tbody id = "unavailableBedsTable">
+                              {% if unavailableBedsSize == 0%}
+                              <tr>
+
+                                <td style="text-align: center;">
+                                    <h3>NO BEDS</h3>
+                                </td>
+                              </tr>
+                              {% endif %}
+                              {% if unavailableBedsSize > 0 %}
+                                {% for bed in occupiedBeds %}
+
+                                  <tr>
+                                    <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                                    <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
+
+                                  </tr>
+                                {% endfor %}
+                              {% endif%}
+                            </tbody>
+                          </table>
+
+
+                        </div> </div>
+                        </div>
+
+                      <!-- /form-actions -->
+                      </div>
+
+
+
+
+                      <br>
+                      </br>
+                      <!-- /control-group-->
+                  </div>
+                  <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+                  <div class="tab-pane" id="editbeds" align ="center"  >
+
+                    <fieldset>
+                      <div class="row" style ="margin: auto;">
+                        <div class="control-group" >
+                           <h4>List of Beds</h4>
+
+                           <div id="big_stats" class="cf">
+
+                             <div class="stat"> <i class="icon-ok-circle"></i> <span class="value" id="availableBedsSize">{{availableBedsSize}}</span><h3>VACANT</h3></div>
+
+
+                             <div class="stat"> <i class="icon-remove-circle"></i> <span class="value" id="unavailableBedsSize">{{unavailableBedsSize}}</span><h3>DAMAGED</h3> </div>
+                           </div>
+
+
+                        </div>
+                        <br>
+                        <div class="column" style="background-color:#fff;border-right:1px solid #bbb;" align ="center">
+
+
+
+                          <ol data-draggable="target" id="Available">
+                            {% for bed in availableBeds %}
+                              <li data-draggable="item" id="{{bed.idBeds}}">Bed #{{bed.bedNumber}}</li>
+                            {% endfor %}
+                          </ol>
+
+                        </div>
+                        <div class="column" style="background-color:#fff;">
+
+
+                          <ol data-draggable="target" id="Unavailable">
+                            {% for bed in unavailableBeds %}
+                              <li data-draggable="item" id="{{bed.idBeds}}">Bed #{{bed.bedNumber}}</li>
+                            {% endfor %}
+                          </ol>
+                        </div>
+                      <!-- /form-actions -->
+                      </div>
+                      <br>
+                      <div align = "center">
+                        <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+                        <button class="btn">Cancel</button>
+                      </div>
+                      <!-- /control-group-->
+                  </div>
+
+
+
+											<div class="tab-pane" id="addbed" >
+												<div class ="container" >
+													<div class ="row" id="bedRow">
+                            {% for bed in beds_list %}
+												<div class = "span3" align ="center" id = "spanBed{{bed.idBeds}}">
+ 												 <div class="widget widget-table action-table" >
+ 													 <div class="widget-header" > <i class="icon-medkit"></i>
+ 														 <h3>Add Bed</h3>
+
+ 													 </div>
+ 													 <!-- /widget-header -->
+ 													 <div class="widget-content" align = "center" id="bed">
+ 														 <img src="{% static 'img/bed.png'%}"/ >
+ 														 <table class="table " align ="center">
+                               <thead>
+                                 <tr>
+
+  						                     <th></th>
+                                   </tr>
+                                 </thead>
+                                 <tbody>
+    															 <tr>
+
+    																 <td>Status:</td>
+                                     </tr>
+ 															 <tfoot align ="center" >
+ 																 <tr>
+ 																	 <th> <a class="btn bt" href="#addModal{{bed.idBeds}}" role="button" data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>
+    <!-- Modal -->
+                                                    <div id="addModal{{bed.idBeds}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                      <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        <h3 id="myModalLabel">Add Bed</h3>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <form id="add-bed" class="form-horizontal" method = "POST" action=".">
+                                 												 {% csrf_token %}
+                                                         <fieldset>
+                                                           <div class="control-group">
+                                                             <label class="control-label" for="bednumber">Bed #</label>
+                                                             <div class="controls">
+                                                               <input type="number" class="span1" value="{{bed.bedNumber}}" name = "bednumber" id="bed{{ bed.pk }}" value="">
+                                                             </div> <!-- /controls -->
+
+
+
+
+                                                        </div> <!-- /control-group -->
+                                                        </fieldset>
+
+
+
+
+
+
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                        <button type="button" class="btn btn-primary" onclick="addBed({{ bed.pk }});">Save</button>
+                                                      </div>
+                                                      </form>
+                                                    </div>
+
+
+
+
+
+                                   </th>
+ 																 </tr>
+ 															 </tfoot>
+ 														 </table>
+ 													 </div>
+ 												 </div>
+ 											 </div>
+
+                      {% endfor %}
+                      </div>
+
+											</div>
+
+
+
+											</div>
+
+
+
+
+
+				</div> <!-- /widget -->
+
+		    </div> <!-- /span8 -->
+
+	      </div> <!-- /row -->
+
+	    </div> <!-- /container -->
+
+	</div> <!-- /main-inner -->
+</div>
+</div>
+</div>
+</div> <!-- /main -->
+
+
+
+
+
+
+
+<div class="footer">
+  <div class="footer-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
+        <!-- /span12 -->
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /footer-inner -->
+</div>
+
+
+
+<script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
+
+<script src="{% static 'js/bootstrap.js'%}"></script>
+<script src="{% static 'js/base.js'%}"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script>
+
+var bedsArray = new Array();
+function bedObject(idBeds, bedNumber, bedStatus){
+  this.idBeds = idBeds;
+  this.bedNumber = bedNumber;
+  this.bedStatus = bedStatus;
+
+}
+function containsObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i].idBeds === obj.idBeds) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function getUpdatedArray(oldArray, newArray){
+  var tempArray = new Array();
+  for(var i = 0; i < oldArray.length; i++){
+    var isFound = false;
+    var tempObj = oldArray[i];
+    for(var j = 0; j < newArray.length && !isFound; j++){
+
+      if(oldArray[i].idBeds == newArray[j].idBeds){
+        isFound = true;
+      }
+    }
+    if(!isFound){
+      tempArray.push(tempObj);
+    }
+  }
+  return tempArray;
+}
+
+$(document).ready(function() {
+  {% for beds in beds_list %}
+
+    bedsArray.push(new bedObject({{beds.idBeds}}, {{beds.bedNumber}}, "{{beds.bedStatus}}"));
+  {% endfor %}
+
+    window.setInterval(function(){
+      $.ajax({
+    		url: '/ajax/getPendingBeds/',
+    		data: {
+
+    		},
+    		dataType: 'json',
+    		success: function (data){
+          //data = array of beds na pending
+
+          //yung nasa data, sinave sa tempoArray
+          var tempoArray = new Array();
+          for(var p = 0; p < data.length; p++){
+            tempoArray.push(new bedObject(data[p].idBeds, data[p].bedNumber, data[p].bedStatus + ""));
+          }
+
+          var newArray = getUpdatedArray(bedsArray, tempoArray);
+          // bedsArray = tempArray;
+
+
+          for(var qwe = 0; qwe < newArray.length; qwe++){
+
+            for(var wer = 0; wer < bedsArray.length; wer++){
+              if(newArray[qwe].idBeds == bedsArray[wer].idBeds){
+
+                bedsArray.splice(wer,1);
+
+                $("#spanBed"+newArray[qwe].idBeds).remove();
+              }
+            }
+          }
+
+
+          var tempArray = new Array();
+          for(var i = 0; i < data.length; i++){
+            var bed1 = new bedObject(data[i].idBeds, data[i].bedNumber, data[i].bedStatus + "");
+            if(!containsObject(bed1, bedsArray)){
+              var tempBed = new bedObject(data[i].idBeds, data[i].bedNumber, data[i].bedStatus + "");
+              bedsArray.push(tempBed);
+              tempArray.push(tempBed);
+            }
+          }
+
+
+
+          wew = "";
+          for(var q = 0; q < tempArray.length; q++){
+            wew += '<div class = "span3" align ="center" id="spanBed' + tempArray[q].idBeds+ '">'+
+             '<div class="widget widget-table action-table">'+
+               '<div class="widget-header" > <i class="icon-medkit"></i>'+
+                '<h3>Add Bed</h3>'+
+
+               '</div>'+
+               '<div class="widget-content" align = "center" id="bed">'+
+                 '<img src="/static/img/bed.png"/ >'+
+                 '<table class="table " align ="center">'+
+                   '<thead>'+
+                     '<tr>'+
+
+                       '<th></th>'+
+                       '</tr>'+
+                     '</thead>'+
+                     '<tbody>'+
+                       '<tr>'+
+
+                         '<td>Status:</td>'+
+                         '</tr>'+
+                   '<tfoot align ="center" >'+
+                     '<tr>'+
+                       '<th> <a class="btn bt" href="#addModal' + tempArray[q].idBeds + '" role="button" data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>'+
+
+                                        '<div id="addModal' + tempArray[q].idBeds + '" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'+
+                                          '<div class="modal-header">'+
+                                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'+
+                                            '<h3 id="myModalLabel">Add Bed</h3>'+
+                                          '</div>'+
+                                          '<div class="modal-body">'+
+                                            '<form id="add-bed" class="form-horizontal" method = "POST" action=".">'+
+
+                                             '<fieldset>'+
+                                               '<div class="control-group">'+
+                                                 '<label class="control-label" for="bednumber">Bed #</label>'+
+                                                 '<div class="controls">'+
+                                                   '<input type="number" class="span1" value="' + tempArray[q].bedNumber+ '" name = "bednumber" id="bed'+ tempArray[q].idBeds+'">'+
+                                                 '</div> '+
+
+
+
+
+                                          '</div>'+
+                                            '</fieldset>'+
+
+
+
+
+
+
+                                          '</div>'+
+                                          '<div class="modal-footer">'+
+                                            '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="addBed('+ tempArray[q].idBeds+');" >Save</button>'+
+                                            '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
+                                          '</div>'+
+                                          '</form>'+
+                                        '</div>'+
+
+
+
+
+
+                       '</th>'+
+                     '</tr>'+
+                   '</tfoot>'+
+                 '</table>'+
+               '</div>'+
+             '</div>'+
+           '</div>';
+          }
+
+             $("#bedRow").append(wew);
+
+    		}
+    	});
+    },2000);
+});
+
+function addBed(id){
+  var wew = "#bed"+id+"";
+  var bedNumber = $(wew).val();
+  	$.ajax({
+  		url: '/ajax/setBedAvailable/',
+  		data: {
+        "id":id,
+        "bedNumber":bedNumber,
+  		},
+  		dataType: 'json',
+  		success: function (data){
+        alert("Bed is successfully added!");
+
+        updateBeds();
+  		}
+  	});
+}
+
+function updateBeds(){
+  bedsArray = [];
+  $.ajax({
+    url: '/ajax/getPendingBeds/',
+    data: {
+
+    },
+    dataType: 'json',
+    success: function (data){
+      for(var i = 0; i < data.length; i++){
+        bedsArray.push(new bedObject(data[i].idBeds, data[i].bedNumber, data[i].bedStatus + ""));
+
+      }
+      wew = "";
+
+      for(var q = 0; q < bedsArray.length; q++){
+        wew += '<div class = "span3" align ="center">'+
+         '<div class="widget widget-table action-table">'+
+           '<div class="widget-header" > <i class="icon-medkit"></i>'+
+            '<h3>Add Bed</h3>'+
+
+           '</div>'+
+           '<div class="widget-content" align = "center" id="bed">'+
+             '<img src="/static/img/bed.png"/ >'+
+             '<table class="table " align ="center">'+
+               '<thead>'+
+                 '<tr>'+
+
+                   '<th></th>'+
+                   '</tr>'+
+                 '</thead>'+
+                 '<tbody>'+
+                   '<tr>'+
+
+                     '<td>Status:</td>'+
+                     '</tr>'+
+               '<tfoot align ="center" >'+
+                 '<tr>'+
+                   '<th> <a class="btn bt" href="#addModal' + bedsArray[q].idBeds + '" role="button" data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>'+
+
+                                    '<div id="addModal' + bedsArray[q].idBeds + '" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'+
+                                      '<div class="modal-header">'+
+                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'+
+                                        '<h3 id="myModalLabel">Add Bed</h3>'+
+                                      '</div>'+
+                                      '<div class="modal-body">'+
+                                        '<form id="add-bed" class="form-horizontal" method = "POST" action=".">'+
+
+                                         '<fieldset>'+
+                                           '<div class="control-group">'+
+                                             '<label class="control-label" for="bednumber">Bed #</label>'+
+                                             '<div class="controls">'+
+                                               '<input type="number" class="span1" value="' + bedsArray[q].bedNumber+ '" name = "bednumber" id="bed'+ bedsArray[q].idBeds+'">'+
+                                             '</div> '+
+
+
+
+
+                                      '</div>'+
+                                        '</fieldset>'+
+
+
+
+
+
+
+                                      '</div>'+
+                                      '<div class="modal-footer">'+
+                                        '<button type="button" class="btn btn-primary" onclick="addBed('+ bedsArray[q].idBeds+');">Save</button>'+
+                                        '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
+                                      '</div>'+
+                                      '</form>'+
+                                    '</div>'+
+
+
+
+
+
+                   '</th>'+
+                 '</tr>'+
+               '</tfoot>'+
+             '</table>'+
+           '</div>'+
+         '</div>'+
+       '</div>';
+      }
+
+         $("#bedRow").html(wew);
+
+    }
+  });
+}
+</script>
+
+<script>
+$(document).ready(function() {
+    $('#example').DataTable();
+
+
+    $("#saveButton").click(function(){
+      var available = $("#Available").children();
+      var unavailable = $("#Unavailable").children();
+      var aList = new Array();
+      var uList = new Array();
+      for(var i = 0; i < available.length; i++){
+        aList.push(available[i].id);
+      }
+      for(var o = 0; o < unavailable.length; o++){
+        uList.push(unavailable[o].id);
+      }
+
+      $.ajax({
+        url: '/ajax/ajaxUpdateBedStatus/',
+        data: {
+          "aList[]":aList,
+          "uList[]":uList,
+        },
+        dataType: 'json',
+        success: function (data){
+          alert("The status of the bed is successfully updated!");
+          ajaxRefreshAvailableBeds();
+
+          ajaxRefreshUnavailableBeds();
+        }
+      });
+    });
+} );
+
+
+
+
+
+      $.ajax({
+        url: '/ajax/ajaxUpdateBedStatus/',
+        data: {
+        },
+        dataType: 'json',
+        success: function (data){
+          
+        }
+      });
+
+
+
+
+(function()
+{
+
+    //exclude older browsers by the features we need them to support
+    //and legacy opera explicitly so we don't waste time on a dead browser
+    if
+    (
+        !document.querySelectorAll
+        ||
+        !('draggable' in document.createElement('span'))
+        ||
+        window.opera
+    )
+    { return; }
+
+    //get the collection of draggable items and add their draggable attribute
+    for(var
+        items = document.querySelectorAll('[data-draggable="item"]'),
+        len = items.length,
+        i = 0; i < len; i ++)
+    {
+        items[i].setAttribute('draggable', 'true');
+    }
+
+    //variable for storing the dragging item reference
+    //this will avoid the need to define any transfer data
+    //which means that the elements don't need to have IDs
+    var item = null;
+
+    //dragstart event to initiate mouse dragging
+    document.addEventListener('dragstart', function(e)
+    {
+        //set the item reference to this element
+        item = e.target;
+
+        //we don't need the transfer data, but we have to define something
+        //otherwise the drop action won't work at all in firefox
+        //most browsers support the proper mime-type syntax, eg. "text/plain"
+        //but we have to use this incorrect syntax for the benefit of IE10+
+        e.dataTransfer.setData('text', '');
+
+    }, false);
+
+    //dragover event to allow the drag by preventing its default
+    //ie. the default action of an element is not to allow dragging
+    document.addEventListener('dragover', function(e)
+    {
+        if(item)
+        {
+            e.preventDefault();
+        }
+
+    }, false);
+
+    //drop event to allow the element to be dropped into valid targets
+    document.addEventListener('drop', function(e)
+    {
+        //if this element is a drop target, move the item here
+        //then prevent default to allow the action (same as dragover)
+        if(e.target.getAttribute('data-draggable') == 'target')
+        {
+            e.target.appendChild(item);
+
+            e.preventDefault();
+        }
+
+    }, false);
+
+    //dragend event to clean-up after drop or abort
+    //which fires whether or not the drop target was valid
+    document.addEventListener('dragend', function(e)
+    {
+        item = null;
+
+    }, false);
+
+})();
+
+function ajaxRefreshAvailableBeds(){
+  $.ajax({
+    url: '/ajax/ajaxRefreshAvailableBeds/',
+    data: {
+
+    },
+    dataType: 'json',
+    success: function (data){
+      var wew = "";
+      $("#availableBedsSize").html(data.length);
+
+      for(var i = 0; i < data.length; i++){
+        wew += '<tr>'+
+          '<td style="width:20%;text-align:center;"><img src="/static/img/bedicon.png"/></td>'+
+        '  <td style="width:80%; font-size:15px;">Bed #' + data[i].bedNumber+ '</td>'+
+
+        '</tr>';
+      }
+      $("#availableBedsTable").html(wew);
+      $("#availableSpan").html(data.length);
+    }
+  });
+}
+function ajaxRefreshUnavailableBeds(){
+  $.ajax({
+    url: '/ajax/ajaxRefreshUnavailableBeds/',
+    data: {
+
+    },
+    dataType: 'json',
+    success: function (data){
+      var waw = "";
+      $("#unavailableBedsSize").html(data.length);
+      for(var i = 0; i < data.length; i++){
+        waw += '<tr>'+
+          '<td style="width:20%;text-align:center;"><img src="/static/img/bedicon.png"/></td>'+
+        '  <td style="width:80%; font-size:15px;">Bed #' + data[i].bedNumber+ '</td>'+
+
+        '</tr>';
+      }
+      $("#unavailableBedsTable").html(waw);
+      $("#unavailableSpan").html(data.length);
+    }
+  });
+}
+</script>
+{% endblock content %}

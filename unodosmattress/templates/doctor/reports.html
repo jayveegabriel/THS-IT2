@@ -1,0 +1,1155 @@
+{% extends 'doctor/reportsbase.html' %}
+{% block content %}
+{% load static %}
+
+<!DOCTYPE html>
+<style>
+	.text-right {
+  text-align: right;
+}
+
+	.timeline-wrapper {
+  display: block;
+  width: 100%;
+  height: 15rem;
+  position: relative;
+  color: #fff;
+  text-align: center;
+  margin: 0 auto;
+  overflow-x: auto;
+  overflow-y: visible;
+  white-space: nowrap;
+}
+.timeline-wrapper .timeline-line {
+  display: block;
+  width: 10000px;
+  height: 1px;
+  background: black;
+  position: absolute;
+  top: 50%;
+  -webkit-box-shadow: 0 0 1px black;
+  -moz-box-shadow: 0 0 1px black;
+  box-shadow: 0 0 1px black;
+
+
+}
+.timeline-wrapper .timeline-content-day {
+  height: 100%;
+  padding: 65px
+}
+.timeline-wrapper .timeline-content-item {
+  background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+  width: 30%;
+  display: inline-block;
+  position: relative;
+  height: 100%;
+  margin-right: 120px;
+  -webkit-transition: width .5s;
+  -moz-transition: width .5s;
+  -o-transition: width .5s;
+  transition: width .5s;
+  z-index: 1;
+}
+.timeline-wrapper .timeline-content-item > span {
+  height: 2rem;
+  display: block;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  margin-top: -.25em;
+  width: 100%;
+  text-shadow: 0 0 2px black;
+  cursor: pointer;
+}
+.timeline-wrapper .timeline-content-item > span:before {
+  content: " ";
+  display: block;
+  width: .5em;
+  height: .5em;
+  background: white;
+  margin: 0 auto .5em auto;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 0 1px black;
+  -moz-box-shadow: 0 0 1px black;
+  box-shadow: 0 0 1px black;
+}
+.timeline-wrapper .timeline-content-item .timeline-content-item-reveal {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 20%;
+  margin-top: -50%;
+  width: 100%;
+}
+.timeline-wrapper .timeline-content-item .timeline-content-item-reveal a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.timeline-wrapper .timeline-content-item .timeline-content-item-reveal a img {
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+	max-height: 100%;
+  max-width: 100%;
+  border: 3px solid white;
+  -webkit-box-shadow: 0 0 2px black;
+  -moz-box-shadow: 0 0 2px black;
+  box-shadow: 0 0 2px black;
+}
+.timeline-wrapper .timeline-content-item .timeline-content-item-reveal a span {
+  position: absolute;
+  width: 250%;
+  margin-left: -75%;
+  bottom: -2rem;
+  left: 0;
+  font-family: serif;
+  font-size: 0.8em;
+  font-style: italic;
+  text-decoration: none;
+  white-space: nowrap;
+  color: black;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5), 0 0 1px black;
+}
+.timeline-wrapper .timeline-content-item .timeline-content-item-reveal a span:after {
+  content: "\203A";
+  margin-left: .3em;
+}
+.timeline-wrapper .timeline-content-item.active {
+  width: 10%;
+}
+.timeline-wrapper .timeline-content-item.active .timeline-content-item-reveal {
+  display:block;
+}
+
+	</style>
+<div class="main" align ="center">
+	<h3 class ="animated slideInUp" align ="center"><b>Reports for {{patient.lastName}}, {{patient.firstName}} {{patient.middleName}}.</b></h3>
+
+	<a class ="animated slideInUp" href="{% url 'unodosmattress:patients' %}"><i class="icon-arrow-left"></i> Back</a>
+
+
+
+
+
+	<div class="main-inner">
+		<br>
+	    <div class="container" >
+
+				<div class="row">
+					<div class="span2">
+
+	      		<div class="widget">
+
+
+
+	      		</div> <!-- /widget -->
+
+      		</div> <!-- /span4 -->
+					<div class="span4">
+
+	      		<div class="widget">
+
+	      			<div class="widget-content" align ="center">
+
+			      		<h4>Choose a Type</h4>
+								<br>
+								<form id="type" class="form-horizontal" method = "POST" action=".">
+									{% csrf_token %}
+								 <fieldset>
+
+
+																						 <div class="form-group">
+
+																							 <select class="form-control" id="selecttype"  onchange="filterReport()">
+																								 <option value ="0">All</option>
+																								 <option value ="1">Heart Rate</option>
+																								 <option value ="2">Temperature</option>
+																								 <option value ="3">Position</option>
+																							 <select>
+
+																						 </div>	<!-- /controls -->
+									  <!-- /control-group -->
+								</fieldset>
+
+								<!--1<img id ="image" src="{% static 'img/blank.png'%}"  / >!-->
+
+								</form>
+
+		      		</div> <!-- /widget-content -->
+
+	      		</div> <!-- /widget -->
+
+      		</div> <!-- /span4 -->
+					<div class="span4">
+
+	      		<div id="target-3" class="widget">
+
+	      			<div class="widget-content" align ="center">
+
+
+			      		<h4>Choose a QD</h4>
+								<br>
+								<form id="patient" class="form-horizontal" method = "POST" action=".">
+									{% csrf_token %}
+								 <fieldset>
+
+
+																						 <div class="form-group">
+
+																							 <select class="form-control" id="selectqd" onchange="changeQ()">
+
+																								 <option value ="1">q1min</option>
+																								 <option value ="2">q15min</option>
+
+																							 <select>
+
+																						 </div>	<!-- /controls -->
+									  <!-- /control-group -->
+								</fieldset>
+
+								<!-- <img src="{% static 'img/blank.png'%}"  / >!-->
+
+								</form>
+
+		      		</div> <!-- /widget-content -->
+
+	      		</div> <!-- /widget -->
+
+      		</div> <!-- /span4 -->
+					<div class="span2">
+
+	      		<div class="widget">
+
+
+
+	      		</div> <!-- /widget -->
+
+      		</div> <!-- /span4 -->
+
+				</div>
+
+
+
+				<div class ="row">
+ 	      	<div class="span6">
+ 						<div class="widget" id="heartRateWidget">
+ 					     <div class="widget-content" >
+ 									<div class ="timeline-wrapper" id="hr" style="min-height: 400px; min-width: 380px">
+									</div>
+ 						   </div>
+ 						</div>
+					</div>
+
+					<div class="span6">
+ 						<div class="widget" id="heartRateWidget2">
+ 					     <div class="widget-content"  style = "overflow-y:auto;height:400px;">
+								 <div class ="" align ="center">
+									 <h4> Heart Rate Records </h4>
+									</div>
+									<table class="table table-bordered" id="fex">
+										<thead >
+											<tr>
+
+												<th style ="text-align:center;">No</th>
+												<th style ="text-align:center;">heart rate</th>
+												<th style ="text-align:center;">date </th>
+												<th style ="text-align:center;">time </th>
+											</tr>
+										</thead>
+										<tbody id = "heartRateBody">
+											{% for h in heartRateList %}
+											<tr>
+
+												<td style ="text-align:center;">{{h.idHeartRate}}</td>
+												<td style ="text-align:center;">{{h.heartRate}}</td>
+												<td style ="text-align:center;">{{h.date}}</td>
+												<td style ="text-align:center;">{{h.time}}</td>
+											</tr>
+											{% endfor %}
+
+										</tbody>
+									</table>
+ 						   </div>
+ 						</div>
+					</div>
+				</div>
+
+				<div class ="row">
+					<div class ="span6">
+						<div class="widget" id="temperatureWidget">
+							 <div class="widget-content" >
+								<div id="temp" style="height: 400px; min-width: 380px"></div>
+									</div>
+					  </div>
+					</div>
+					<div class ="span6">
+						<div class="widget" id="temperatureWidget2">
+							 <div class="widget-content" style = "overflow-y:auto;height:400px;" >
+								 <div class ="" align ="center">
+									<h4> Temperature Records </h4>
+								 </div>
+								<table class="table table-bordered" id="fexx">
+									<thead >
+										<tr>
+											<th style ="text-align:center;">No</th>
+											<th style ="text-align:center;">temperature</th>
+											<th style ="text-align:center;">date </th>
+											<th style ="text-align:center;">time </th>
+										</tr>
+									</thead>
+									<tbody id = "temperatureBody">
+										{% for t in temperatureList %}
+										<tr>
+
+											<td style ="text-align:center;">{{t.idTemperature}}</td>
+											<td style ="text-align:center;">{{t.temperature}}</td>
+											<td style ="text-align:center;">{{t.date}}</td>
+											<td style ="text-align:center;">{{t.time}}</td>
+										</tr>
+										{% endfor %}
+
+									</tbody>
+								</table>
+									</div>
+					  </div>
+					</div>
+ 				</div>
+
+
+
+
+
+
+					<div class="row" id="positionWidget">
+						<div class="span12">
+							<div class="widget">
+
+								<div class="widget-content" align ="right">
+									<div class ="" align ="left">
+ 									<h4> Position Trends </h4>
+ 								 </div>
+									<h4 class ="text-right"> Legend: &nbsp; <img src="{% static 'img/tl none.png'%}"> No Position &nbsp;
+										 <img src="{% static 'img/tl back.png'%}"> Back &nbsp;
+										 <img src="{% static 'img/tl fetal.png'%}"> Left Fetal &nbsp;
+										 <img src="{% static 'img/tl rightfetal.png'%}"> Right Fetal &nbsp;
+										 <img src="{% static 'img/tl side.png'%}"> Left Side &nbsp;
+									 	<img src="{% static 'img/tl rightside.png'%}"> Right Side &nbsp;</h4>
+
+										<div class="body">
+											<div id="timeline" class="body" style="padding-top: 2%;" >
+												<!-- <div id="line" style="height: 100%; width: 100%; margin: 0 auto"></div> -->
+												<div id="scroll" class="timeline-wrapper">
+													<div id= "container" class="timeline-content-day">
+														<div id="itemline" class="timeline-line"></div>
+
+														{% for p in positionList %}
+														<div class='timeline-content-item active' data-timeline="hour-8">
+															<span>{{p.hour}}:00:00</span>
+															<div class='timeline-content-item-reveal'>
+																<a>
+																	{% if p.position == "NONE" %}
+																		<img src="{% static 'img/timeline none.png'%}"/ >
+																	{% endif %}
+																	{% if p.position == "BACK" %}
+																		<img src="{% static 'img/timeline back.png'%}"/ >
+																	{% endif %}
+																	{% if p.position == "RIGHT SIDE" %}
+																		<img src="{% static 'img/timeline rightside.png'%}"/ >
+																	{% endif %}
+																	{% if p.position == "LEFT SIDE" %}
+																		<img src="{% static 'img/timeline side.png'%}"/ >
+																	{% endif %}
+																	{% if p.position == "RIGHT FETAL" %}
+																		<img src="{% static 'img/timeline rightfetal.png'%}"/ >
+																	{% endif %}
+																	{% if p.position == "LEFT FETAL" %}
+																		<img src="{% static 'img/timeline fetal.png'%}"/ >
+																	{% endif %}
+																	<span>{{p.position}}</span>
+																</a>
+															</div>
+														</div>
+														{% endfor %}
+
+														<!-- <div class='timeline-content-item active' data-timeline="hour-9">
+															<span>9 AM</span>
+															<div class='timeline-content-item-reveal'>
+																<a>
+																	<img src="{% static 'img/timeline back.png'%}"/ >
+																	<span>Back</span>
+																</a>
+															</div>
+														</div> -->
+														<!-- <div class="timeline-content-item active" data-timeline="hour-10">
+															<span>10 AM</span>
+															<div class="timeline-content-item-reveal">
+																<a>
+																	<img src="{% static 'img/timeline none.png'%}"/ >
+																	<span>None</span>
+																</a>
+															</div>
+														</div> -->
+
+													</div>
+
+												</div>
+											</div>
+						</div>
+
+										</div>
+
+										</div>
+
+
+
+
+         </div>
+         </div>
+
+	  	  <!-- /row -->
+
+
+
+
+
+
+
+
+
+
+
+	    </div> <!-- /container -->
+
+	</div> <!-- /main-inner -->
+
+</div> <!-- /main -->
+
+
+
+
+
+
+<div class="footer">
+  <div class="footer-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
+        <!-- /span12 -->
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /footer-inner -->
+</div>
+
+<script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
+<script src="{% static 'js/excanvas.min.js'%}"></script>
+<script src="{% static 'js/chart.min.js" type="text/javascript'%}"></script>
+<script src="{% static 'js/bootstrap.js'%}"></script>
+<script src="{% static 'js/base.js'%}"></script>
+<script src="{% static 'js/highcharts.js'%}"></script>
+<script src="{% static 'js/annotations.js'%}"></script>
+<script src="{% static 'js/series-label.js'%}"></script>
+<script src="{% static 'js/exporting.js'%}"></script>
+<script src="{% static 'js/export-data.js'%}"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/dataTables.js'%}"></script>
+<script>
+	$(document).ready(function() {
+	    $('#fex').DataTable();
+			 $('#fexx').DataTable();
+	} );
+	function filterReport(){
+		var selected = $("#selecttype").val();
+		if(selected == 0){
+			$("#temperatureWidget").show();
+			$("#heartRateWidget").show();
+				$("#temperatureWidget2").show();
+				$("#heartRateWidget2").show();
+			$("#positionWidget").show();
+		}
+		else if(selected == 1){
+			$("#temperatureWidget").hide();
+			$("#heartRateWidget").show();
+			$("#temperatureWidget2").hide();
+			$("#heartRateWidget2").show();
+			$("#positionWidget").hide();
+
+		}
+		else if(selected == 2){
+			$("#temperatureWidget").show();
+			$("#heartRateWidget").hide();
+			$("#temperatureWidget2").show();
+			$("#heartRateWidget2").hide();
+			$("#positionWidget").hide();
+
+		}
+		else if(selected == 3){
+			$("#temperatureWidget").hide();
+			$("#heartRateWidget").hide();
+
+				$("#temperatureWidget2").hide();
+				$("#heartRateWidget2").hide();
+			$("#positionWidget").show();
+		}
+	}
+
+	function displayCharts(heartRateData, temperatureData){
+		Highcharts.chart('hr', {
+				chart: {
+						type: 'spline',
+						scrollablePlotArea: {
+								minWidth: 600,
+								scrollPositionX: 1
+						}
+				},
+				title: {
+						text: 'Heart Rate Report'
+				},
+				subtitle: {
+						text: '2018-11-26'
+				},
+				xAxis: {
+						type: 'datetime',
+						labels: {
+								overflow: 'justify'
+						}
+				},
+				yAxis: {
+						title: {
+								text: 'Heart Rate (BPM)'
+						},
+						minorGridLineWidth: 0,
+						gridLineWidth: 0,
+						alternateGridColor: null,
+						plotBands: [ { // Light breeze
+								from: "{{minHeartRate}}",
+								to: "{{maxHeartRate}}",
+								color: 'rgba(0,255,0,0.2)',
+								label: {
+										text: 'Normal',
+										style: {
+												color: '#606060'
+										}
+								}
+						},
+	 ]
+				},
+				tooltip: {
+
+
+						valueSuffix: ' BPM <br>Status: </br>'
+
+				},
+				plotOptions: {
+						spline: {
+								lineWidth: 4,
+								states: {
+										hover: {
+												lineWidth: 5
+										}
+								},
+								marker: {
+										enabled: false
+								},
+								pointInterval: 60000, // one hour 60000 if 1 second
+								pointStart: Date.UTC(2018, 2, 13, 0, 0, 0) // start day and time
+
+						}
+				},
+				series: [{
+					lineColor: Highcharts.getOptions().colors[5],
+					color: Highcharts.getOptions().colors[5],
+					fillOpacity: 0.5,
+						name: "{{firstName}}",
+						data: heartRateData
+
+				}, ],
+				navigation: {
+						menuItemStyle: {
+								fontSize: '10px'
+						}
+				}
+		});
+
+		Highcharts.chart('temp', {
+				chart: {
+						type: 'spline',
+						scrollablePlotArea: {
+								minWidth: 600,
+								scrollPositionX: 1
+						}
+				},
+				title: {
+						text: 'Temperature Report'
+				},
+				subtitle: {
+						text: '2018-11-26'
+				},
+				xAxis: {
+						type: 'datetime',
+						labels: {
+								overflow: 'justify'
+						}
+				},
+				yAxis: {
+						title: {
+								text: 'Temp (℃)'
+						},
+						minorGridLineWidth: 0,
+						gridLineWidth: 0,
+						alternateGridColor: null,
+						plotBands: [{ // Light air
+								from: 0,
+								to: 35,
+								color: 'rgba(68, 170, 213, 0.1)',
+								label: {
+										text: 'Hypothermia',
+										style: {
+												color: '#606060'
+										}
+								}
+						}, { // Light breeze
+								from: 36.5,
+								to: 37.5,
+								color: 'rgba(0, 0, 0, 0)',
+								label: {
+										text: 'Normal',
+										style: {
+												color: '#606060'
+										}
+								}
+						}, { // Gentle breeze
+								from: 37.6,
+								to: 39.9,
+								color: 'rgba(68, 170, 213, 0.1)',
+								label: {
+										text: 'Fever/Hyperthermia',
+										style: {
+												color: '#606060'
+										}
+								}
+						}, { // Moderate breeze
+								from: 40,
+								to: 1000,
+								color: 'rgba(68, 170, 213, 0.1)',
+								label: {
+										text: 'Hyperpyrexia',
+										style: {
+												color: '#606060'
+										}
+								}
+						},  ]
+				},
+				tooltip: {
+
+
+						valueSuffix: ' ℃'
+				},
+				plotOptions: {
+						spline: {
+								lineWidth: 4,
+								states: {
+										hover: {
+												lineWidth: 5
+										}
+								},
+								marker: {
+										enabled: false
+								},
+								pointInterval: 60000, // one hour 60000 if 1 second
+								pointStart: Date.UTC(2018, 1, 13, 0, 0, 0) // start day and time
+
+						}
+				},
+				series: [{
+					lineColor: Highcharts.getOptions().colors[3],
+					color: Highcharts.getOptions().colors[3],
+					fillOpacity: 0.5,
+						name: "{{firstName}}",
+						data: temperatureData
+
+				}, ],
+				navigation: {
+						menuItemStyle: {
+								fontSize: '10px'
+						}
+				}
+		});
+	}
+	function changeQ(){
+		var selected = $("#selectqd").val();
+		if(selected == 1){
+
+			var i = "{{patient.idPatient}}";
+			$.ajax({
+				url: '/ajax/ajaxGetEveryMinHeartRate/',
+				data: {
+					"idPatient":i
+				},
+				dataType: 'json',
+				success: function (data){
+					var heartRateData = new Array();
+					var temperatureData = new Array();
+					var heartRateBody = "";
+					var temperatureBody = "";
+					for(var w = 0; w < data['heartRateList'].length; w++){
+
+							heartRateData.push(data['heartRateList'][w].heartRate);
+
+							heartRateBody += '<tr>'+
+
+								'<td>' + data['heartRateList'][w].idHeartRate + '</td>'+
+								'<td>' + data['heartRateList'][w].heartRate + '</td>'+
+								'<td>' + data['heartRateList'][w].date + '</td>'+
+								'<td>' + data['heartRateList'][w].time + '</td>'+
+							'</tr>';
+					}
+
+					for(var w = 0; w < data['temperatureList'].length; w++){
+
+							temperatureData.push(data['temperatureList'][w].temperature);
+							temperatureBody += '<tr>'+
+
+								'<td>' + data['temperatureList'][w].idTemperature + '</td>'+
+								'<td>' + data['temperatureList'][w].temperature + '</td>'+
+								'<td>' + data['temperatureList'][w].date + '</td>'+
+								'<td>' + data['temperatureList'][w].time + '</td>'+
+							'</tr>';
+
+					}
+					$("#heartRateBody").html(heartRateBody);
+					$("#temperatureBody").html(temperatureBody);
+
+					displayCharts(heartRateData,temperatureData);
+
+				}
+			});
+		}
+		else{
+			var i = "{{patient.idPatient}}";
+			$.ajax({
+				url: '/ajax/ajaxGetEveryMinHeartRate/',
+				data: {
+					"idPatient":i
+				},
+				dataType: 'json',
+				success: function (data){
+					var heartRateData = new Array();
+					var temperatureData = new Array();
+
+					var heartRateBody = "";
+					var temperatureBody = "";
+					var counter = 1;
+					for(var w = 0; w < data['heartRateList'].length; w++){
+						if(w == 0 || w % 15 === 0){
+							heartRateData.push(data['heartRateList'][w].heartRate);
+							heartRateBody += '<tr>'+
+
+								// '<td>' + data['heartRateList'][w].idHeartRate + '</td>'+
+								'<td>' + counter + '</td>'+
+								'<td>' + data['heartRateList'][w].heartRate + '</td>'+
+								'<td>' + data['heartRateList'][w].date + '</td>'+
+								'<td>' + data['heartRateList'][w].time + '</td>'+
+							'</tr>';
+							counter += 1;
+						}
+					}
+					counter = 1;
+					for(var w = 0; w < data['temperatureList'].length; w++){
+						if(w == 0 || w % 15 === 0){
+							temperatureData.push(data['temperatureList'][w].temperature);
+							temperatureBody += '<tr>'+
+
+								// '<td>' + data['temperatureList'][w].idTemperature + '</td>'+
+								'<td>' + counter + '</td>'+
+								'<td>' + data['temperatureList'][w].temperature + '</td>'+
+								'<td>' + data['temperatureList'][w].date + '</td>'+
+								'<td>' + data['temperatureList'][w].time + '</td>'+
+							'</tr>';
+							counter += 1;
+						}
+					}
+					$("#heartRateBody").html(heartRateBody);
+					$("#temperatureBody").html(temperatureBody);
+					displayCharts(heartRateData,temperatureData);
+
+				}
+			});
+		}
+		$('#fex').DataTable();
+	  $('#fexx').DataTable();
+	}
+	</script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var i = "{{patient.idPatient}}";
+		$.ajax({
+			url: '/ajax/ajaxGetEveryMinHeartRate/',
+			data: {
+				"idPatient":i
+			},
+			dataType: 'json',
+			success: function (data){
+				var heartRateData = new Array();
+				var temperatureData = new Array();
+
+				for(var w = 0; w < data['heartRateList'].length; w++){
+					heartRateData.push(data['heartRateList'][w].heartRate);
+				}
+
+				for(var w = 0; w < data['temperatureList'].length; w++){
+					temperatureData.push(data['temperatureList'][w].temperature);
+				}
+
+				displayCharts(heartRateData,temperatureData);
+
+			}
+		});
+	});
+
+
+// Data generated from http://www.bikeforums.net/professional-cycling-fans/1113087-2017-tour-de-france-gpx-tcx-files.html
+var elevationData = [
+		[1, 225],
+		[2, 226],
+		[3, 228],
+		[4, 228],
+		[5, 229],
+		[6, 195],
+		[7, 195],
+		[8, 196],
+		[9, 192],
+		[10, 200],
+		[11, 197],
+		[12, 194],
+		[13, 194],
+    [14, 228],
+    [15, 228],
+    [16, 229],
+    [17, 195],
+    [18, 195],
+    [19, 196],
+    [20, 192],
+    [21, 200],
+    [22, 197],
+    [23, 194],
+    [24, 194],
+
+
+
+];
+
+// Now create the chart
+Highcharts.chart('cont', {
+
+    chart: {
+        type: 'area',
+        zoomType: 'x',
+        panning: true,
+        panKey: 'shift',
+        scrollablePlotArea: {
+            minWidth: 600
+        }
+    },
+
+    title: {
+        text: 'Heart Rate Report'
+    },
+
+    subtitle: {
+        text: '2018-11-11'
+    },
+
+    annotations: [{
+        labelOptions: {
+            backgroundColor: 'rgba(255,255,0,0.3)',
+            verticalAlign: 'top',
+            y: 15
+        },
+        labels: [{
+            point: {
+                xAxis: 0,
+                yAxis: 0,
+                x: 2,
+                y: 226
+            },
+            text: 'Warning'
+        }, {
+            point: {
+                xAxis: 0,
+                yAxis: 0,
+                x: 45.5,
+                y: 611
+            },
+            text: 'Montrond'
+        }, {
+            point: {
+                xAxis: 0,
+                yAxis: 0,
+                x: 63,
+                y: 651
+            },
+            text: 'Mont-sur-Monnet'
+        }, {
+            point: {
+                xAxis: 0,
+                yAxis: 0,
+                x: 84,
+                y: 789
+            },
+            x: -10,
+            text: 'Bonlieu'
+        }, {
+            point: {
+                xAxis: 0,
+                yAxis: 0,
+                x: 129.5,
+                y: 382
+            },
+            text: 'Chassal'
+        }, {
+            point: {
+                xAxis: 0,
+                yAxis: 0,
+                x: 159,
+                y: 443
+            },
+            text: 'Saint-Claude'
+        }]
+    }, {
+
+        labelOptions: {
+            shape: 'connector',
+            align: 'right',
+            justify: false,
+            crop: true,
+            style: {
+                fontSize: '0.8em',
+                textOutline: '1px white'
+            }
+        },
+        labels: [{
+            point: {
+                xAxis: 0,
+                yAxis: 0,
+                x: 96.2,
+                y: 783
+            },
+            text: '6.1 km climb<br>4.6% on avg.'
+        }, {
+            point: {
+                xAxis: 0,
+                yAxis: 0,
+                x: 134.5,
+                y: 540
+            },
+            text: '7.6 km climb<br>5.2% on avg.'
+        }, {
+            point: {
+                xAxis: 0,
+                yAxis: 0,
+                x: 172.2,
+                y: 925
+            },
+            text: '11.7 km climb<br>6.4% on avg.'
+        }]
+    }],
+
+    xAxis: {
+
+        labels: {
+
+            format: '{value} AM/PM'
+        },
+        minRange: 5,
+        title: {
+            text: 'Time'
+        },
+					type: 'datetime'
+    },
+
+    yAxis: {
+        startOnTick: true,
+        endOnTick: false,
+        maxPadding: 0.35,
+        title: {
+            text: null
+        },
+        labels: {
+            format: '{value} BPM'
+        },
+
+				plotBands: [{ // normal ba or warning and danger
+						from: 210,
+						to: 220,
+						color: 'rgba(68, 170, 213, 0.1)',
+						label: {
+								text: 'Normal',
+								style: {
+										color: '#606060'
+								}
+						}
+				},
+				]
+
+
+    },
+
+    tooltip: {
+        headerFormat: 'Status: <br>',
+        pointFormat: 'HR: {point.y} BPM<br>',
+
+        shared: true
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    series: [{
+        data: elevationData,
+        lineColor: Highcharts.getOptions().colors[5],
+        color: Highcharts.getOptions().colors[5],
+        fillOpacity: 0.5,
+
+        marker: {
+            enabled: false
+        },
+        threshold: null
+    }]
+
+});
+		</script>
+
+<script>
+
+	var ctxL = document.getElementById("lineChart").getContext('2d');
+	  var myLineChart = new Chart(ctxL, {
+	    type: 'line',
+	    data: {
+	      labels: ["January", "February", "March", "April", "May", "June", "July"],
+	      datasets: [{
+	          label: "My First dataset",
+	          data: [65, 59, 80, 81, 56, 55, 40],
+	          backgroundColor: [
+	            'rgba(105, 0, 132, .2)',
+	          ],
+	          borderColor: [
+	            'rgba(200, 99, 132, .7)',
+	          ],
+	          borderWidth: 2
+	        },
+	        {
+	          label: "My Second dataset",
+	          data: [28, 48, 40, 19, 86, 27, 90],
+	          backgroundColor: [
+	            'rgba(0, 137, 132, .2)',
+	          ],
+	          borderColor: [
+	            'rgba(0, 10, 130, .7)',
+	          ],
+	          borderWidth: 2
+	        }
+	      ]
+	    },
+	    options: {
+	      responsive: true
+	    }
+	  });
+
+	function myFunction() {
+		if (document.getElementById("selectmoment").value != "0"){
+			var z = new Image();
+			z = "{% static 'img/check.png'%}";
+			document.getElementById("moment").src=z;
+		}
+		else if  (document.getElementById("selectmoment").value = "0"){
+			var z = new Image();
+			z = "{% static 'img/blank.png'%}";
+			document.getElementById("moment").src=z;
+		}
+
+
+
+	}
+	$( function() {
+	 $( "#datepicker" ).datepicker();
+
+ } );
+
+    var pieData = [
+				{
+				    value: 30,
+				    color: "#F38630"
+				},
+				{
+				    value: 50,
+				    color: "#E0E4CC"
+				},
+				{
+				    value: 100,
+				    color: "#69D2E7"
+				}
+
+			];
+
+    var myPie = new Chart(document.getElementById("pie-chart").getContext("2d")).Pie(pieData);
+
+    var barChartData = {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+				{
+				    fillColor: "rgba(220,220,220,0.5)",
+				    strokeColor: "rgba(220,220,220,1)",
+				    data: [65, 59, 90, 81, 56, 55, 40]
+				},
+				{
+				    fillColor: "rgba(151,187,205,0.5)",
+				    strokeColor: "rgba(151,187,205,1)",
+				    data: [28, 48, 40, 19, 96, 27, 100]
+				}
+			]
+
+    }
+
+    var myLine = new Chart(document.getElementById("bar-chart").getContext("2d")).Bar(barChartData);
+	var myLine = new Chart(document.getElementById("bar-chart1").getContext("2d")).Bar(barChartData);
+	var myLine = new Chart(document.getElementById("bar-chart2").getContext("2d")).Bar(barChartData);
+	var myLine = new Chart(document.getElementById("bar-chart3").getContext("2d")).Bar(barChartData);
+	var lineChartData = {
+             labels: ["1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00"
+						 , "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"],
+             datasets: [
+ 				{
+ 				    fillColor: "rgba(220,220,220,0.5)",
+ 				    strokeColor: "rgba(220,220,220,1)",
+ 				    pointColor: "rgba(220,220,220,1)",
+ 				    pointStrokeColor: "#fff",
+ 				    data: [65, 59, 90, 81, 56, 55, 40]
+ 				},
+ 				{
+ 				    fillColor: "rgba(151,187,205,0.5)",
+ 				    strokeColor: "rgba(151,187,205,1)",
+ 				    pointColor: "rgba(151,187,205,1)",
+ 				    pointStrokeColor: "#fff",
+ 				    data: [28, 48, 40, 19, 96, 27, 100]
+ 				}
+ 			]
+
+         }
+
+         var myLine = new Chart(document.getElementById("area-chart1").getContext("2d")).Line(lineChartData);
+				 var myLine = new Chart(document.getElementById("area-chart2").getContext("2d")).Line(lineChartData);
+	</script>
+
+
+
+{% endblock content %}

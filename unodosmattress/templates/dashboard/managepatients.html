@@ -1,0 +1,903 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>UDM - Manage Patients</title>
+<link rel="icon" href="{% static 'img/UDM.png'%}"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-responsive.min.css'%}" rel="stylesheet">
+<link href="{% static 'css/animate-css/animate.css'%}" rel="stylesheet">
+<link href="{% static 'css/listbox.css'%}" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet">
+
+
+<link href="{% static 'css/data-tables.css'%}" rel="stylesheet">
+
+
+<link href="{% static 'css/font-awesome.css'%}" rel="stylesheet">
+<link href="{% static 'css/style.css'%}" rel="stylesheet">
+<link href="{% static 'css/dashboard.css'%}" rel="stylesheet">
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<style>
+
+	.badge1 {
+	 position:relative;
+	}
+	.badge1[data-badge]:after {
+	 content:attr(data-badge);
+	 position:absolute;
+	 top:-10px;
+	 right:-10px;
+	 font-size:.7em;
+	 background:#b94a48;
+	 color:white;
+	 width:18px;height:18px;
+	 text-align:center;
+	 line-height:18px;
+	 border-radius:50%;
+	 box-shadow:0 0 1px #333;
+	}
+
+.alert {
+  width: 10%;
+  float: right;
+}
+.badge1 {
+   position:relative;
+}
+.logo {
+  height: 25px;
+  width: 25px;
+}
+.table-wrapper-scroll-y {
+display: block;
+max-height: 200px;
+max-width: 270px;
+overflow-y: auto;
+-ms-overflow-style: -ms-autohiding-scrollbar;
+.badge1[data-badge]:after {
+   content:attr(data-badge);
+   position:absolute;
+   top:-10px;
+   right:-10px;
+   font-size:.7em;
+   background:#b94a48;
+   color:white;
+   width:18px;height:18px;
+   text-align:center;
+   line-height:18px;
+   border-radius:50%;
+   box-shadow:0 0 1px #333;
+}
+.containerwew{
+
+  position: fixed;
+  right: 5%;
+
+}
+</style>
+<body>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></span><span class="icon-bar"></span></span> </a><a class="brand" href="{% url 'unodosmattress:dashboard' %}"></a>
+      <div class="nav-collapse">
+        <ul class="nav pull-right">
+
+          <a class =""href="{% url 'unodosmattress:login' %}"><i class="icon-signout"></i> Logout</a>
+
+        </ul>
+        <!--<form class="navbar-search pull-right">
+          <input type="text" class="search-query" placeholder="Search">
+        </form>!-->
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /navbar-inner -->
+</div>
+<!-- /navbar -->
+<div class="subnavbar">
+  <div class="subnavbar-inner">
+    <div class="container">
+      <ul class="mainnav">
+        <li><a href="{% url 'unodosmattress:dashboard' %}"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
+        <li class="active"><a href="{% url 'unodosmattress:managepatients' %}"><i class="icon-user"></i><span>Manage Patients</span> </a> </li>
+        <li class="dropdown" ><a href="javascript:;" id="dropdownLi" class="dropdown-toggle" data-toggle="dropdown"> <i id="badgeData" class="icon-bell badge1" data-badge="{{newNotificationList }}"></i><span>Notifications</span><b class="caret"></b></a>
+                 <ul class="dropdown-menu" style ="overflow-y: auto;width:300px;max-height: 200px;">
+                   <li><table class="table table-bordered ">
+
+                     <tbody id="notifBody">
+                       {% for n in notifications %}
+                       <tr>
+                         <td style="width:30%;"><button class="btn btn-warning">Bed {{n.bedNumber}}</button></td>
+                         <td style="width:70%; font-size:10px;">needs your assistance!</td>
+
+                       </tr>
+                       {% endfor %}
+                     </tbody>
+                   </table></li>
+
+                 </ul>
+               </li>
+
+      </ul>
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /subnavbar-inner -->
+</div>
+<div class = "containerwew" id="containerDiv">
+
+	</div>
+
+<div class="main">
+	<div class="main-inner">
+	    <div class="container">
+	      <div class="row">
+	      	<div class="span12">
+	      		<div class="widget ">
+	      			<div class="widget-header">
+	      				<i class="icon-user"></i>
+	      				<h3>Manage Patients</h3>
+	  					</div> <!-- /widget-header -->
+					<div class="widget-content">
+						<div class="tabbable">
+							<ul class="nav nav-tabs">
+							  <li class="active">
+							    <a href="#viewpatients" id="ViewPatientsButton" data-toggle="tab">View Patients</a>
+							  </li>
+							  <li><a href="#addpatient" data-toggle="tab">Add Patient</a></li>
+							</ul>
+
+							<br>
+
+							<div class="tab-content">
+                <!--Add patient --->
+                <!---View Patients -->
+								<div class="tab-pane active" id="viewpatients">
+
+										<fieldset>
+
+											<div class="control-group">
+												 <h3><i class="icon-eye-open"></i> View Patient</h3>
+												 <br>
+
+												<div class="controls">
+													 <table class="table table-bordered" id="example">
+														 <thead>
+						                   <tr>
+						                     <th style ="text-align:center;">Bed number</th>
+						                     <th style ="text-align:center;">LAST NAME</th>
+						                     <th style ="text-align:center;">FIRST NAME</th>
+																 <th style ="text-align:center;">MIDDLE NAME</th>
+																 <th style ="text-align:center;">STATUS</th>
+																 <th style ="text-align:center;"></th>
+						                   </tr>
+						                 </thead>
+														 <tbody id="bodyTable">
+															  {% for patient in patients_list %}
+																	 <tr>
+																		<td style ="text-align:center;">{{ patient.bedNumber.bedNumber }}</td>
+																		<td style ="text-align:center;">{{ patient.lastName }}</td>
+																		<td style ="text-align:center;">{{ patient.firstName }}</td>
+																		<td style ="text-align:center;">{{ patient.middleName }}</td>
+																		<td style ="text-align:center;">{{ patient.status }}</td>
+																		<td style ="text-align:center;"><a role="button" href="{% url 'unodosmattress:viewpatients' patient.idPatient %}">Edit</a></td>
+																	</tr>
+
+															 {% endfor %}
+
+														 </tbody>
+													 </table>
+												</div> <!-- /controls -->
+
+											</div> <!-- /control-group-->
+											</div>
+
+											<div class="tab-pane" id="addpatient">
+
+
+
+                        											 <form id="add-patient" class="form-horizontal" method = "POST" action=".">
+                        												 {% csrf_token %}
+                        												<fieldset>
+                        													<div class="control-group">
+                        														<div class="controls">
+                        															<h3><i class="icon-pencil"></i> Patient Information</h3>
+                        														</div>
+                        													</div>
+
+                        														<div class="control-group">
+                        															<label class="control-label" for="bednumber">Bed #</label>
+                        															<div class="controls">
+                        																<div id="listOfBeds">
+                        																	<select name="bednumber" id="bednumber">
+                        																		{% for beds in beds_list %}
+                        																			<option value="{{ beds.idBeds }}">{{ beds.bedNumber }}</option>
+                        																		{% endfor %}
+                        																	</select>
+                        																</div>
+                        																<!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
+                        															</div> <!-- /controls -->
+                        														</div> <!-- /control-group -->
+                        													<div class="control-group">
+                        														<label class="control-label" for="firstname">First Name</label>
+                        														<div class="controls">
+
+                        															<input required type="text" placeholder="e.g. Jayvee" class="span2" onkeyup="check(this.value,'logoFirstName')"  name = "firstname" id="firstname" value="" />
+                        															<img id="logoFirstName" class="logo" src="{% static 'img/white.png'%}"/>
+                        														</div> <!-- /controls -->
+                        													</div> <!-- /control-group -->
+                        													<div class="control-group">
+                        														<label class="control-label" for="middlename">Middle Name</label>
+                        														<div class="controls">
+                        															<input required type="text" placeholder="e.g. Tomas"  class="span2" onkeyup="check(this.value,'logoMiddleName')"  name = "middlename" id="middlename" value="">
+                        															<img id="logoMiddleName" class="logo" src="{% static 'img/white.png'%}"/>
+                        														</div> <!-- /controls -->
+                        													</div>
+                        													<div class="control-group">
+                        														<label class="control-label" for="lastname">Last Name</label>
+                        														<div class="controls">
+                        															<input required type="text" placeholder="e.g. Gabriel"  class="span2" onkeyup="check(this.value,'logoLastName')"  name = "lastname" id="lastname" value="">
+                        															<img id="logoLastName" class="logo" src="{% static 'img/white.png'%}"/>
+                        														</div> <!-- /controls -->
+                        													</div> <!-- /control-group -->
+
+                        													<div class="control-group">
+                        														<label class="control-label" for="radiobtns">Religion</label>
+                        																									<div class="controls">
+                        																										<div class="form-group">
+
+                        																											<select name="religion" id="religion">
+                        																												<option value="Roman Catholic">Roman Catholic</option>
+                        																												<option value="Islam">Islam</option>
+                        																												<option value="Jehova's Witness">Jehova's Witness</option>
+                        																												<option value="Hinduism">Hinduism</option>
+                        																												<option value="Buddhism">Buddhism</option>
+                        																											</select>
+                        																										</div>
+                        																										</div>	<!-- /controls -->
+                        													</div> <!-- /control-group -->
+                        													<div class="control-group">
+                        														<label class="control-label" for="birthday">Birthday</label>
+                        														<div class="controls">
+                        															<input required type="date" class="span2" name = "birthday" id="birthday" value="">
+                        															<img id="logoDate" class="logo" src="{% static 'img/white.png'%}"/>
+                        														</div> <!-- /controls -->
+                        													</div>
+                        													<div class="control-group">
+                        														<label class="control-label" for="Fson">Contact person</label>
+                        														<div class="controls">
+                        															<input required type="text" placeholder="e.g. Kayle Tiu"  class="span2" onkeyup="check(this.value,'logoContactperson')"  name = "contactperson" id="contactperson" value="">
+                        															<img id="logoContactperson" class="logo" src="{% static 'img/white.png'%}"/>
+                        														</div> <!-- /controls -->
+                        													</div> <!-- /control-group -->
+                        													<div class="control-group">
+                        														<label class="control-label" for="birthday">Contact Number</label>
+                        														<div class="controls">
+                        															<input required maxlength="11" type="text" placeholder="e.g. 09062268410"  class="span2" onkeyup="checkNumber(this.value,'logoContactNum')" name = "contactnum" id="contactnum" value="">
+                        															<img id="logoContactNum" class="logo" src="{% static 'img/white.png'%}"/>
+                        														</div> <!-- /controls -->
+                        													</div>
+                        													<div class="control-group">
+                        															<label class="control-label" for="radiobtns">Heart Rate</label>
+                        																										<div class="controls">
+                        																											 <div class="input-prepend input-append">
+                        																												 <input class="span1" onkeyup="checkMinMax()" onchange="checkMinMax()" value="60" id="minhr" type="number">
+                        																													<span class="add-on">MIN</span>
+                        																													<input class="span1" onkeyup="checkMinMax()" onchange="checkMinMax()" value="100" id="maxhr" type="number">
+                        																													<span class="add-on" style ="font-size: 12px">MAX</span>
+
+
+                        																												</div>
+
+                        																												<img id="logoHeartRate" class="logo" src="{% static 'img/check.jpg'%}"/>
+                        																										</div>
+                        																											<!-- /controls -->
+                        														</div>
+
+
+
+                        														<div class="control-group">
+                        															<label class="control-label" for="radiobtns">Temperature</label>
+                        																										<div class="controls">
+                        																											 <div class="input-prepend input-append">
+                        																												 <input class="span1" onchange="checkMinMaxTemp()" onkeyup="checkMinMaxTemp()"  value="35" id="mint" type="number">
+                        																													<span class="add-on">MIN</span>
+                        																													<input class="span1" onchange="checkMinMaxTemp()" onkeyup="checkMinMaxTemp()" value="37" id="maxt" type="number">
+                        																													<span class="add-on" style ="font-size: 12px">MAX</span>
+
+                        																												</div>
+                        																												<img id="logoTemperature" class="logo" src="{% static 'img/check.jpg'%}"/>
+
+                        																										</div>
+                        																											<!-- /controls -->
+                        														</div>
+
+                        													<div class="control-group">
+
+
+                        													</div> <!-- /control-group -->
+
+
+
+                        													<div class="control-group">
+                        														<label class="control-label" for="radiobtns">Doctor(s)</label>
+                        																									<div class="controls">
+                        																										<div class="form-group">
+
+                        																											<div id = "listOfDoctor">
+                        																												<select class="span2" name="doctors" id="doctors">
+                        																													{% for doctors in doctors_list %}
+                        																														<option value="{{ doctors.idDoctor }}">Dr. {{doctors.firstName}} {{ doctors.lastName }}</option>
+                        																													{% endfor %}
+                        																												</select>
+
+                        																												<button type="button" class ="btn" id="assignDoctor">+</button>
+                        																											</div>
+                        																											<br></br>
+
+                        																											<div class="table-wrapper-scroll-y">
+
+                        																													<label class="control-label" for="tableDoctors">Assigned Doctor(s)</label>
+                          																										<table class="table table-bordered" id="tableDoctors">
+
+                        																										    <tbody id="doctorTable">
+
+
+                        																										    </tbody>
+                          																										</table>
+
+                        																										</div>
+
+
+                        																										</div>
+                        																										</div>	<!-- /controls -->
+                        													</div> <!-- /control-group -->
+
+
+                        <!--
+                        													<div id = "listOfDoctor">
+                        														<select name="doctors" id="doctors">
+                        															{% for doctors in doctors_list %}
+                        																<option value="{{ doctors.idDoctor }}">{{ doctors.lastName }}</option>
+                        															{% endfor %}
+                        														</select>
+                        													</div>
+                        													<button type="button" id="assignDoctor">Assign Doctor</button> -->
+
+                        		<p id="demo"></p>
+
+
+                        												</fieldset>
+                        												<br></br>
+                        												<!-- <div align = "center">
+                        													<button type="button" id="addButton" class="btn btn-primary">Add</button>
+                        													<button type="button" class="btn">Cancel</button>
+                        												</div>-->
+
+                        											</form>
+
+
+                                              <div align = "center">
+													<a href="#myModal" type ="button" role="button" onclick="getCurrentSize()" class="btn btn-primary" data-toggle="modal">Add</a>
+
+                                                    <!-- Modal -->
+                                                    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                      <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        <h3 id="myModalLabel">Confirm dialog</h3>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <p>Please tap your ID to proceed!</p>
+
+                      																	<img id="imageTag" src="{% static 'img/scanid.png'%}" class ="animated bounce"/ >
+
+
+
+
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                                                        <button type="button" id="addButton" class="btn btn-primary">Confirm</button>
+                                                      </div>
+                                                    </div>
+
+
+													<a href="#viewpatients" data-toggle="tab"><button type="button" class="btn">Cancel</button></a>
+												</div>
+
+											</div>
+
+
+
+											</div>
+										</div>
+
+
+
+
+
+
+				</div> <!-- /widget -->
+
+		    </div> <!-- /span8 -->
+
+	      </div> <!-- /row -->
+
+	    </div> <!-- /container -->
+
+	</div> <!-- /main-inner -->
+
+</div> <!-- /main -->
+
+
+
+
+
+
+
+<div class="footer">
+
+	<div class="footer-inner">
+
+		<div class="container">
+
+			<div class="row">
+
+    			<div class="span12">
+    				&copy; 2013 <a href="#">Bootstrap Responsive Admin Template</a>.
+    			</div> <!-- /span12 -->
+
+    		</div> <!-- /row -->
+
+		</div> <!-- /container -->
+
+	</div> <!-- /footer-inner -->
+
+</div> <!-- /footer -->
+
+<script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
+<audio id="myAudio">
+	<source src="{% static 'sounds/notification.ogg' %}" type="audio/ogg">
+	<source src="{% static 'sounds/notification.mp3' %}" type="audio/mpeg">
+</audio>
+<script src="{% static 'js/bootstrap.js'%}"></script>
+<script src="{% static 'js/base.js'%}"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script>
+var tempSize;
+var isTapped;
+var tempID = "";
+function getCurrentSize(){
+  $.ajax({
+    url: '/ajax/ajaxGetCurrentRFIDs/',
+    data: {
+
+    },
+    dataType: 'json',
+    success: function (data){
+      tempSize = data[0].size;
+    }
+  });
+}
+  $(document).ready(function(){
+    getCurrentSize();
+    isTapped = false;
+    window.setInterval(function(){
+      $.ajax({
+        url: '/ajax/ajaxGetCurrentRFIDs/',
+        data: {
+
+        },
+        dataType: 'json',
+        success: function (data){
+          if(data[0].size > tempSize){
+            tempSize = data[0].size;
+            tempID = data[0].RFIDnumber;
+            document.getElementById("imageTag").src = "{% static 'img/icon.png'%}";
+            isTapped = true;
+          }
+        }
+      });
+    },2000);
+
+    window.setInterval(function(){
+      $.ajax({
+        url: '/ajax/ajaxGetClicked/',
+        data: {
+
+        },
+        dataType: 'json',
+        success: function (data){
+          $.ajax({
+            url: '/ajax/ajaxClearClicked/',
+            data: {
+
+            },
+            dataType: 'json',
+            success: function (data2){
+
+            }
+          });
+          var aw = "";
+          for(var x = 0; x < data.length; x++){
+            document.getElementById("myAudio").play();
+            var temp = data[x].bedNumber;
+            var aw = '<div class="alert bedNo'+ temp + ' alert-danger alert-dismissable fade in" id="">'+
+                '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'+
+                'BED# ' + temp +
+              '</div>';
+
+              $("#containerDiv").append(aw);
+              setTimeout(function(){
+                $(".bedNo"+temp).alert('close');
+              },5000);
+
+          }
+
+
+
+        }
+      });
+    },2000);
+
+      $("#dropdownLi").click(function(){
+        $.ajax({
+          url: '/ajax/ajaxClearNewNotifications/',
+          data: {
+
+          },
+          dataType: 'json',
+          success: function (data){
+
+            $("#badgeData").attr("data-badge",0);
+
+          }
+        });
+      });
+      window.setInterval(function(){
+        $.ajax({
+          url: '/ajax/ajaxGetNewNotificationsSize/',
+          data: {
+
+          },
+          dataType: 'json',
+          success: function (data){
+            var size = data[0].size;
+
+            $("#badgeData").attr("data-badge",size);
+
+          }
+        });
+        $.ajax({
+          url: '/ajax/ajaxGetNotifications/',
+          data: {
+
+          },
+          dataType: 'json',
+          success: function (data){
+            var qwe = "";
+            for(var l = 0; l < data.length; l++){
+              qwe += '<tr>'+
+                '<td style="width:30%;"><button class="btn btn-warning">Bed '+ data[l].bedNumber +'</button></td>'+
+                '<td style="width:70%; font-size:10px;">needs your assistance!</td>'+
+
+              '</tr>';
+
+            }
+            $("#notifBody").html(qwe);
+
+          }
+        });
+
+      },2000);
+  });
+
+	function checkMinMax(){
+		var minhr = $("#minhr").val();
+		var maxhr = $("#maxhr").val();
+		if(parseInt(maxhr) > parseInt(minhr)){
+			document.getElementById("logoHeartRate").src = "{% static 'img/check.jpg' %}";
+		}
+		else{
+			document.getElementById("logoHeartRate").src = "{% static 'img/cross.jpg' %}";
+		}
+
+	}
+	function checkMinMaxTemp(){
+		var mint = $("#mint").val();
+		var maxt = $("#maxt").val();
+		if(parseFloat(maxt) > parseFloat(mint)){
+			document.getElementById("logoTemperature").src = "{% static 'img/check.jpg' %}";
+		}
+		else{
+			document.getElementById("logoTemperature").src = "{% static 'img/cross.jpg' %}";
+		}
+
+	}
+function checkNumber(input,logo){
+		var size = input.length;
+		if(input == ""){
+			document.getElementById(logo).src = "{% static 'img/none.png' %}";
+		}
+		else if(/^[0-9]*$/g.test(input) && size == 11){
+			document.getElementById(logo).src = "{% static 'img/check.jpg' %}";
+		}
+		else{
+			document.getElementById(logo).src = "{% static 'img/cross.jpg' %}";
+		}
+	}
+function check(input, logo){
+
+		if(input == ""){
+			document.getElementById(logo).src = "{% static 'img/none.png' %}";
+		}
+		else if(/^[a-zA-Z]*$/g.test(input)){
+			document.getElementById(logo).src = "{% static 'img/check.jpg' %}";
+		}
+		else{
+			document.getElementById(logo).src ="{% static 'img/cross.jpg' %}";
+		}
+	}
+
+doctors = new Array();
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
+
+		$("#assignDoctor").click(function(){
+			var e = document.getElementById("doctors").value;
+			//var e = document.getElementById("doctors");
+			//var strUser = e.options[e.selectedIndex].text;
+				var isOkay = true;
+				for(var i = 0; i < doctors.length; i++){
+					if(doctors[i] == e){
+						isOkay = false;
+					}
+				}
+				if(isOkay){
+					doctors.push(e);
+				}
+				$("#doctorTable").html("");
+				for(var p = 0; p < doctors.length; p++){
+					var current = doctors[p];
+					$.ajax({
+						url: '/ajax/getDoctorInfo/',
+						data: {
+							'idDoctor':current,
+						},
+						dataType: 'json',
+						success: function (data){
+
+							var aw = "";
+							aw += '<tr id="cancelRow' + data[0].idDoctor+ '">'+
+
+								'<td style="width:80%">'+ data[0].firstName + ' ' + data[0].lastName+ '</td>'+
+								'<td style="width:20%"><button type="button" class ="btn btn-danger" id="cancelButton'+ data[0].idDoctor+'">-</button></td>'+
+
+							'</tr>';
+
+							$("#doctorTable").append(aw);
+							$("#cancelButton"+data[0].idDoctor).click(function(){
+								$("#cancelRow"+data[0].idDoctor).remove();
+								for(var wew = 0; wew < doctors.length; wew++){
+									if(doctors[wew] == data[0].idDoctor){
+										doctors.splice(wew,1);
+									}
+								}
+							});
+
+						}
+					});
+
+
+				}
+		});
+
+$("#addButton").click(function(){
+
+  var bednumber = $("#bednumber").val();
+
+  var firstname = $("#firstname").val();
+	var lastname = $("#lastname").val();
+	var middlename = $("#middlename").val();
+	var religion = $("#religion").val();
+
+	var birthday = $("#birthday").val();
+	var contactperson = $("#contactperson").val();
+	var contactnum = $("#contactnum").val();
+	var minhr = $("#minhr").val();
+	var maxhr = $("#maxhr").val();
+	var mint = $("#mint").val();
+	var maxt = $("#maxt").val();
+	var isOkay = true;
+	if(bednumber == ""){
+		isOkay = false;
+		alert("No beds available");
+	}
+	else if(firstname == ""){
+		isOkay = false;
+		alert("Please enter the first name");
+	}
+	else if(middlename == ""){
+  	isOkay = false;
+		alert("Please enter the middle name");
+	}
+	else if(lastname == ""){
+		isOkay = false;
+		alert("Please enter the last name");
+	}
+	else if(birthday == ""){
+		isOkay = false;
+		alert("Please enter the birthday");
+	}
+
+	else if(contactperson == ""){
+		isOkay = false;
+		alert("Please enter the contact person");
+	}
+
+	else if(contactnum == ""){
+		isOkay = false;
+		alert("Please enter the contact number");
+	}
+	else if(minhr == ""){
+		isOkay = false;
+		alert("Please enter the minimum heart rate");
+	}
+	else if(maxhr == ""){
+		isOkay = false;
+		alert("Please enter the maximum heart rate");
+	}
+	else if(mint == ""){
+		isOkay = false;
+		alert("Please enter the minimum temperature");
+	}
+
+	else if(maxt == ""){
+		isOkay = false;
+		alert("Please enter the maximum temperature");
+	}
+	else if(doctors.length == 0){
+		isOkay = false;
+		alert("Please assign at least one doctor");
+	}
+	else if(parseInt(minhr) >= parseInt(maxhr)){
+		isOkay = false;
+		alert("Minimum heart rate must be less than the maximum");
+	}
+	else if(parseFloat(mint) >= parseFloat(maxt)){
+		isOkay = false;
+		alert("Minimum temperature must be less than the maximum");
+	}
+  else if(!isTapped){
+    isOkay = false;
+
+  }
+
+
+	if(isOkay){
+		$.ajax({
+			url: '/ajax/addPatient/',
+			data: {
+				'doctors[]': doctors,
+				'firstName': firstname,
+				'middleName': middlename,
+				'lastName': lastname,
+				'birthDate': birthday,
+				'religion': religion,
+				'minTemp': mint,
+				'maxTemp': maxt,
+				'minHeartRate': minhr,
+				'maxHeartRate': maxhr,
+				'contactperson': contactperson,
+				'contactNum': contactnum,
+				'bedNumber':bednumber
+			},
+			dataType: 'json',
+			success: function (data){
+
+		    $("#firstname").val("");
+		    $("#lastname").val("");
+				$("#middlename").val("");
+				$("#religion").val("");
+				$("#birthday").val("");
+				$("#contactperson").val("");
+				$("#contactnum").val("");
+				$("#minhr").val("");
+			 	$("#maxhr").val("");
+				$("#mint").val("");
+				$("#maxt").val("");
+				doctors.length = 0;
+				alert("Success! A new patient has been added.");
+				updateBeds();
+        window.location.href = "{% url 'unodosmattress:managepatients' %}";
+
+
+			}
+		});
+	}
+
+
+
+
+
+
+
+});
+function updateBeds(){
+
+	$.ajax({
+		url: '/ajax/getAvailableBeds/',
+		data: {
+
+		},
+		dataType: 'json',
+		success: function (data){
+
+
+			var wew = "<select name='bedNumber' id='bedNumber'>";
+			for(var i = 0; i < data.length; i++){
+				wew += "<option value='" + data[i].idBeds + "'>" + data[i].bedNumber+ "</option>";
+			}
+			wew += "</select>";
+			$("#listOfBeds").html(wew);
+		}
+	});
+}
+
+
+$("#ViewPatientsButton").click(function(){
+
+	$.ajax({
+		url: '/ajax/ajaxGetPatients/',
+		data: {
+
+		},
+		dataType: 'json',
+		success: function (data){
+			var wew = "<fieldset>" + "<div class='control-group'>" +
+					 "<h3><i class='icon-eye-open'></i>"+ "View Patient</h3>"+
+					 "<br><div class='controls'>"+
+						 "<table class='table table-bordered' id='example'><thead>"
+							+ "<tr><th>Bed number</th><th>LAST NAME</th><th>FIRST NAME</th>"+
+									 "<th>MIDDLE NAME</th><th>STATUS</th><th></th></tr>"+
+							 "</thead><tbody>";
+			for(var i = 0; i < data.length; i++){
+				wew += "<tr>";
+				wew += "<td>"+ data[i].bedNumber +"</td>";
+				wew += "<td>"+ data[i].lastName +"</td>";
+				wew += "<td>"+ data[i].firstName +"</td>";
+				wew += "<td>"+ data[i].middleName +"</td>";
+				wew += "<td>"+ data[i].status +"</td>";
+				var waw = "{% url 'unodosmattress:viewpatients' 12345 %}".replace(/12345/, data[i].idPatient.toString());
+				wew += "<td>" + "<a role='button' href='" + waw  + "'>Edit</a></td>";
+				 wew += "</tr>";
+			}
+			wew += "</tbody>";
+
+
+		 $("#viewpatients").html(wew);
+
+		     $('#example').DataTable();
+
+		}
+	});
+});
+
+
+
+</script>

@@ -1,0 +1,427 @@
+{% extends 'admin/usersbase.html' %}
+
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<style>
+
+	.logo {
+	  height: 25px;
+	  width: 25px;
+	}
+</style>
+<div class="main">
+	<div class="main-inner">
+	    <div class="container">
+	      <div class="row">
+	      	<div class="span12">
+	      		<div class="widget ">
+	      			<div class="widget-header">
+	      				<i class="icon-group"></i>
+	      				<h3>Manage Users</h3>
+	  					</div> <!-- /widget-header -->
+					<div class="widget-content">
+						<div class="tabbable">
+							<ul class="nav nav-tabs">
+							  <li class="active">
+							    <a href="#viewusers" data-toggle="tab">View Users</a>
+							  </li>
+							  <li><a href="#adduser" data-toggle="tab">Add User</a></li>
+							</ul>
+
+							<br>
+
+							<div class="tab-content">
+                <!--Add patient --->
+                <!---View Patients -->
+								<div class="tab-pane active" id="viewusers" >
+
+										<fieldset>
+
+											<div class="control-group">
+												 <h3><i class="icon-eye-open"></i> View Users</h3>
+												 <br>
+
+												<div class="controls">
+													 <table class="table table-bordered" id="example">
+														 <thead>
+						                   <tr>
+
+																 <th style ="text-align:center;">FIRST NAME</th>
+						                     <th style ="text-align:center;">LAST NAME</th>
+																 <th style ="text-align:center;">MIDDLE NAME</th>
+																 <th style ="text-align:center;">USER TYPE</th>
+																 <th style ="text-align:center;"></th>
+						                   </tr>
+						                 </thead>
+														 <tbody>
+
+															 {% for user in users_list %}
+																 <tr>
+
+																 <td style ="text-align:center;">{{ user.firstName }}</td>
+																	 <td style ="text-align:center;">{{ user.lastName }}</td>
+																	 <td style ="text-align:center;">{{ user.middleName }}</td>
+																	 <td style ="text-align:center;">{{ user.userType }}</td>
+																	 <td style ="text-align:center;"><a role="button" href="{% url 'unodosmattress:viewusers' user.username  %}">Edit</a></td>
+																 </tr>
+
+															 {% endfor %}
+														 </tbody>
+													 </table>
+												</div> <!-- /controls -->
+
+											</div> <!-- /control-group-->
+											</div>
+
+											<div class="tab-pane" id="adduser">
+
+											 <form id="add-patient" class="form-horizontal" method = "POST" action=".">
+												 {% csrf_token %}
+												<fieldset>
+													<div class="control-group">
+
+														<div class="controls">
+															<h3><i class="icon-pencil"></i> User Information</h3>
+														</div>
+													</div>
+
+
+													<div class="control-group">
+														<label class="control-label" for="firstname">First Name</label>
+														<div class="controls">
+															<input required type="text" class="span2" onkeyup="check(this.value, 'logoFirstName')" name = "firstname" id="firstname" value="">
+															<img id="logoFirstName" class="logo" src="{% static 'img/none.png'%}"/>
+														</div> <!-- /controls -->
+													</div> <!-- /control-group -->
+													<div class="control-group">
+														<label class="control-label" for="middlename">Middle Name</label>
+														<div class="controls">
+															<input required type="text" class="span2" onkeyup="check(this.value, 'logoMiddleName')" name = "middlename" id="middlename" value="">
+															<img id="logoMiddleName" class="logo" src="{% static 'img/none.png'%}"/>
+														</div> <!-- /controls -->
+													</div>
+													<div class="control-group">
+														<label class="control-label" for="lastname">Last Name</label>
+														<div class="controls">
+															<input required type="text" class="span2" onkeyup="check(this.value, 'logoLastName')" name = "lastname" id="lastname" value="">
+															<img id="logoLastName" class="logo" src="{% static 'img/none.png'%}"/>
+														</div> <!-- /controls -->
+													</div> <!-- /control-group -->
+                          <div class="control-group">
+														<label class="control-label" for="contactnum">Contact Number</label>
+														<div class="controls">
+															<input required type="text" maxlength="11" class="span2" onkeyup="checkNumber(this.value, 'logoContactNum')" name = "contactnum" id="contactnum" value="">
+															<img id="logoContactNum" class="logo" src="{% static 'img/none.png'%}"/>
+														</div> <!-- /controls -->
+													</div>
+                          <div class="control-group">
+														<label class="control-label" for="radiobtns">User Type</label>
+																									<div class="controls">
+																										<div class="form-group">
+
+																										  <select class="form-control" id="userType">
+																										    <option value="" selected disabled>Select Type	</option>
+
+																										    <option value="Nurse">Nurse</option>
+																										    <option value="Doctor">Doctor</option>
+																												<option value="Admin">Admin</option>
+																										  </select>
+																										</div>
+																									</div>	<!-- /controls -->
+													</div> <!-- /control-group -->
+                          <br>
+                          <div class="control-group">
+														<div class="controls">
+															<h3><i class="icon-pencil"></i> Account Information</h3>
+														</div>
+													</div>
+                          <div class="control-group">
+														<label class="control-label" for="username">Username</label>
+														<div class="controls">
+															<input required type="text" class="span2" name = "username" id="username" value="">
+														</div> <!-- /controls -->
+														<p class= "error" id = "error"></p>
+													</div>
+                          <div class="control-group">
+														<label class="control-label" for="password">Password</label>
+														<div class="controls">
+															<input required type="password" class="span2" onkeyup="checkPassword('logoPassword')" name = "password" id="password" value="">
+														</div> <!-- /controls -->
+													</div>
+                          <div class="control-group">
+														<label class="control-label" for="cpassword">Confirm Password</label>
+														<div class="controls">
+															<input required type="password" class="span2" onkeyup="checkPassword('logoPassword')" name = "cpassword" id="cpassword" value="">
+															<img id="logoPassword" class="logo" src="{% static 'img/none.png'%}"/>
+														</div> <!-- /controls -->
+														 <p class = "error" id = "error2"></p>
+													</div>
+
+
+													<label class="control-label">ID Number</label>
+												<div class="controls" >
+													 <!-- Button to trigger modal -->
+													 <div class="accordion" id="accordion2" style="width:350px;">
+														<div class="accordion-group">
+															<div class="accordion-heading">
+																{% for count in rfid_count %}
+																 <input type="hidden" id="initCount" value={{count.r}}>
+															{% endfor %}
+																<a id = "acc" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+																	Scan ID
+																</a>
+															</div>
+															<div id="collapseOne" class="accordion-body collapse" align ="center">
+																<div class="accordion-inner">
+																	<img id="imageTag" src="{% static 'img/scanid.png'%}" class ="animated bounce"/ >
+
+
+																</div>
+															</div>
+														</div>
+
+												</div> <!-- /controls -->
+											</div> <!-- /control-group -->
+											<div align = "center">
+												<button id="addButton" type="button" class="btn btn-primary">Add</button>
+												<a href= "{% url 'unodosmattress:manageusers' %}"><button type="button" class="btn">Cancel</button></a>
+											</div> <!-- /form-actions -->
+
+
+
+
+</div>
+
+
+
+
+
+<!-- /control-group -->
+
+
+
+
+												</fieldset>
+												<br></br>
+
+											</form>
+
+											</div>
+
+
+
+											</div>
+										</div>
+
+
+
+
+
+
+				</div> <!-- /widget -->
+
+		    </div> <!-- /span8 -->
+
+	      </div> <!-- /row -->
+
+	    </div> <!-- /container -->
+
+	</div> <!-- /main-inner -->
+
+</div>
+</div> <!-- /main -->
+
+
+
+
+
+
+
+<div class="footer">
+  <div class="footer-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
+        <!-- /span12 -->
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /footer-inner -->
+</div>
+
+
+
+<script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
+
+<script src="{% static 'js/bootstrap.js'%}"></script>
+<script src="{% static 'js/base.js'%}"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<audio id="myAudio">
+	<source src="{% static 'sounds/tap.mp3' %}" type="audio/mpeg">
+</audio>
+<script>
+	var isScanned = false;
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
+function checkPassword(logo){
+	var password = $("#password").val();
+	var cpassword = $("#cpassword").val();
+	if(password == cpassword){
+
+		document.getElementById(logo).src = "{% static 'img/check.jpg' %}";
+	}
+	else {
+
+		document.getElementById(logo).src = "{% static 'img/cross.jpg' %}";
+	}
+
+}
+function checkNumber(input,logo){
+		var size = input.length;
+		if(input == ""){
+			document.getElementById(logo).src = "{% static 'img/none.png' %}";
+		}
+		else if(/^[0-9]*$/g.test(input) && size == 11){
+			document.getElementById(logo).src = "{% static 'img/check.jpg' %}";
+		}
+		else{
+			document.getElementById(logo).src = "{% static 'img/cross.jpg' %}";
+		}
+	}
+function check(input, logo){
+	console.log(input);
+		if(input == ""){
+			document.getElementById(logo).src = "{% static 'img/none.png' %}";
+		}
+		else if(/^[a-zA-Z]*$/g.test(input)){
+			document.getElementById(logo).src = "{% static 'img/check.jpg' %}";
+		}
+		else{
+			document.getElementById(logo).src ="{% static 'img/cross.jpg' %}";
+		}
+	}
+
+
+$("#acc").click(function(){
+	initial = document.getElementById("initCount").value;
+	setInterval(function(){
+		$.ajax({
+			url: '/ajax/rfidCount/',
+			data: {
+				'initial': initial
+			},
+			dataType: 'json',
+			success: function(data){
+				console.log(data);
+
+				if (data.newID == false){
+					console.log("la pa boi");
+				}
+				else{
+					if(!isScanned){
+
+						document.getElementById("myAudio").play();
+						isScanned = true;
+						document.getElementById("imageTag").src = "{% static 'img/icon.png' %}";
+					}
+					console.log("SCANNED"); //INSERT PIC SAANA
+
+
+				}
+			}
+		});
+	},2000);
+} );
+$("#addButton").click(function(){
+
+		userType = 	$( "#userType" ).val();
+		firstName = document.getElementById("firstname").value;
+		middleName = document.getElementById("middlename").value;
+		lastName = document.getElementById("lastname").value;
+		contactNum = document.getElementById("contactnum").value;
+		username = document.getElementById("username").value;
+		password = document.getElementById("password").value;
+		password2 = document.getElementById("cpassword").value;
+
+		var isOkay = true;
+		if(userType == ""){
+			alert("Please select the user type");
+			var isOkay = false;
+		}
+		if(firstName == ""){
+			alert("Please enter the first name");
+			var isOkay = false;
+		}
+		else if(middleName == ""){
+			alert("Please enter the middle name");
+			var isOkay = false;
+		}
+		else if(lastName == ""){
+			alert("Please enter the last name");
+			var isOkay = false;
+		}
+		else if(contactNum == ""){
+			alert("Please enter the contact number");
+			var isOkay = false;
+		}
+		else if(username == ""){
+			alert("Please enter the username");
+			var isOkay = false;
+		}
+		else if(password == ""){
+			alert("Please enter the password");
+			var isOkay = false;
+		}
+		else if(password2 == ""){
+			alert("Please confirm the password");
+			var isOkay = false;
+		}
+		else if(password != password2){
+			alert("The passwords do not match.");
+			var isOkay = false;
+		}
+
+		if(isOkay){
+			$.ajax({
+				url: '/ajax/checkUser/',
+				data: {
+					'userType':userType,
+					'firstName':firstName,
+					'middleName':middleName,
+					'lastName':lastName,
+					'contactNum':contactNum,
+					'username':username,
+					'password':password,
+					'password2': password2
+				},
+				dataType: 'json',
+				success: function(data){
+					if (data.is_existing) {
+							document.getElementById("error").innerHTML = "Username is already Existing"
+							document.getElementById("password").value = "";
+							document.getElementById("cpassword").value = "";
+					}
+					else if (data.is_match == false){
+							document.getElementById("error2").innerHTML = "Passwords did not match"
+							document.getElementById("password").value = "";
+							document.getElementById("cpassword").value = "";
+					}
+					else{
+						 $(".error").remove();
+						 alert("New user is successfully added!");
+						 location.reload();
+					}
+				}
+			});
+		}
+
+
+});
+</script>
+
+
+{% endblock content %}

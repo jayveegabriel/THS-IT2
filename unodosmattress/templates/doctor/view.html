@@ -1,0 +1,238 @@
+{% extends 'doctor/mypatientsbase.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<style>
+	.slidecontainer {
+	    width: 100%;
+	}
+	.table td {
+		align-content: center;
+		align-items: center;
+		align-self: center;
+
+		vertical-align: middle;
+	}
+	.slider {
+	    -webkit-appearance: none;
+	    width: 100%;
+	    height: 2px;
+	    border-radius: 5px;
+	    background: #f2f2f2;
+	    -webkit-transition: .2s;
+	    transition: opacity .2s;
+	}
+
+
+
+	.slider:hover {
+	    opacity: 1;
+	}
+
+	.slider::-webkit-slider-thumb {
+	    -webkit-appearance: none;
+	    appearance: none;
+	    width: 15px;
+	    height: 15px;
+	    border-radius: 50%;
+	    background: #30cfd0;
+	    cursor: pointer;
+	}
+
+	.slider::-moz-range-thumb {
+	    width: 20px;
+	    height: 20px;
+	    border-radius: 50%;
+	    background: #4CAF50;
+	    cursor: pointer;
+	}
+.center {
+    margin: auto;
+    width: 60%;
+		border-radius: 10px;
+    border: 1px solid #d6d6d6;
+    padding: 10px;
+}
+</style>
+<div class="main">
+	<div class="main-inner">
+	    <div class="container">
+
+				<h3 class ="animated slideInUp" align ="center"><b>View Patient</b></h3>
+				<h4 class ="animated slideInUp" align ="center"><b>{{patient.lastName}}, {{patient.firstName}} {{patient.middleName}}.</b></h4><br>
+						<div class="center animated fadeIn" align ="center">
+							<p><b>PATIENT INFORMATION</b></p>
+							<br>
+							<table class="table" align = "center">
+								<thead align ="center" >
+
+									<tr>
+										<th>STATUS</th>
+
+										<th>{{patient.status}}</th>
+
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>LAST NAME</td>
+										<td>{{patient.lastName}}</td>
+
+									</tr>
+									<tr>
+										<td>FIRST NAME</td>
+										<td>{{patient.firstName}}</td>
+
+									</tr>
+									<tr>
+										<td>MIDDLE NAME</td>
+										<td>{{patient.middleName}}</td>
+
+									</tr>
+									<tr>
+
+										<td>RELIGION</td>
+										<td>{{patient.religion}}</td>
+									</tr>
+									<tr>
+
+										<td>BIRTHDAY</td>
+										<td>{{patient.birthDate}}</td>
+									</tr>
+									<tr>
+
+										<td>CONTACT NUMBER</td>
+										<td>{{patient.contactNum}}</td>
+									</tr>
+									<tr>
+
+										<td>DOCTORS</td>
+										<td>
+											{% for doctor in doctors_list %}
+												{{ doctor.firstName}} {{ doctor.middleName}} {{ doctor.lastName}} <br>
+											{% endfor %}
+										</td>
+									</tr>
+
+								</tbody>
+							</table>
+								<p><b>VITAL SIGNS</b></p>
+							<table class="table" align = "center">
+								<thead align ="center" >
+
+									<tr>
+										<th></th>
+
+										<th></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr>
+										<td></td>
+										<td style="text-align:center" >HEART RATE</td>
+
+										<td style="text-align:center">TEMPERATURE</td>
+
+									</tr>
+									<tr>
+										<td style="text-align:center">MINIMUM</td>
+											<td style="text-align:center">{{patient.minHeartRate}}</span></td>
+										<td style="text-align:center">{{patient.minTemp}}</span></td>
+
+									</tr>
+									<tr>
+										<td style="text-align:center">MAXIMUM</td>
+											<td style="text-align:center">{{patient.maxHeartRate}}</span></td>
+											<td style="text-align:center">{{patient.maxTemp}}</span></td>
+									</tr>
+								</tbody>
+							</table>
+
+
+
+
+
+
+	      </div>
+				<br>
+				<div class ="container" align ="center">
+
+			   <a class="btn" href="{% url 'unodosmattress:mypatients' %}"><i class="icon-arrow-left"></i> BACK</a>
+
+			   <br></br>
+			 </div>
+	    </div> <!-- /container -->
+
+	</div>
+<br>
+</div>
+
+ <!-- /main -->
+
+
+
+
+
+
+
+<div class="footer">
+  <div class="footer-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
+        <!-- /span12 -->
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /footer-inner -->
+</div>
+
+
+
+
+<script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
+
+<script src="{% static 'js/bootstrap.js'%}"></script>
+<script src="{% static 'js/base.js'%}"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/dataTables.js'%}"></script>
+<script>
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
+
+var slider1 = document.getElementById("minheartrateslide");
+var slider2 = document.getElementById("maxheartrateslide");
+var slider3 = document.getElementById("mintemperatureslide");
+var slider4 = document.getElementById("maxtemperatureslide");
+
+var output1 = document.getElementById("minhr");
+var output2 = document.getElementById("maxhr");
+var output3 = document.getElementById("mint");
+var output4 = document.getElementById("maxt");
+output1.innerHTML = slider1.value;
+output2.innerHTML = slider2.value;
+output3.innerHTML = slider3.value;
+output4.innerHTML = slider4.value;
+
+slider1.oninput = function() {
+  output1.innerHTML = this.value;
+}
+
+slider2.oninput = function() {
+  output2.innerHTML = this.value;
+}
+slider3.oninput = function() {
+  output3.innerHTML = this.value;
+}
+slider4.oninput = function() {
+  output4.innerHTML = this.value;
+}
+
+</script>
+
+
+{% endblock content %}

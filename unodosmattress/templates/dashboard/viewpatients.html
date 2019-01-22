@@ -1,0 +1,409 @@
+
+{% load static %}
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<title>UDM - Manage Patients</title>
+<link rel="icon" href="{% static 'img/UDM.png'%}"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-responsive.min.css'%}" rel="stylesheet">
+<link href="{% static 'css/animate-css/animate.css'%}" rel="stylesheet">
+<link href="{% static 'css/listbox.css'%}" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
+        rel="stylesheet">
+
+
+<link href="{% static 'css/data-tables.css'%}" rel="stylesheet">
+
+
+<link href="{% static 'css/font-awesome.css'%}" rel="stylesheet">
+<link href="{% static 'css/style.css'%}" rel="stylesheet">
+<link href="{% static 'css/dashboard.css'%}" rel="stylesheet">
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<style>
+
+	.badge1 {
+	   position:relative;
+	}
+	.badge1[data-badge]:after {
+	   content:attr(data-badge);
+	   position:absolute;
+	   top:-10px;
+	   right:-10px;
+	   font-size:.7em;
+	   background:#b94a48;
+	   color:white;
+	   width:18px;height:18px;
+	   text-align:center;
+	   line-height:18px;
+	   border-radius:50%;
+	   box-shadow:0 0 1px #333;
+	}
+
+	.slidecontainer {
+	    width: 100%;
+	}
+	.table td {
+		align-content: center;
+		align-items: center;
+		align-self: center;
+
+		vertical-align: middle;
+	}
+	.slider {
+	    -webkit-appearance: none;
+	    width: 100%;
+	    height: 2px;
+	    border-radius: 5px;
+	    background: #f2f2f2;
+	    -webkit-transition: .2s;
+	    transition: opacity .2s;
+	}
+
+
+
+	.slider:hover {
+	    opacity: 1;
+	}
+
+	.slider::-webkit-slider-thumb {
+	    -webkit-appearance: none;
+	    appearance: none;
+	    width: 15px;
+	    height: 15px;
+	    border-radius: 50%;
+	    background: #30cfd0;
+	    cursor: pointer;
+	}
+
+	.slider::-moz-range-thumb {
+	    width: 20px;
+	    height: 20px;
+	    border-radius: 50%;
+	    background: #4CAF50;
+	    cursor: pointer;
+	}
+.center {
+    margin: auto;
+    width: 60%;
+		border-radius: 10px;
+    border: 1px solid #d6d6d6;
+    padding: 10px;
+}</style>
+<body>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></span><span class="icon-bar"></span></span> </a><a class="brand" href="{% url 'unodosmattress:dashboard' %}"></a>
+      <div class="nav-collapse">
+        <ul class="nav pull-right">
+
+          <a class =""href="{% url 'unodosmattress:login' %}"><i class="icon-signout"></i> Logout</a>
+
+        </ul>
+        <!--<form class="navbar-search pull-right">
+          <input type="text" class="search-query" placeholder="Search">
+        </form>!-->
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /navbar-inner -->
+</div>
+<!-- /navbar -->
+<div class="subnavbar">
+  <div class="subnavbar-inner">
+    <div class="container">
+      <ul class="mainnav">
+        <li><a href="{% url 'unodosmattress:dashboard' %}"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
+        <li class="active"><a href="{% url 'unodosmattress:managepatients' %}"><i class="icon-user"></i><span>Manage Patients</span> </a> </li>
+        <li class="dropdown" ><a href="javascript:;" id="dropdownLi" class="dropdown-toggle" data-toggle="dropdown"> <i id="badgeData" class="icon-bell badge1" data-badge="{{newNotificationList }}"></i><span>Notifications</span><b class="caret"></b></a>
+                 <ul class="dropdown-menu" style ="overflow-y: auto;width:300px;max-height: 200px;">
+                   <li><table class="table table-bordered ">
+
+                     <tbody id="notifBody">
+                       {% for n in notifications %}
+                       <tr>
+                         <td style="width:30%;"><button class="btn btn-warning">Bed {{n.bedNumber}}</button></td>
+                         <td style="width:70%; font-size:10px;">needs your assistance!</td>
+
+                       </tr>
+                       {% endfor %}
+                     </tbody>
+                   </table></li>
+
+                 </ul>
+               </li>
+
+      </ul>
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /subnavbar-inner -->
+</div>
+
+<div class="main">
+	<div class="main-inner">
+	    <div class="container">
+
+				<h2 class ="animated slideInUp" align ="center"><b>View Patient: {{ patient.lastName}}, {{patient.firstName}} </b></h2><br>
+						<div class="center animated fadeIn" align ="center">
+							<p><b>PATIENT INFORMATION</b></p>
+							<p>STATUS: <b>{{ patient.status }}</b></p>
+							<select  id="sel1"> Change Status:
+								<!-- <option selected disabled>Select Status..	</option> -->
+								{% if patient.status == "RESERVED" %}
+
+									<option selected>RESERVED</option>
+									<option>ON BED</option>
+								{% endif %}
+
+
+								{% if patient.status == "ON BED" %}
+
+									<option selected>ON BED</option>
+									<option>FINISHED</option>
+								{% endif %}
+
+								{% if patient.status == "STARTING" %}
+
+									<option selected>STARTING</option>
+								{% endif %}
+
+								{% if patient.status == "FINISHED" %}
+
+									<option selected disabled>FINISHED</option>
+								{% endif %}
+							</select>
+
+							<table class="table" align = "center">
+								<thead align ="center" >
+
+									<tr>
+										<th></th>
+
+										<th></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>LAST NAME</td>
+										<td>{{patient.lastName}}</td>
+
+									</tr>
+									<tr>
+										<td>FIRST NAME</td>
+										<td>{{patient.firstName}}</td>
+
+									</tr>
+									<tr>
+										<td>MIDDLE NAME</td>
+										<td>{{patient.middleName}}</td>
+
+									</tr>
+									<tr>
+
+										<td>RELIGION</td>
+										<td>{{patient.religion}}</td>
+									</tr>
+									<tr>
+
+										<td>BIRTHDAY</td>
+										<td>{{patient.birthDate}}</td>
+									</tr>
+									<tr>
+
+										<td>CONTACT NUMBER</td>
+										<td>{{patient.contactNum}}</td>
+									</tr>
+									<tr>
+
+										<td>DOCTORS</td>
+										<td>
+											{% for doctor in doctors %}
+												{{doctor.firstName}} {{doctor.middleName}} {{doctor.lastName}} <br>
+											{% endfor %}
+										</td>
+									</tr>
+
+								</tbody>
+							</table>
+								<p><b>VITAL SIGNS</b></p>
+							<table class="table" align = "center">
+								<thead align ="center" >
+
+									<tr>
+										<th></th>
+
+										<th></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr>
+										<td></td>
+										<td>HEART RATE</td>
+										<td></td>
+										<td>TEMPERATURE</td>
+										<td></td>
+
+									</tr>
+									{% if patient.status == "FINISHED" %}
+									<tr>
+										<td>MINIMUM</td>
+										<td>  <input disabled type="range" min="1" max="120" value="{{ patient.minHeartRate }}" class="slider" id="minheartrateslide"></td>
+											<td><span id="minhr"></span></td>
+										<td><input disabled type="range" min="30" max="40" step="0.1" value="{{ patient.minTemp }}" class="slider" id="mintemperatureslide"></td>
+										<td><span id="mint"></span></td>
+
+									</tr>
+									<tr>
+										<td>MAXIMUM</td>
+										<td><input disabled type="range" min="1" max="120" value="{{ patient.maxHeartRate }}" class="slider" id="maxheartrateslide"></td>
+										<td><span id="maxhr"></span></td>
+										<td><input disabled type="range" min="30" max="40" step="0.1" value="{{ patient.maxTemp}}" class="slider" id="maxtemperatureslide"></td>
+											<td><span id="maxt"></span></td>
+									</tr>
+									{% endif %}
+
+									{% if patient.status != "FINISHED" %}
+									<tr>
+										<td>MINIMUM</td>
+										<td>  <input type="range" min="1" max="120" value="{{ patient.minHeartRate }}" class="slider" id="minheartrateslide"></td>
+											<td><span id="minhr"></span></td>
+										<td><input type="range" min="30" max="40" step="0.1" value="{{ patient.minTemp }}" class="slider" id="mintemperatureslide"></td>
+										<td><span id="mint"></span></td>
+
+									</tr>
+									<tr>
+										<td>MAXIMUM</td>
+										<td><input type="range" min="1" max="120" value="{{ patient.maxHeartRate }}" class="slider" id="maxheartrateslide"></td>
+										<td><span id="maxhr"></span></td>
+										<td><input type="range" min="30" max="40" step="0.1" value="{{ patient.maxTemp}}" class="slider" id="maxtemperatureslide"></td>
+											<td><span id="maxt"></span></td>
+									</tr>
+									{% endif %}
+
+								</tbody>
+							</table>
+
+							 <a class="btn" href="{% url 'unodosmattress:managepatients' %}"><i class="icon-arrow-left"></i> BACK</a>
+						 		{% if patient.status != "FINISHED" %}
+
+							 		<a class="btn btn-primary" id="saveButton"> SAVE</a>
+								{% endif %}
+
+							 <br></br>
+
+
+
+	      </div> <!-- /row -->
+
+	    </div> <!-- /container -->
+
+	</div>
+<br>
+</div>
+
+ <!-- /main -->
+
+
+
+
+
+
+
+<div class="footer">
+  <div class="footer-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
+        <!-- /span12 -->
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /footer-inner -->
+</div>
+
+
+
+
+<script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
+
+<script src="{% static 'js/bootstrap.js'%}"></script>
+<script src="{% static 'js/base.js'%}"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script>
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
+
+var slider1 = document.getElementById("minheartrateslide");
+var slider2 = document.getElementById("maxheartrateslide");
+var slider3 = document.getElementById("mintemperatureslide");
+var slider4 = document.getElementById("maxtemperatureslide");
+
+var output1 = document.getElementById("minhr");
+var output2 = document.getElementById("maxhr");
+var output3 = document.getElementById("mint");
+var output4 = document.getElementById("maxt");
+output1.innerHTML = slider1.value;
+output2.innerHTML = slider2.value;
+output3.innerHTML = slider3.value;
+output4.innerHTML = slider4.value;
+
+slider1.oninput = function() {
+  output1.innerHTML = this.value;
+}
+
+slider2.oninput = function() {
+  output2.innerHTML = this.value;
+}
+slider3.oninput = function() {
+  output3.innerHTML = this.value;
+}
+slider4.oninput = function() {
+  output4.innerHTML = this.value;
+}
+
+$(document).ready(function(){
+	$("#saveButton").click(function(){
+		var id = {{patient.pk }};
+		var minTemp = $("#mintemperatureslide").val();
+		var maxTemp = $("#maxtemperatureslide").val()
+		var minHeartRate = $("#minheartrateslide").val();
+		var maxHeartRate = $("#maxheartrateslide").val();
+		var status = $("#sel1").val();
+		console.log(status);
+		$.ajax({
+			url: '/ajax/ajaxUpdateStatusPatient/',
+			data: {
+				"id":id,
+				"minTemp":minTemp,
+				"maxTemp":maxTemp,
+				"minHeartRate":minHeartRate,
+				"maxHeartRate":maxHeartRate,
+				"status":status,
+
+			},
+			dataType: 'json',
+			success: function(data){
+				alert("Patient info is successfully updated!");
+			}
+		});
+	});
+});
+
+</script>

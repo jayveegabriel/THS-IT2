@@ -1,0 +1,173 @@
+{% extends 'doctor/mypatientsbase.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<style>
+	.slidecontainer {
+	    width: 100%;
+	}
+	.table td {
+		align-content: center;
+		align-items: center;
+		align-self: center;
+
+		vertical-align: middle;
+	}
+	.slider {
+	    -webkit-appearance: none;
+	    width: 100%;
+	    height: 2px;
+	    border-radius: 5px;
+	    background: #f2f2f2;
+	    -webkit-transition: .2s;
+	    transition: opacity .2s;
+	}
+
+
+
+	.slider:hover {
+	    opacity: 1;
+	}
+
+	.slider::-webkit-slider-thumb {
+	    -webkit-appearance: none;
+	    appearance: none;
+	    width: 15px;
+	    height: 15px;
+	    border-radius: 50%;
+	    background: #30cfd0;
+	    cursor: pointer;
+	}
+
+	.slider::-moz-range-thumb {
+	    width: 20px;
+	    height: 20px;
+	    border-radius: 50%;
+	    background: #4CAF50;
+	    cursor: pointer;
+	}
+.center {
+    margin: auto;
+    width: 60%;
+		border-radius: 10px;
+    border: 1px solid #d6d6d6;
+    padding: 10px;
+}
+</style>
+<div class="main">
+	<div class="main-inner">
+	    <div class="container">
+
+        <h3 class ="animated slideInUp" align ="center"><b>List of Patients</b></h3><br>
+
+						<div class="center animated fadeIn" >
+							<h3 align ="center"><b>Choose a Patient</b></h3><br>
+
+              <table class="table table-bordered" id="fexample">
+                <thead >
+                  <tr>
+
+                    <th style ="text-align:center;">LAST NAME</th>
+                    <th style ="text-align:center;">FIRST NAME</th>
+                    <th style ="text-align:center;">MIDDLE NAME</th>
+                    <th style ="text-align:center;">STATUS</th>
+                    <th style ="text-align:center;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+									{% for patient in patients_list %}
+                  <tr>
+
+                    <td style ="text-align:center;">{{ patient.lastName }}</td>
+                    <td style ="text-align:center;">{{ patient.firstName}}</td>
+                    <td style ="text-align:center;">{{ patient.middleName}}</td>
+                    <td style ="text-align:center;">{{ patient.status}}</td>
+                    <td style ="text-align:center;"><a role="button" href="{% url 'unodosmattress:view' patient.idPatient %}">View</a></td>
+                  </tr>
+									{% endfor %}
+                </tbody>
+              </table>
+
+
+
+
+						</div>
+
+            </div>
+
+
+				</div>
+        <br><!-- /widget -->
+
+		    </div>
+        <!-- /span8 -->
+
+
+
+ <!-- /main -->
+
+
+
+
+
+
+
+<div class="footer">
+  <div class="footer-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
+        <!-- /span12 -->
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /footer-inner -->
+</div>
+
+
+
+
+<script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
+
+<script src="{% static 'js/bootstrap.js'%}"></script>
+<script src="{% static 'js/base.js'%}"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/dataTables.js'%}"></script>
+<script>
+$(document).ready(function() {
+    $('#fexample').DataTable();
+} );
+
+var slider1 = document.getElementById("minheartrateslide");
+var slider2 = document.getElementById("maxheartrateslide");
+var slider3 = document.getElementById("mintemperatureslide");
+var slider4 = document.getElementById("maxtemperatureslide");
+
+var output1 = document.getElementById("minhr");
+var output2 = document.getElementById("maxhr");
+var output3 = document.getElementById("mint");
+var output4 = document.getElementById("maxt");
+output1.innerHTML = slider1.value;
+output2.innerHTML = slider2.value;
+output3.innerHTML = slider3.value;
+output4.innerHTML = slider4.value;
+
+slider1.oninput = function() {
+  output1.innerHTML = this.value;
+}
+
+slider2.oninput = function() {
+  output2.innerHTML = this.value;
+}
+slider3.oninput = function() {
+  output3.innerHTML = this.value;
+}
+slider4.oninput = function() {
+  output4.innerHTML = this.value;
+}
+
+</script>
+
+
+{% endblock content %}

@@ -1,0 +1,270 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>UDM - Login</title>
+    <link rel="icon" href="{% static 'img/UDM.png'%}"/>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+<link href="{% static 'css/animate-css/animate.css'%}" rel="stylesheet">
+<link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet" type="text/css" />
+<link href="{% static 'css/bootstrap-responsive.min.css'%}" rel="stylesheet" type="text/css" />
+
+<link href="{% static 'css/font-awesome.css'%}" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" rel="stylesheet">
+
+<link href="{% static 'css/style.css'%}" rel="stylesheet" type="text/css">
+<link href="{% static 'css/pages/signin.css'%}" rel="stylesheet" type="text/css">
+<style>
+.container {
+  width: 360px;
+	display: block;
+	margin: 10px auto 0 auto;
+
+}
+.well{
+  background: white;
+}
+.hvr-bounce-in {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+}
+.hvr-bounce-in:hover, .hvr-bounce-in:focus, .hvr-bounce-in:active {
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+  -webkit-transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
+  transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
+}
+
+</style>
+</head>
+
+<body>
+
+
+
+<br></br>
+ <!-- /account-container -->
+
+
+  <div class="container" align ="center">
+  	<div class="row">
+          <div class="span4">
+            <img src="{% static 'img/loginlogo.png'%}" class ="hvr-bounce-in"/ >
+            <div class="animated bounceInDown" id="loginModal">
+                <div class="modal-header ">
+                  <h3>Welcome to Uno Dos Mattress 2.0</h3>
+                </div>
+                  {% for count in rfid_count %}
+                     <input type="hidden" id="initCount" value={{count.r}}>
+                  {% endfor %}
+
+                <div class="modal-body ">
+                  <div class="well">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#create" data-toggle="tab" onclick="check1()">Login with ID</a></li>
+
+                        <li><a href="#login" data-toggle="tab" onclick="check()">Login with Username</a></li>
+                    </ul>
+
+                    <div id="myTabContent" class="tab-content">
+                      <div class="tab-pane fade" id="login">
+                        <form class="form-horizontal" action='' method="POST" id="login">
+                          {% csrf_token %}
+                          <fieldset>
+                            <div id="legend">
+                              <legend class="">Login to UDM</legend>
+                            </div>
+                            <br>
+                            <div class="form-group">
+          										<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+          									</div>
+                            <br>
+                            <div class="form-group">
+          										<input type="password" name="password" id="password" tabindex="1" class="form-control" placeholder="Password" value="">
+          									</div>
+                            <br>
+                            <p id="error" style="color:red;"></p>
+
+                            <div class="form-group">
+                              <a class="btn btn-primary" id="loginButton"> Log in</a></div>
+                            <br>
+                          </fieldset>
+                        </form>
+                      </div>
+
+
+                      <div class="tab-pane active in" id="create">
+                        <form id="tab" class="form-horizontal" action='' method="POST">
+                          {% csrf_token %}
+                          <fieldset>
+                            <div id="legend">
+                              <legend class="">Tap your ID</legend>
+                            </div>
+                            <div class = "form-group">
+                              <img id="imageId" src="{% static 'img/tap.png'%}"/ >
+                            </div>
+                          </fieldset
+                        </form>
+                      </div>
+
+                  </div>
+                </div>
+              </div>
+
+
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+
+<div class="login-extra">
+
+</div> <!-- /login-extra -->
+
+
+<script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
+<script src="{% static 'js/bootstrap.js'%}"></script>
+
+<script src="{% static 'js/signin.js'%}"></script>
+<audio id="myAudio">
+	<source src="{% static 'sounds/tap.mp3' %}" type="audio/mpeg">
+</audio>
+<script>
+
+var checker = "id";
+
+function check(){
+  checker = "username";
+}
+
+function check1(){
+  checker = "id";
+}
+
+
+window.setInterval(function(){ //finalCHANGED
+initial = document.getElementById("initCount").value;
+
+if (checker == "username"){
+  $("#loginButton").click(function(){
+   var username = $("#username").val();
+   var password = $("#password").val();
+   $.ajax({
+     url: '/ajax/loginUsername/',
+     data: {
+       'username':username,
+       'password':password,
+     },
+     dataType: 'json',
+     success: function(data){
+       console.log(data)
+
+       if (data.is_match) {
+         // location.href="/addPatient/";
+         if(data.position == "Nurse"){
+
+           location.href = "{% url 'unodosmattress:dashboard' %}";
+         }
+         else if(data.position == "Doctor"){
+
+           location.href = "{% url 'unodosmattress:doctorhome' %}";
+         }
+         else if(data.position == "Admin"){
+           location.href = "{% url 'unodosmattress:home' %}";
+         }
+
+       }
+       else if (data.is_match == false) {
+         document.getElementById("error").innerHTML = "Password mismatch";
+       }
+       else if (data.is_rfidexisting == false) {
+         document.getElementById("error").innerHTML = "RFID is not registered";
+       }
+       else if (data.is_existing == false){
+         document.getElementById("error").innerHTML = "Username does not exist";
+       }
+
+     }
+   });
+ });
+}
+else{
+  $.ajax({
+    url: '/ajax/loginChecker/',
+    data: {
+      'initial':initial,
+      'checker':checker
+    },
+    dataType: 'json',
+    success: function(data){
+      console.log("success");
+      console.log(data);
+      if (data.is_match) {
+         // location.href="/addPatient/";
+         // document.getElementById("imageId").src = "{% static 'img/icon.png'%}";
+         
+         document.getElementById("myAudio").play();
+         setTimeout(function(){
+           if(data.position == "Nurse"){
+
+             location.href = "{% url 'unodosmattress:dashboard' %}"
+           }
+           else if(data.position == "Doctor"){
+
+             location.href = "{% url 'unodosmattress:doctorhome' %}"
+           }
+           else if(data.position == "Admin"){
+             location.href = "{% url 'unodosmattress:home' %}"
+           }
+         }, 1000);
+
+
+        }
+       else if (data.is_rfidexisting == false) {
+         document.getElementById("error").innerHTML = "RFID is not registered";
+       }
+       else if (data.is_tapped){
+          console.log("WALA PA HEHE")
+       }
+    }
+  });
+}
+}, 3000);
+
+$(function() {
+
+    $('#login-form-link').click(function(e) {
+		$("#login-form").delay(100).fadeIn(100);
+ 		$("#register-form").fadeOut(100);
+		$('#register-form-link').removeClass('active');
+		$(this).addClass('active');
+		e.preventDefault();
+	});
+	$('#register-form-link').click(function(e) {
+		$("#register-form").delay(100).fadeIn(100);
+ 		$("#login-form").fadeOut(100);
+		$('#login-form-link').removeClass('active');
+		$(this).addClass('active  ');
+		e.preventDefault();
+	});
+
+});
+
+
+</script>
+</body>
+
+</html>

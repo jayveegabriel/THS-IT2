@@ -1,0 +1,200 @@
+{% extends 'admin/usersbase.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<style>
+	.center {
+	    margin: auto;
+	    width: 60%;
+			border-radius: 10px;
+	    border: 1px solid #d6d6d6;
+	    padding: 10px;
+	}
+</style
+
+<div class="main">
+	<div class="main-inner">
+	    <div class="container">
+
+				<h2 class ="animated slideInUp" align ="center"><b>View User</b></h2>
+			 <h4 class ="animated slideInUp" align ="center"><b>{{ user.lastName }}, {{ user.firstName }} {{ user.middleName }}.</b></h4><br>
+
+
+					 <div class="center animated fadeIn" align ="center">
+						 <p><b>USER INFORMATION</b></p>
+							<table class="table">
+								<thead align ="center" >
+
+								<tr>
+									<th></th>
+								</tr>
+							</thead>
+
+                    <tbody>
+
+                      <tr>
+                        <td width="50%">LAST NAME</td>
+                        <td width="50%">{{ user.lastName }}</td>
+
+                      </tr>
+                      <tr>
+                        <td width="50%">FIRST NAME</td>
+                        <td width="50%">{{ user.firstName }}</td>
+
+                      </tr>
+                      <tr>
+                        <td width="50%">MIDDLE NAME</td>
+                        <td width="50%">{{ user.middleName }}</td>
+
+                      </tr>
+                      <tr>
+
+                        <td width="50%">CONTACT NUMBER</td>
+                        <td width="50%">{{ user.contactNum }}</td>
+                      </tr>
+                      <tr>
+
+                        <td width="50%">USER TYPE</td>
+                        <td width="50%">{{ usertype }}</td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+									<p><b>ACCOUNT INFORMATION</b></p>
+								<table class="table">
+									<thead align ="center" >
+
+										<tr>
+											<th></th>
+										</tr>
+									</thead>
+
+                  <tbody>
+                    <tr>
+                      <td width="50%">USERNAME</td>
+                      <td width="50%">{{ user.username}}</td>
+
+                    </tr>
+                    <tr>
+                      <td width="50%">NEW PASSWORD</td>
+                      <td width="50%"><input type="password" class="span2" name = "npassword" id="npassword"  data-placement="left" title="Popover header" value=""></td>
+
+                    </tr>
+                    <tr>
+                      <td width="50%">CONFIRM NEW PASSWORD</td>
+                      <td width="50%"><input type="password" class="span2" name = "cnpassword" id="cnpassword" value=""></td>
+
+                    </tr>
+
+
+                  </tbody>
+                </table>
+
+              </div>
+
+
+							<div class ="container">
+              <div class = "row">
+
+
+
+
+
+                </div>
+
+              </div>
+              <br>
+
+
+	    </div> <!-- /container -->
+
+	</div>
+  <div class ="container" align ="center">
+
+   <a class="btn" href="{% url 'unodosmattress:manageusers' %}"><i class="icon-arrow-left"></i> BACK</a>
+	 		<button id="saveButton" type="button" class="btn btn-primary">Save</button>
+   <br></br>
+ </div><!-- /main-inner -->
+</div>
+
+
+ <!-- /main -->
+
+
+
+
+
+
+
+<div class="footer">
+  <div class="footer-inner">
+    <div class="container">
+      <div class="row">
+        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
+        <!-- /span12 -->
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /footer-inner -->
+</div>
+
+
+<link href="{% static 'jquery-ui.min.css' %}" rel="stylesheet">
+<script src="{% static 'external/jquery/jquery.js' %}"></script>
+<script src="{% static 'jquery-ui.min.js' %}"></script>
+
+<script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
+
+<script src="{% static 'js/bootstrap.js'%}"></script>
+<script src="{% static 'js/base.js'%}"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script>
+$(document).ready(function() {
+		$("#saveButton").click(function(){
+
+			var npassword = $("#npassword").val();
+			var cnpassword = $("#cnpassword").val();
+
+			if(npassword == ""){
+
+				alert("Please input your new password");
+			}
+
+			else if(cnpassword == ""){
+				alert("Please confirm your new password!");
+			}
+			else if(npassword != cnpassword){
+				alert("Passwords do not match.");
+			}
+			else{
+				var id = "{{ user.pk }}";
+				var position = "{{ usertype }}";
+
+				$.ajax({
+					url: '/ajax/saveNewPassword/',
+					data: {
+						'id':id,
+						'position':position,
+						'password': npassword,
+					},
+					dataType: 'json',
+					success: function(data){
+						$("#npassword").val("");
+						$("#cnpassword").val("");
+						alert("Password successfully updated!");
+						window.location = "/admin/manageusers/";
+					}
+
+				});
+
+			}
+
+		});
+} );
+
+</script>
+
+
+{% endblock content %}
