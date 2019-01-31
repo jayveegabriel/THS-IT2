@@ -13,135 +13,130 @@
 <div class="main">
 	<div class="main-inner">
 	    <div class="container">
-	      <div class="row">
-	      	<div class="span12">
-	      		<div class="widget ">
-	      			<div class="widget-header">
-	      				<i class="icon-group"></i>
-	      				<h3>Manage Users</h3>
-	  					</div> <!-- /widget-header -->
-					<div class="widget-content">
-						<div class="tabbable">
-							<ul class="nav nav-tabs">
-							  <li class="active">
-							    <a href="#viewusers" data-toggle="tab">View Users</a>
-							  </li>
-							  <li><a href="#adduser" data-toggle="tab">Add User</a></li>
-							</ul>
-
-							<br>
-
-							<div class="tab-content">
+				<div class ="tabbable">
+					<ul class ="nav nav-tabs">
+						<li class="active" style="width:50%;text-align:center">
+					    <a href="#viewusers" data-toggle="tab">View Users</a>
+						</li>
+				  <li style="width:50%;text-align:center"><a href="#adduser" data-toggle="tab">Add User</a></li>
+				<div class="tab-content">
                 <!--Add patient --->
                 <!---View Patients -->
-								<div class="tab-pane active" id="viewusers" >
+					<div class="tab-pane active" id="viewusers" >
+						<div class ="widget-content">
+							<fieldset>
+								<div class="control-group">
+									<br>
+									<div class="controls">
+									 	<table class="table table-bordered" id="example">
+									 	<thead>
+						          <tr>
+												<th style ="text-align:center;">FIRST NAME</th>
+						            <th style ="text-align:center;">LAST NAME</th>
+											 	<th style ="text-align:center;">MIDDLE NAME</th>
+											  <th style ="text-align:center;">USER TYPE</th>
+												<th style ="text-align:center;">DISABLE</th>
+												<th style ="text-align:center;"></th>
+						          </tr>
+		              	</thead>
+									 	<tbody>
+										 {% for user in users_list %}
+											<tr>
+												<td style ="text-align:center;">{{ user.firstName }}</td>
+												<td style ="text-align:center;">{{ user.lastName }}</td>
+											 	<td style ="text-align:center;">{{ user.middleName }}</td>
+											 	<td style ="text-align:center;">{{ user.userType }}</td>
+												<td style="text-align:center;"><input id ="chkCodeudor" type="checkbox" onclick="showPrompt(this.checked)" >
+													<div class="modal fade" id="myModal" role="dialog">
+											 			<div class="modal-dialog">
+												 			<div class="modal-content">
+													 			<div class="modal-header">
+																 <button type="button" class="close" >&times;</button>
+																 <h4 class="modal-title">Are you sure you want to disable this user?</h4>
+															 </div>
+															 <div class="modal-body">
 
+																 <p>User: {{ user.lastName }}, {{ user.firstName }} {{ user.middleName }}</p>
+																 <p>User Type: {{ user.userType }}</p>
+															 </div>
+															 <div class="modal-footer">
+																 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+																 <button class="btn btn-primary">Yes</button>
+															 </div>
+														 </div>
+											 	 		</div>
+										 			</div>
+												</td>
+											 	<td style ="text-align:center;"><a role="button" href="{% url 'unodosmattress:viewusers' user.username  %}">Edit</a></td>
+					 					 	</tr>
+										 {% endfor %}
+										</tbody>
+									</table>
+								</div> <!-- /controls - <!-- /control-group-->
+							</div>
+							<br></br>
+						</div>
+					</div>
+						<div class="tab-pane" id="adduser">
+							<div class ="widget-content">
+								<br>
+							<div class = "row">
+								<div class ="span6">
+									<form id="add-patient" class="form-horizontal" method = "POST" action=".">
+										{% csrf_token %}
 										<fieldset>
-
-											<div class="control-group">
-												 <h3><i class="icon-eye-open"></i> View Users</h3>
-												 <br>
-
-												<div class="controls">
-													 <table class="table table-bordered" id="example">
-														 <thead>
-						                   <tr>
-
-																 <th style ="text-align:center;">FIRST NAME</th>
-						                     <th style ="text-align:center;">LAST NAME</th>
-																 <th style ="text-align:center;">MIDDLE NAME</th>
-																 <th style ="text-align:center;">USER TYPE</th>
-																 <th style ="text-align:center;"></th>
-						                   </tr>
-						                 </thead>
-														 <tbody>
-
-															 {% for user in users_list %}
-																 <tr>
-
-																 <td style ="text-align:center;">{{ user.firstName }}</td>
-																	 <td style ="text-align:center;">{{ user.lastName }}</td>
-																	 <td style ="text-align:center;">{{ user.middleName }}</td>
-																	 <td style ="text-align:center;">{{ user.userType }}</td>
-																	 <td style ="text-align:center;"><a role="button" href="{% url 'unodosmattress:viewusers' user.username  %}">Edit</a></td>
-																 </tr>
-
-															 {% endfor %}
-														 </tbody>
-													 </table>
-												</div> <!-- /controls -->
-
-											</div> <!-- /control-group-->
+										<div class="control-group">
+											<div class="controls">
+												<h4><i class="icon-pencil"></i> User Information</h4>
 											</div>
-
-											<div class="tab-pane" id="adduser">
-
-											 <form id="add-patient" class="form-horizontal" method = "POST" action=".">
-												 {% csrf_token %}
-												<fieldset>
-													<div class="control-group">
-
-														<div class="controls">
-															<h3><i class="icon-pencil"></i> User Information</h3>
-														</div>
+										</div>
+										<div class="control-group">
+											<label class="control-label" for="firstname">First Name</label>
+											<div class="controls">
+												<input required type="text" class="span2" onkeyup="check(this.value, 'logoFirstName')" name = "firstname" id="firstname" value="">
+											</div> <!-- /controls -->
+										</div> <!-- /control-group -->
+										<div class="control-group">
+											<label class="control-label" for="lastname">Last Name</label>
+											<div class="controls">
+												<input required type="text" class="span2" onkeyup="check(this.value, 'logoLastName')" name = "lastname" id="lastname" value="">
+											</div> <!-- /controls -->
+										</div> <!-- /control-group -->
+										<div class="control-group">
+											<label class="control-label" for="middlename">Middle Name</label>
+											<div class="controls">
+												<input required type="text" class="span2" onkeyup="check(this.value, 'logoMiddleName')" name = "middlename" id="middlename" value="">														<img id="logoMiddleName" class="logo" src="{% static 'img/none.png'%}"/>
+											</div> <!-- /controls -->
+										</div>
+                    <div class="control-group">
+											<label class="control-label" for="contactnum">Contact Number</label>
+											<div class="controls">
+												<input required type="text" maxlength="11" class="span2" onkeyup="checkNumber(this.value, 'logoContactNum')" name = "contactnum" id="contactnum" value="">
+											</div> <!-- /controls -->
+										</div>
+                    <div class="control-group">
+											<label class="control-label" for="radiobtns">User Type</label>																		<div class="controls">
+												<div class ="controls">
+													<div class="form-group">
+														<select class="form-control" id="userType">
+															<option value="" selected disabled>Select Type	</option>
+															<option value="Nurse">Nurse</option>
+													    <option value="Doctor">Doctor</option>
+													 	</select>
 													</div>
-
-
-													<div class="control-group">
-														<label class="control-label" for="firstname">First Name</label>
-														<div class="controls">
-															<input required type="text" class="span2" onkeyup="check(this.value, 'logoFirstName')" name = "firstname" id="firstname" value="">
-															<img id="logoFirstName" class="logo" src="{% static 'img/none.png'%}"/>
-														</div> <!-- /controls -->
-													</div> <!-- /control-group -->
-													<div class="control-group">
-														<label class="control-label" for="middlename">Middle Name</label>
-														<div class="controls">
-															<input required type="text" class="span2" onkeyup="check(this.value, 'logoMiddleName')" name = "middlename" id="middlename" value="">
-															<img id="logoMiddleName" class="logo" src="{% static 'img/none.png'%}"/>
-														</div> <!-- /controls -->
-													</div>
-													<div class="control-group">
-														<label class="control-label" for="lastname">Last Name</label>
-														<div class="controls">
-															<input required type="text" class="span2" onkeyup="check(this.value, 'logoLastName')" name = "lastname" id="lastname" value="">
-															<img id="logoLastName" class="logo" src="{% static 'img/none.png'%}"/>
-														</div> <!-- /controls -->
-													</div> <!-- /control-group -->
-                          <div class="control-group">
-														<label class="control-label" for="contactnum">Contact Number</label>
-														<div class="controls">
-															<input required type="text" maxlength="11" class="span2" onkeyup="checkNumber(this.value, 'logoContactNum')" name = "contactnum" id="contactnum" value="">
-															<img id="logoContactNum" class="logo" src="{% static 'img/none.png'%}"/>
-														</div> <!-- /controls -->
-													</div>
-                          <div class="control-group">
-														<label class="control-label" for="radiobtns">User Type</label>
-																									<div class="controls">
-																										<div class="form-group">
-
-																										  <select class="form-control" id="userType">
-																										    <option value="" selected disabled>Select Type	</option>
-
-																										    <option value="Nurse">Nurse</option>
-																										    <option value="Doctor">Doctor</option>
-																												<option value="Admin">Admin</option>
-																										  </select>
-																										</div>
-																									</div>	<!-- /controls -->
-													</div> <!-- /control-group -->
-                          <br>
-                          <div class="control-group">
-														<div class="controls">
-															<h3><i class="icon-pencil"></i> Account Information</h3>
-														</div>
-													</div>
+												</div>	<!-- /controls -->
+										</div> <!-- /control-group -->
+                    <br>
+                    <div class="control-group">
+											<div class="controls">
+												<h4><i class="icon-pencil"></i> Account Information</h4>
+											</div>
+										</div>
                           <div class="control-group">
 														<label class="control-label" for="username">Username</label>
 														<div class="controls">
 															<input required type="text" class="span2" name = "username" id="username" value="">
 														</div> <!-- /controls -->
-														<p class= "error" id = "error"></p>
 													</div>
                           <div class="control-group">
 														<label class="control-label" for="password">Password</label>
@@ -158,7 +153,7 @@
 														 <p class = "error" id = "error2"></p>
 													</div>
 
-
+													<div class ="control-group">
 													<label class="control-label">ID Number</label>
 												<div class="controls" >
 													 <!-- Button to trigger modal -->
@@ -183,36 +178,18 @@
 
 												</div> <!-- /controls -->
 											</div> <!-- /control-group -->
+											</div>
+											</fieldset>
+											</div>
+											</div>
 											<div align = "center">
 												<button id="addButton" type="button" class="btn btn-primary">Add</button>
 												<a href= "{% url 'unodosmattress:manageusers' %}"><button type="button" class="btn">Cancel</button></a>
 											</div> <!-- /form-actions -->
-
-
-
-
-</div>
-
-
-
-
-
-<!-- /control-group -->
-
-
-
-
-												</fieldset>
-												<br></br>
-
-											</form>
-
+											<form>
 											</div>
-
-
-
 											</div>
-										</div>
+											<br></br>
 
 
 
@@ -230,27 +207,12 @@
 	</div> <!-- /main-inner -->
 
 </div>
-</div> <!-- /main -->
 
 
 
 
 
 
-
-<div class="footer">
-  <div class="footer-inner">
-    <div class="container">
-      <div class="row">
-        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
-        <!-- /span12 -->
-      </div>
-      <!-- /row -->
-    </div>
-    <!-- /container -->
-  </div>
-  <!-- /footer-inner -->
-</div>
 
 
 
