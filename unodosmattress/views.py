@@ -167,6 +167,9 @@ def	loginUsername (request): #ADDED
 	return JsonResponse(data)
 
 
+def notifications(request):
+	return render(request, 'dashboard/notifications.html')
+
 #Nurse
 def dashboard(request):
 
@@ -197,6 +200,9 @@ def dashboard(request):
 		context = {"patients_list": wew, 'position': request.session.get('position', 'none'), "notifications":what, "notificationSize":len(notificationList), "newNotificationList":len(newNotificationList)}
 		return render(request, 'dashboard/dashboard.html',context)
 	return render(request, 'blocked.html')
+
+
+
 #Nurse AJAX
 def ajaxUpdateDashboard(request):
 	patients = Patient.objects.values('idPatient')

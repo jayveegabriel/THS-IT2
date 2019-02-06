@@ -65,12 +65,12 @@ textarea {
 */
 
 .navbar .container {
-	position: relative;
-	height: 25px;
+	position: static;
+
 }
 
 .navbar-inner {
-	padding: 7px 0;
+	padding: 7px 0 auto;
 
 	background: linear-gradient(to right, rgba(48, 207, 208, 1),rgba(51, 8, 103, 1))
 !important;
@@ -1297,7 +1297,7 @@ color: #333;
 
 	.navbar-fixed-top {
 		position: static;
-
+		height: 25px;
 		margin-bottom: 0;
 	}
 

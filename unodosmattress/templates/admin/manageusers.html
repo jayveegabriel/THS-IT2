@@ -1,10 +1,8 @@
 {% extends 'admin/usersbase.html' %}
-
 {% load static %}
 {% block content %}
 <!DOCTYPE html>
 <style>
-
 	.logo {
 	  height: 25px;
 	  width: 25px;
@@ -16,9 +14,10 @@
 				<div class ="tabbable">
 					<ul class ="nav nav-tabs">
 						<li class="active" style="width:50%;text-align:center">
-					    <a href="#viewusers" data-toggle="tab">View Users</a>
+					    <a href="#viewusers" data-toggle="tab"><i class="icon-eye-open"></i><b> View Users</b></a>
 						</li>
-				  <li style="width:50%;text-align:center"><a href="#adduser" data-toggle="tab">Add User</a></li>
+				  <li style="width:50%;text-align:center"><a href="#adduser" data-toggle="tab"><i class="icon-plus-sign"></i><b> Add User</b></a></li>
+					</ul>
 				<div class="tab-content">
                 <!--Add patient --->
                 <!---View Patients -->
@@ -46,7 +45,9 @@
 												<td style ="text-align:center;">{{ user.lastName }}</td>
 											 	<td style ="text-align:center;">{{ user.middleName }}</td>
 											 	<td style ="text-align:center;">{{ user.userType }}</td>
-												<td style="text-align:center;"><input id ="chkCodeudor" type="checkbox" onclick="showPrompt(this.checked)" >
+
+												<td style="text-align:center;"><input id ="chkCodeudorr" type="checkbox" onclick="nicoleTest({{ user.id }})" >
+
 													<div class="modal fade" id="myModal" role="dialog">
 											 			<div class="modal-dialog">
 												 			<div class="modal-content">
@@ -66,7 +67,10 @@
 														 </div>
 											 	 		</div>
 										 			</div>
+
 												</td>
+
+
 											 	<td style ="text-align:center;"><a role="button" href="{% url 'unodosmattress:viewusers' user.username  %}">Edit</a></td>
 					 					 	</tr>
 										 {% endfor %}
@@ -114,19 +118,23 @@
 												<input required type="text" maxlength="11" class="span2" onkeyup="checkNumber(this.value, 'logoContactNum')" name = "contactnum" id="contactnum" value="">
 											</div> <!-- /controls -->
 										</div>
-                    <div class="control-group">
-											<label class="control-label" for="radiobtns">User Type</label>																		<div class="controls">
-												<div class ="controls">
-													<div class="form-group">
-														<select class="form-control" id="userType">
-															<option value="" selected disabled>Select Type	</option>
-															<option value="Nurse">Nurse</option>
-													    <option value="Doctor">Doctor</option>
-													 	</select>
-													</div>
-												</div>	<!-- /controls -->
-										</div> <!-- /control-group -->
+										<div class="control-group">
+												 <label class="control-label" for="radiobtns">User Type</label>
+												 <div class="controls">
+													 <div class="form-group">
+														 <select class="span2" id="userType" >
+															 <option>Select Type	</option>
+															 <option>Doctor</option>
+															 <option>Nurse</option>
+														 <select>
+													 </div>
+												 </div>	<!-- /controls -->
+											 </div> <!-- /control-group --><!-- /control-group -->
                     <br>
+
+
+
+
                     <div class="control-group">
 											<div class="controls">
 												<h4><i class="icon-pencil"></i> Account Information</h4>
@@ -178,7 +186,7 @@
 
 												</div> <!-- /controls -->
 											</div> <!-- /control-group -->
-											</div>
+
 											</fieldset>
 											</div>
 											</div>
@@ -220,11 +228,33 @@
 
 <script src="{% static 'js/bootstrap.js'%}"></script>
 <script src="{% static 'js/base.js'%}"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/dataTables.js'%}"></script>
 <audio id="myAudio">
 	<source src="{% static 'sounds/tap.mp3' %}" type="audio/mpeg">
 </audio>
 <script>
+	function nicoleTest(chkCodeudorr){
+		console.log(chkCodeudorr);
+		var checkBox = document.getElementById("chkCodeudorr");
+		if (checkBox.checked == true){
+			console.log("elo");
+		}
+		else{
+			console.log("Stupid");
+		}
+
+	}
+	$(function()
+	{
+	  $('#chkCodeudor').click(function()
+	        {
+	            if ($('#chkCodeudor').is(":checked")) {
+	                $('#myModal').modal('show');
+	            }else {
+	                $('#myModal').modal('hide');
+	            }
+	        });
+	});
 	var isScanned = false;
 $(document).ready(function() {
     $('#example').DataTable();
