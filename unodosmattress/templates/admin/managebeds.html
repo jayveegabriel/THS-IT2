@@ -80,210 +80,232 @@ overflow-y: auto;
 </style>
 <div class="main">
 	<div class="main-inner">
-	    <div class="container">
-	      <div class="row">
-	      	<div class="span12">
-	      		<div class="widget ">
-	      			<div class="widget-header">
-	      				<i class="icon-medkit"></i>
-	      				<h3>Manage Beds</h3>
-	  					</div> <!-- /widget-header -->
-					<div class="widget-content">
-						<div class="tabbable">
-              <ul class="nav nav-tabs">
-  							  <li class="active">
-  							    <a href="#viewbeds" data-toggle="tab">View Beds</a>
-  							  </li>
-  							  <li><a href="#editbeds" data-toggle="tab">Edit Beds</a></li>
-                  <li><a href="#addbed" data-toggle="tab">Add Bed</a></li>
-  							</ul>
+	    <div class="container" align ="center">
+        <select class ="span2">
+          <option>Select Room No.</option>
+          <option>R01</option>
+          <option>R02</option>
+        <select>
+        <h4>List of Beds at Room No. R01</h4>
+        <hr>
+        <div class ="tabbable">
+          <ul class="nav nav-tabs">
+						<li class="active" style="width:33%;text-align:center"><a href="#viewbeds" data-toggle="tab"><i class="icon-eye-open"></i><b> View Beds</b></a></li>
+					  <li style="width:34%;text-align:center"><a href="#editbeds" data-toggle="tab"><i class="icon-pencil"></i><b> Edit Beds</b></a></li>
+            <li style="width:33%;text-align:center"><a href="#addbed" data-toggle="tab"<i class="icon-plus-sign"></i><b> Add Bed</b></a></li>
+					</ul><br>
+          <div class ="tab-content">
+            <div class="tab-pane active" id="viewbeds" align ="center">
+              <div class ="widget-content">
+                <div class="pricing-plans plans-3">
 
-							<br>
+						<div class="plan-container">
+					        <div class="plan gray">
+						        <div class="plan-header">
+						        	<div class="plan-title">
+						        		OCCUPIED
+					        		</div> <!-- /plan-title -->
+						          <div class="plan-price">
+					           	 <span class="value" id="availableSpan">{{occupiedBedsSize}}</span><span class="term"> </span>
+								      </div> <!-- /plan-price -->
+						        </div> <!-- /plan-header -->
 
-							<div class="tab-content" >
-                <!--Add patient --->
-                <!---View Patients -->
-                <div class="tab-pane active" id="viewbeds" align ="center"  >
-
-                    <fieldset>
-                      <div class="row" style ="margin: auto;">
-
-                        <h4>List of Beds</h4>
-
-                        <div id="big_stats" class="cf">
-
-                          <div class="stat"> <i class="icon-ok-circle"></i> <span class="value" id="availableSpan">{{availableBedsSize}}</span><h3>VACANT</h3>
-
-
-
- </div>
-
-                          <div class="stat"> <i class="icon-ban-circle"></i> <span class="value">{{occupiedBedsSize}}<h3>OCCUPIED</h3></span> </div>
-
-                          <div class="stat"> <i class="icon-remove-circle"></i> <span class="value" id="unavailableSpan">{{unavailableBedsSize}}</span><h3>DAMAGED</h3> </div>
-                        </div>
-                        <div id="big_stats" class="cf">
-
-                          <div class="stat" align ="center">
-
-                            <div class="table-wrapper-scroll-y">
-
-                            <table class="table table-bordered ">
-
-                              <tbody id = "availableBedsTable">
-                                {% if availableBedsSize == 0%}
-                                <tr>
-                                  <td style="text-align: center;">
-                                      <h3>NO BEDS</h3>
-                                  </td>
-                                </tr>
-                                {% endif %}
-                                {% if availableBedsSize > 0 %}
-                                  {% for bed in availableBeds %}
-
-                                    <tr>
-                                      <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
-                                      <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
-
-                                    </tr>
-                                  {% endfor %}
-                                {% endif%}
-
-                              </tbody>
-                            </table>
-
-
-                          </div>
-
-
-
-                           </div>
-
-                          <div class="stat">
-                            <div class="table-wrapper-scroll-y">
-
-                            <table class="table table-bordered ">
-
-                              <tbody>
-                                {% if occupiedBedsSize == 0%}
-                                <tr>
-
-                                  <td style="text-align: center;">
-                                      <h3>NO BEDS</h3>
-                                  </td>
-                                </tr>
-                                {% endif %}
-                                {% if occupiedBedsSize > 0 %}
-                                  {% for bed in occupiedBeds %}
-
-                                    <tr>
-                                      <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
-                                      <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
-
-                                    </tr>
-                                  {% endfor %}
-                                {% endif%}
-                              </tbody>
-                            </table>
-
-
-                          </div>
-                          </div>
-
-                          <div class="stat"> <div class="table-wrapper-scroll-y">
-
-                          <table class="table table-bordered ">
-
-                            <tbody id = "unavailableBedsTable">
-                              {% if unavailableBedsSize == 0%}
-                              <tr>
-
-                                <td style="text-align: center;">
-                                    <h3>NO BEDS</h3>
-                                </td>
-                              </tr>
-                              {% endif %}
-                              {% if unavailableBedsSize > 0 %}
-                                {% for bed in occupiedBeds %}
-
-                                  <tr>
-                                    <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
-                                    <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
-
-                                  </tr>
-                                {% endfor %}
-                              {% endif%}
-                            </tbody>
-                          </table>
-
-
-                        </div> </div>
-                        </div>
-
-                      <!-- /form-actions -->
-                      </div>
-
-
-
-
-                      <br>
-                      </br>
-                      <!-- /control-group-->
+								<div class="plan-actions">
+                  <div class="table-wrapper-scroll-y">
+                    <table class="table table-bordered ">
+                      <tbody id = "availableBedsTable">
+                        {% if availableBedsSize == 0%}
+                        <tr>
+                        <td style="text-align: center;">
+                          <h3>NO BEDS</h3>
+                        </td>
+                        </tr>
+                        {% endif %}
+                        {% if availableBedsSize > 0 %}
+                        {% for bed in availableBeds %}
+                        <tr>
+                          <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                          <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
+                        </tr>
+                        {% endfor %}
+                        {% endif%}
+                      </tbody>
+                    </table>
                   </div>
-                  <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-                  <div class="tab-pane" id="editbeds" align ="center"  >
+								</div> <!-- /plan-actions -->
 
-                    <fieldset>
-                      <div class="row" style ="margin: auto;">
-                        <div class="control-group" >
-                           <h4>List of Beds</h4>
-
-                           <div id="big_stats" class="cf">
-
-                             <div class="stat"> <i class="icon-ok-circle"></i> <span class="value" id="availableBedsSize">{{availableBedsSize}}</span><h3>VACANT</h3></div>
-
-
-                             <div class="stat"> <i class="icon-remove-circle"></i> <span class="value" id="unavailableBedsSize">{{unavailableBedsSize}}</span><h3>DAMAGED</h3> </div>
-                           </div>
-
-
-                        </div>
-                        <br>
-                        <div class="column" style="background-color:#fff;border-right:1px solid #bbb;" align ="center">
+							</div> <!-- /plan -->
+					    </div> <!-- /plan-container -->
 
 
 
-                          <ol data-draggable="target" id="Available">
-                            {% for bed in availableBeds %}
-                              <li data-draggable="item" id="{{bed.idBeds}}">Bed #{{bed.bedNumber}}</li>
-                            {% endfor %}
-                          </ol>
+					    <div class="plan-container">
+					        <div class="plan green">
+						        <div class="plan-header">
 
-                        </div>
-                        <div class="column" style="background-color:#fff;">
+						        	<div class="plan-title">
+						        		VACANT
+					        		</div> <!-- /plan-title -->
 
+                      <div class="plan-price">
+                          <span class="value" id="availableSpan">{{availableBedsSize}}</span><span class="term"> </span>
+                     </div>
+						        </div> <!-- /plan-header -->
 
-                          <ol data-draggable="target" id="Unavailable">
-                            {% for bed in unavailableBeds %}
-                              <li data-draggable="item" id="{{bed.idBeds}}">Bed #{{bed.bedNumber}}</li>
-                            {% endfor %}
-                          </ol>
-                        </div>
-                      <!-- /form-actions -->
-                      </div>
-                      <br>
-                      <div align = "center">
-                        <button type="button" class="btn btn-primary" id="saveButton">Save</button>
-                        <button class="btn">Cancel</button>
-                      </div>
-                      <!-- /control-group-->
+								<div class="plan-actions">
+                  <div class="table-wrapper-scroll-y">
+                    <table class="table table-bordered ">
+                      <tbody>
+                        {% if occupiedBedsSize == 0%}
+                        <tr>
+                        <td style="text-align: center;">
+                          <h3>NO BEDS</h3>
+                        </td>
+                        </tr>
+                        {% endif %}
+                        {% if occupiedBedsSize > 0 %}
+                        {% for bed in occupiedBeds %}
+                        <tr>
+                        <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                        <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
+                        </tr>
+                        {% endfor %}
+                        {% endif%}
+                      </tbody>
+                    </table>
                   </div>
+								</div> <!-- /plan-actions -->
+
+							</div> <!-- /plan -->
+					    </div> <!-- /plan-container -->
+
+					    <div class="plan-container">
+					        <div class="plan gray">
+						        <div class="plan-header">
+
+						        	<div class="plan-title">
+						        		OUT OF ORDER
+					        		</div> <!-- /plan-title -->
+
+                      <div class="plan-price">
+                          <span class="value" id="availableSpan">{{unavailableBedsSize}}</span><span class="term"> </span>
+                     </div>
+
+						        </div> <!-- /plan-header -->
+
+
+								<div class="plan-actions">
+                  <div class="table-wrapper-scroll-y">
+                    <table class="table table-bordered ">
+                      <tbody>
+                        {% if occupiedBedsSize == 0%}
+                        <tr>
+                        <td style="text-align: center;">
+                          <h3>NO BEDS</h3>
+                        </td>
+                        </tr>
+                        {% endif %}
+                        {% if occupiedBedsSize > 0 %}
+                        {% for bed in occupiedBeds %}
+                        <tr>
+                        <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                        <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
+                        </tr>
+                        {% endfor %}
+                        {% endif%}
+                      </tbody>
+                    </table>
+                  </div>
+								</div> <!-- /plan-actions -->
+
+							</div> <!-- /plan -->
+
+					    </div> <!-- /plan-container -->
+
+
+					</div> <!-- /pricing-plans -->
+                <fieldset>
+
+              </div>
+            </div>
+
+            <div class="tab-pane" id="editbeds" align ="center">
+              <div class ="tab-content">
+                <div class="tab-pane active" id="viewbeds" align ="center">
+                  <div class ="widget-content">
+                    <div class="pricing-plans plans-2">
+
+						<div class="plan-container">
+					        <div class="plan green">
+						        <div class="plan-header">
+
+						        	<div class="plan-title">
+						        		VACANT
+					        		</div> <!-- /plan-title -->
+
+                      <div class="plan-price">
+                          <span class="value" id="availableSpan">{{availableBedsSize}}</span><span class="term"> </span>
+                     </div>
+
+						        </div> <!-- /plan-header -->
 
 
 
-											<div class="tab-pane" id="addbed" >
-												<div class ="container" >
-													<div class ="row" id="bedRow">
+								<div class="plan-actions">
+                  <ol data-draggable="target" id="Available">
+                  {% for bed in availableBeds %}
+                    <li data-draggable="item" id="{{bed.idBeds}}">Bed #{{bed.bedNumber}}</li>
+                  {% endfor %}
+                  </ol>
+                  </div> <!-- /plan-actions -->
+
+							</div> <!-- /plan -->
+					    </div> <!-- /plan-container -->
+
+
+
+					    <div class="plan-container">
+					        <div class="plan gray ">
+						        <div class="plan-header">
+
+						        	<div class="plan-title">
+						        		OUT OF ORDER
+					        		</div> <!-- /plan-title -->
+
+                      <div class="plan-price">
+                          <span class="value" id="availableSpan">{{unavailableBedsSize}}</span><span class="term"> </span>
+                     </div>
+
+						        </div> <!-- /plan-header -->
+
+
+
+								<div class="plan-actions">
+                  <ol data-draggable="target" id="Unavailable">
+                    {% for bed in unavailableBeds %}
+                    <li data-draggable="item" id="{{bed.idBeds}}">Bed #{{bed.bedNumber}}</li>
+                    {% endfor %}
+                  </ol>
+								</div> <!-- /plan-actions -->
+
+							</div> <!-- /plan -->
+					    </div> <!-- /plan-container -->
+
+              </div>
+                </div>
+                <br>
+                <div align = "center">
+                  <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+                  <button class="btn">Cancel</button>
+                </div>
+                <br>
+                </div>
+                </div>
+                </div>
+                  <div class="tab-pane" id="addbed" >
+										<div class ="container" >
+                    <div class ="widget-content">
+										   <div class ="row" id="bedRow">
                             {% for bed in beds_list %}
 												<div class = "span3" align ="center" id = "spanBed{{bed.idBeds}}">
  												 <div class="widget widget-table action-table" >
@@ -292,7 +314,10 @@ overflow-y: auto;
 
  													 </div>
  													 <!-- /widget-header -->
+
+
  													 <div class="widget-content" align = "center" id="bed">
+
  														 <img src="{% static 'img/bed.png'%}"/ >
  														 <table class="table " align ="center">
                                <thead>
@@ -355,6 +380,7 @@ overflow-y: auto;
  													 </div>
  												 </div>
  											 </div>
+                       </div>
 
                       {% endfor %}
                       </div>
@@ -389,19 +415,7 @@ overflow-y: auto;
 
 
 
-<div class="footer">
-  <div class="footer-inner">
-    <div class="container">
-      <div class="row">
-        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
-        <!-- /span12 -->
-      </div>
-      <!-- /row -->
-    </div>
-    <!-- /container -->
-  </div>
-  <!-- /footer-inner -->
-</div>
+
 
 
 
@@ -735,7 +749,7 @@ $(document).ready(function() {
         },
         dataType: 'json',
         success: function (data){
-          
+
         }
       });
 

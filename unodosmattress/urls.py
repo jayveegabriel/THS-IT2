@@ -27,6 +27,7 @@ urlpatterns = [
 
     #nurse
     url(r'^dashboard/$', views.dashboard, name = "dashboard"),
+    url(r'^notifications/$', views.notifications, name ="notifications"),
     url(r'^managepatients/$', views.managepatients, name="managepatients"),
     # url(r'^managebeds/$', views.managebeds, name="managebeds"),
     # url(r'^reports/$', views.reports, name="reports"),

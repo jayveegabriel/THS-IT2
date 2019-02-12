@@ -65,12 +65,12 @@ textarea {
 */
 
 .navbar .container {
-	position: relative;
-	height: 25px;
+	position: static;
+
 }
 
 .navbar-inner {
-	padding: 7px 0;
+	padding: 7px 0 auto;
 
 	background: linear-gradient(to right, rgba(48, 207, 208, 1),rgba(51, 8, 103, 1))
 !important;
@@ -257,11 +257,7 @@ textarea {
 [4. Main / .main]
 */
 
-.main {
-	padding-bottom: 2em;
 
-	border-bottom: 1px solid #000;
-}
 
 
 
@@ -312,30 +308,6 @@ textarea {
 /*------------------------------------------------------------------
 [6. Footer/ .footer]
 */
-
-.footer {
-	margin-top: 0;
-	position:relative
-	border-top: 1px solid #292929;
-}
-
-.footer-inner {
-	padding: 15px 0;
-
-	font-size: 12px;
-	background: #111;
-	color: #999;
-}
-
-.footer a {
-	color: #999;
-}
-
-.footer a:hover {
-	color: #FFF;
-	text-decoration: none;
-}
-
 
 /*------------------------------------------------------------------
 [6. Widget / .widget]
@@ -1178,6 +1150,56 @@ color: #333;
 }
 
 
+.badge {
+  height: 15px;
+  padding: 1px 9px 2px;
+  font-size: 12.025px;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #ffffff;
+  background-color: #999999;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
+.badge-warning {
+  background-color: #f89406;
+}
+.badge:hover {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.badge-error {
+  background-color: #b94a48;
+}
+.badge-error:hover {
+  background-color: #953b39;
+}
+.badge-warning {
+  15ackground-color: #f89406;
+}
+.badge-warning:hover {
+  background-color: #c67605;
+}
+.badge-success {
+  background-color: #468847;
+}
+.badge-success:hover {
+  background-color: #356635;
+}
+.badge-info {
+  background-color: #3a87ad;
+}
+.badge-info:hover {
+  background-color: #2d6987;
+}
+.badge-inverse {
+  background-color: #333333;
+}
+.badge-inverse:hover {
+  background-color: #1a1a1a;
+}
 
 
 
@@ -1188,6 +1210,7 @@ color: #333;
 @media (max-width: 767px) {
 
 	#main {
+
 		padding: 0 10px;
 		margin-right: -20px;
 		margin-left: -20px;
@@ -1258,23 +1281,7 @@ color: #333;
 		padding: 0 20px;
 	}
 
-	.footer {
-		margin-right: -20px;
-		margin-left: -20px;
-	}
 
-	.footer .container {
-		padding: 0 20px;
-	}
-
-	.footer .footer-terms {
-		text-align: left;
-	}
-
-	.footer .footer-terms a {
-		margin-left: 0;
-		margin-right: 1em;
-	}
 
 }
 
@@ -1290,7 +1297,7 @@ color: #333;
 
 	.navbar-fixed-top {
 		position: static;
-
+		height: 25px;
 		margin-bottom: 0;
 	}
 

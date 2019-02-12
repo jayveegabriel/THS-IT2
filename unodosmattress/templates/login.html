@@ -51,82 +51,68 @@
 
 
 
-<br></br>
+
  <!-- /account-container -->
 
+ <div class="animated bounceInDown account-container " align = "center">
+   <br>
+    <img src="{% static 'img/loginlogo.png'%}" class ="hvr-bounce-in"/ >
+      <h3 style ="color:black;">Welcome to Uno Dos Mattress 2.0</h3>
+      {% for count in rfid_count %}
+         <input type="hidden" id="initCount" value={{count.r}}>
+      {% endfor %}
+ 	<div class="content clearfix">
+    <ul class="nav nav-tabs">
+      <li class="active" style="width:50%;text-align:center"><a href="#create" data-toggle="tab" onclick="check1()"><b>Login with ID</b></a></li>
 
-  <div class="container" align ="center">
-  	<div class="row">
-          <div class="span4">
-            <img src="{% static 'img/loginlogo.png'%}" class ="hvr-bounce-in"/ >
-            <div class="animated bounceInDown" id="loginModal">
-                <div class="modal-header ">
-                  <h3>Welcome to Uno Dos Mattress 2.0</h3>
-                </div>
-                  {% for count in rfid_count %}
-                     <input type="hidden" id="initCount" value={{count.r}}>
-                  {% endfor %}
+        <li style="width:50%;text-align:center"><a href="#login" data-toggle="tab" onclick="check()"><b>Login with Username</b></a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+      <div class="tab-pane fade" id="login">
+        <form class="form-horizontal" action='' method="POST" id="login">
+          {% csrf_token %}
+          <fieldset>
+            <div id="legend">
+              <legend class="">Login to UDM</legend>
+            </div>
+            <br>
+            <div class="form-group">
+              <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+            </div>
+            <br>
+            <div class="form-group">
+              <input type="password" name="password" id="password" tabindex="1" class="form-control" placeholder="Password" value="">
+            </div>
+            <br>
+            <p id="error" style="color:red;"></p>
 
-                <div class="modal-body ">
-                  <div class="well">
-                    <ul class="nav nav-tabs">
-                      <li class="active"><a href="#create" data-toggle="tab" onclick="check1()">Login with ID</a></li>
-
-                        <li><a href="#login" data-toggle="tab" onclick="check()">Login with Username</a></li>
-                    </ul>
-
-                    <div id="myTabContent" class="tab-content">
-                      <div class="tab-pane fade" id="login">
-                        <form class="form-horizontal" action='' method="POST" id="login">
-                          {% csrf_token %}
-                          <fieldset>
-                            <div id="legend">
-                              <legend class="">Login to UDM</legend>
-                            </div>
-                            <br>
-                            <div class="form-group">
-          										<input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
-          									</div>
-                            <br>
-                            <div class="form-group">
-          										<input type="password" name="password" id="password" tabindex="1" class="form-control" placeholder="Password" value="">
-          									</div>
-                            <br>
-                            <p id="error" style="color:red;"></p>
-
-                            <div class="form-group">
-                              <a class="btn btn-primary" id="loginButton"> Log in</a></div>
-                            <br>
-                          </fieldset>
-                        </form>
-                      </div>
-
-
-                      <div class="tab-pane active in" id="create">
-                        <form id="tab" class="form-horizontal" action='' method="POST">
-                          {% csrf_token %}
-                          <fieldset>
-                            <div id="legend">
-                              <legend class="">Tap your ID</legend>
-                            </div>
-                            <div class = "form-group">
-                              <img id="imageId" src="{% static 'img/tap.png'%}"/ >
-                            </div>
-                          </fieldset
-                        </form>
-                      </div>
-
-                  </div>
-                </div>
-              </div>
-
-
-
-          </div>
-        </div>
-
+            <div class="form-group">
+              <a class="btn btn-primary" id="loginButton"> Log in</a></div>
+            <br>
+          </fieldset>
+        </form>
       </div>
-    </div>
+      <div class="tab-pane active in" id="create">
+        <form id="tab" class="form-horizontal" action='' method="POST">
+          {% csrf_token %}
+          <fieldset>
+            <div id="legend">
+              <legend class="">Tap your ID</legend>
+            </div>
+            <div class = "form-group">
+              <img id="imageId" src="{% static 'img/tap.png'%}"/ >
+            </div>
+          </fieldset
+        </form>
+      </div>
+
+  </div>
+
+
+ 	</div> <!-- /content -->
+
+ </div> <!-- /account-container -->
+
 
 
 
@@ -215,7 +201,7 @@ else{
       if (data.is_match) {
          // location.href="/addPatient/";
          // document.getElementById("imageId").src = "{% static 'img/icon.png'%}";
-         
+
          document.getElementById("myAudio").play();
          setTimeout(function(){
            if(data.position == "Nurse"){

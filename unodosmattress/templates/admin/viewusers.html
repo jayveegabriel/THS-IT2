@@ -17,7 +17,7 @@
 	    <div class="container">
 
 				<h2 class ="animated slideInUp" align ="center"><b>View User</b></h2>
-			 <h4 class ="animated slideInUp" align ="center"><b>{{ user.lastName }}, {{ user.firstName }} {{ user.middleName }}.</b></h4><br>
+			 <h4 class ="animated slideInUp" align ="center"><b>{{ user.lastName }}, {{ user.firstName }} {{ user.middleName }}</b></h4><br>
 
 
 					 <div class="center animated fadeIn" align ="center">
@@ -111,7 +111,7 @@
 	</div>
   <div class ="container" align ="center">
 
-   <a class="btn" href="{% url 'unodosmattress:manageusers' %}"><i class="icon-arrow-left"></i> BACK</a>
+   <a class="btn" href="{% url 'unodosmattress:manageusers' %}"></i> Back</a>
 	 		<button id="saveButton" type="button" class="btn btn-primary">Save</button>
    <br></br>
  </div><!-- /main-inner -->
@@ -125,20 +125,6 @@
 
 
 
-
-<div class="footer">
-  <div class="footer-inner">
-    <div class="container">
-      <div class="row">
-        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
-        <!-- /span12 -->
-      </div>
-      <!-- /row -->
-    </div>
-    <!-- /container -->
-  </div>
-  <!-- /footer-inner -->
-</div>
 
 
 <link href="{% static 'jquery-ui.min.css' %}" rel="stylesheet">

@@ -1,3 +1,4 @@
+
 {% extends 'admin/homebase.html' %}
 {% block content %}
 {% load static %}
@@ -39,7 +40,7 @@
             <div class="widget-content">
               <div class="widget big-stats-container">
                 <div class="widget-content">
-                  <h6 class="bigstats">In managing users, you can add users in the system and also view and edit their accounts. Here are your active users per role:</h6>
+                  <h6 class="bigstats">In managing users, you can add users in the system and view and edit their accounts. Here are your active users per role:</h6>
                   <div id="big_stats" class="cf">
                     <div class="stat"> <i class="icon-user"></i> <span class="value">{{nurseSize}}<h3>NURSE</h3></span> </div>
                     <div class="stat"> <i class="icon-user-md"></i> <span class="value">{{doctorSize}}<h3>DOCTOR</h3></span> </div>
@@ -65,13 +66,12 @@
             <div class="widget-content">
               <div class="widget big-stats-container">
                 <div class="widget-content">
-                  <h6 class="bigstats">In managing beds, you can add a bed, view beds and also edit the status of each bed. Here are your beds:</h6>
+                  <h6 class="bigstats">In managing beds, you can add a bed, view beds and also edit the status of each bed. TOTAL NUMBER OF BEDS: </h6>
                   <div id="big_stats" class="cf">
 
                     <div class="stat"> <i class="icon-ok-circle"></i> <span class="value">{{availableBeds}}<h3>VACANT</h3></span> </div>
 
-                    <div class="stat"> <i class="icon-ban-circle"></i> <span class="value">{{occupiedBeds}}<h3>OCCUPIED</h3></span> </div>
-
+                  
                     <div class="stat"> <i class="icon-remove-circle"></i> <span class="value">{{unavailableBeds}}<h3>OUT OF ORDER</h3></span> </div>
                   </div>
                 </div>
@@ -99,19 +99,7 @@
 <!-- /main -->
 
 <!-- /extra -->
-<div class="footer">
-  <div class="footer-inner">
-    <div class="container">
-      <div class="row">
-        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a> </div>
-        <!-- /span12 -->
-      </div>
-      <!-- /row -->
-    </div>
-    <!-- /container -->
-  </div>
-  <!-- /footer-inner -->
-</div>
+
 <!-- /footer -->
 <!-- Le javascript
 ================================================== -->

@@ -193,6 +193,7 @@
                         {% endfor %}
                       </tbody>
                     </table></li>
+                    <a href="{% url 'unodosmattress:notifications' %}" style="text-align:center;"></i>View All</a>
 
                   </ul>
                 </li>
@@ -240,10 +241,21 @@
 
   <div class="main-inner">
     <div class="container">
+      <div class ="tabbable">
+        <ul class ="nav nav-tabs">
+          <li class="active" style="width:50%;text-align:center">
+                 <a href="#tileview" data-toggle="tab"><i class="icon-th-large"> </i><b> Tile View</b></a>
+               </li>
+               <li style="width:50%;text-align:center"><a href="#listview" data-toggle="tab"><i class =" icon-align-justify"></i><b> List View</b></a></li>
+             </ul>
+             <br>
+       <div class ="tab-content">
+         <div class="tab-pane active" id="tileview">
+                 <div class="row">
+                   <div class = "span3">
 
-      <div class="row" id="divRow">
           {% for patient in patients_list %}
-                <div class = "span3">
+
                   <div class="widget " id = "{{patient.idPatient_id }}">
                     <div class="widget-header" > <i class="icon-user"></i>
                       <h3>Bed #{{ patient.bedNumber }}</h3>
@@ -254,25 +266,25 @@
 
 
                     <div class="widget-content" align = "center" id ="bed">
-        <p><b>{{ patient.lastName}}, {{ patient.firstName}}</b></p>
-				{% if patient.positionPatient == "RIGHT SIDE" %}
-						<img src="{% static 'img/rightsidepos.png'%}"/ >
-				{% endif %}
-				{% if patient.positionPatient == "RIGHT FETAL" %}
-						<img src="{% static 'img/rightfetalpos.png'%}"/ >
-				{% endif %}
-				{% if patient.positionPatient == "LEFT SIDE" %}
-						<img src="{% static 'img/leftsidepos.png'%}"/ >
-				{% endif %}
-				{% if patient.positionPatient == "LEFT FETAL" %}
-						<img src="{% static 'img/leftfetalpos.png'%}"/ >
-				{% endif %}
-				{% if patient.positionPatient == "BACK" %}
-						<img src="{% static 'img/backpos.png'%}"/ >
-				{% endif %}
-				{% if patient.positionPatient == "NONE" %}
-						<img src="{% static 'img/none.png'%}"/ >
-				{% endif %}
+                          <p><b>{{ patient.lastName}}, {{ patient.firstName}}</b></p>
+                  				{% if patient.positionPatient == "RIGHT SIDE" %}
+                  						<img src="{% static 'img/rightsidepos.png'%}"/ >
+                  				{% endif %}
+                  				{% if patient.positionPatient == "RIGHT FETAL" %}
+                  						<img src="{% static 'img/rightfetalpos.png'%}"/ >
+                  				{% endif %}
+                  				{% if patient.positionPatient == "LEFT SIDE" %}
+                  						<img src="{% static 'img/leftsidepos.png'%}"/ >
+                  				{% endif %}
+                  				{% if patient.positionPatient == "LEFT FETAL" %}
+                  						<img src="{% static 'img/leftfetalpos.png'%}"/ >
+                  				{% endif %}
+                  				{% if patient.positionPatient == "BACK" %}
+                  						<img src="{% static 'img/backpos.png'%}"/ >
+                  				{% endif %}
+                  				{% if patient.positionPatient == "NONE" %}
+                  						<img src="{% static 'img/none.png'%}"/ >
+                  				{% endif %}
                   <div class ="widget-table action-table">
                       <table class=" widget-table table" >
 
@@ -322,23 +334,74 @@
       </div>
       <!-- /row -->
     </div>
-    <!-- /container -->
-  </div>
-  <!-- /main-inner -->
-</div>
-<div class="footer">
-  <div class="footer-inner">
-    <div class="container">
-      <div class="row">
-        <div class="span12"> Uno Dos Mattress 2.0 &copy; 2019 <a href="#"></a>. </div>
-        <!-- /span12 -->
-      </div>
-      <!-- /row -->
     </div>
-    <!-- /container -->
-  </div>
-  <!-- /footer-inner -->
-</div>
+
+    <div class="tab-pane" id="listview">
+                    <div class="widget-content">
+                      <table class="table table-bordered" id="example">
+                        <thead >
+                          <tr>
+                            <th style="text-align:center;"></th>
+                            <th style="text-align:center;">Bed #</th>
+                            <th style="text-align:center;">Name</th>
+                            <th style="text-align:center;">Heart Rate</th>
+                            <th style="text-align:center;">Temperature</th>
+                            <th style="text-align:center;">Position</th>
+                            <th style="text-align:center;">Status</th>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td style="text-align:center;"><span class="badge badge-danger" style ="text-align:right;">3</span></td>
+                            <td style="text-align:center;">3</td>
+                            <td style="text-align:center;">Carlos, Eduard L.</td>
+                            <td style="text-align:center;color:red;">75 BPM</td>
+                            <td style="text-align:center;color:red;">37 ℃</td>
+                            <td style="text-align:center;">Right Fetal</td>
+                            <td style="text-align:center;">Normal</td>
+                          </tr>
+                          <tr>
+                            <td style="text-align:center;"><span class="badge badge-warning" style ="text-align:right;">2</span></td>
+                            <td style="text-align:center;">2</td>
+                            <td style="text-align:center;">Gabriel, Jayvee table.</td>
+                            <td style="text-align:center;color:orange;">70 BPM</td>
+                            <td style="text-align:center;">35 ℃</td>
+                            <td style="text-align:center;">Left Side</td>
+                            <td style="text-align:center;">Normal</td>
+                          </tr>
+                          <tr>
+                            <td style="text-align:center;"><span class="badge " style ="text-align:right;">1</span></td>
+                            <td style="text-align:center;">1</td>
+                            <td style="text-align:center;">Tiu, Kayle E.</td>
+                            <td style="text-align:center;">70 BPM</td>
+                            <td style="text-align:center;">35 ℃</td>
+                            <td style="text-align:center;">Back</td>
+                            <td style="text-align:center;">Normal</td>
+                          </tr>
+
+
+
+
+                        </tbody>
+                      </table>
+    					      </div> <!-- /widget-content -->
+                  </div>
+                </div>
+
+
+
+              </div>
+
+
+
+
+              <!-- /row -->
+            </div>
+
+            </div>
+
+
 <!-- /main -->
 
 <!-- /extra -->

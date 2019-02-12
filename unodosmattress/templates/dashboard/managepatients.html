@@ -128,6 +128,8 @@ overflow-y: auto;
                        {% endfor %}
                      </tbody>
                    </table></li>
+                   <a href="{% url 'unodosmattress:notifications' %}" style="text-align:center;"></i>View All</a>
+
 
                  </ul>
                </li>
@@ -145,34 +147,25 @@ overflow-y: auto;
 <div class="main">
 	<div class="main-inner">
 	    <div class="container">
-	      <div class="row">
-	      	<div class="span12">
-	      		<div class="widget ">
-	      			<div class="widget-header">
-	      				<i class="icon-user"></i>
-	      				<h3>Manage Patients</h3>
-	  					</div> <!-- /widget-header -->
-					<div class="widget-content">
-						<div class="tabbable">
-							<ul class="nav nav-tabs">
-							  <li class="active">
-							    <a href="#viewpatients" id="ViewPatientsButton" data-toggle="tab">View Patients</a>
+        <div class ="tabbable">
+
+            <ul class="nav nav-tabs">
+							  <li class="active" style="width:50%;text-align:center">
+							    <a href="#viewpatients" data-toggle="tab"><i class="icon-eye-open"></i><b> View Patients</b></a>
 							  </li>
-							  <li><a href="#addpatient" data-toggle="tab">Add Patient</a></li>
+							  <li style="width:50%;text-align:center"><a href="#addpatient" data-toggle="tab"><i class="icon-plus-sign"></i><b> Add Patient</b></a></li>
 							</ul>
+            <br>
 
-							<br>
-
-							<div class="tab-content">
-                <!--Add patient --->
-                <!---View Patients -->
-								<div class="tab-pane active" id="viewpatients">
+            <div class="tab-content">
+                    <!--Add patient --->
+                    <!---View Patients -->
+    								<div class="tab-pane active" id="viewpatients" >
+					<div class="widget-content">
 
 										<fieldset>
 
 											<div class="control-group">
-												 <h3><i class="icon-eye-open"></i> View Patient</h3>
-												 <br>
 
 												<div class="controls">
 													 <table class="table table-bordered" id="example">
@@ -205,25 +198,23 @@ overflow-y: auto;
 
 											</div> <!-- /control-group-->
 											</div>
+                    </div>
 
 											<div class="tab-pane" id="addpatient">
-
+                        <div class="widget-content">
+                      <br>
 
 
                         											 <form id="add-patient" class="form-horizontal" method = "POST" action=".">
                         												 {% csrf_token %}
                         												<fieldset>
-                        													<div class="control-group">
-                        														<div class="controls">
-                        															<h3><i class="icon-pencil"></i> Patient Information</h3>
-                        														</div>
-                        													</div>
+
 
                         														<div class="control-group">
                         															<label class="control-label" for="bednumber">Bed #</label>
                         															<div class="controls">
                         																<div id="listOfBeds">
-                        																	<select name="bednumber" id="bednumber">
+                        																	<select name="bednumber" id="bednumber" class ="span1">
                         																		{% for beds in beds_list %}
                         																			<option value="{{ beds.idBeds }}">{{ beds.bedNumber }}</option>
                         																		{% endfor %}
@@ -232,6 +223,13 @@ overflow-y: auto;
                         																<!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
                         															</div> <!-- /controls -->
                         														</div> <!-- /control-group -->
+                                                    <div class="control-group">
+                          														<label class="control-label" for="lastname">Last Name</label>
+                          														<div class="controls">
+                          															<input required type="text" placeholder="e.g. Gabriel"  class="span2" onkeyup="check(this.value,'logoLastName')"  name = "lastname" id="lastname" value="">
+                          															<img id="logoLastName" class="logo" src="{% static 'img/white.png'%}"/>
+                          														</div> <!-- /controls -->
+                          													</div> <!-- /control-group -->
                         													<div class="control-group">
                         														<label class="control-label" for="firstname">First Name</label>
                         														<div class="controls">
@@ -247,51 +245,29 @@ overflow-y: auto;
                         															<img id="logoMiddleName" class="logo" src="{% static 'img/white.png'%}"/>
                         														</div> <!-- /controls -->
                         													</div>
-                        													<div class="control-group">
-                        														<label class="control-label" for="lastname">Last Name</label>
-                        														<div class="controls">
-                        															<input required type="text" placeholder="e.g. Gabriel"  class="span2" onkeyup="check(this.value,'logoLastName')"  name = "lastname" id="lastname" value="">
-                        															<img id="logoLastName" class="logo" src="{% static 'img/white.png'%}"/>
-                        														</div> <!-- /controls -->
-                        													</div> <!-- /control-group -->
 
-                        													<div class="control-group">
-                        														<label class="control-label" for="radiobtns">Religion</label>
-                        																									<div class="controls">
-                        																										<div class="form-group">
-
-                        																											<select name="religion" id="religion">
-                        																												<option value="Roman Catholic">Roman Catholic</option>
-                        																												<option value="Islam">Islam</option>
-                        																												<option value="Jehova's Witness">Jehova's Witness</option>
-                        																												<option value="Hinduism">Hinduism</option>
-                        																												<option value="Buddhism">Buddhism</option>
-                        																											</select>
-                        																										</div>
-                        																										</div>	<!-- /controls -->
-                        													</div> <!-- /control-group -->
-                        													<div class="control-group">
-                        														<label class="control-label" for="birthday">Birthday</label>
-                        														<div class="controls">
-                        															<input required type="date" class="span2" name = "birthday" id="birthday" value="">
-                        															<img id="logoDate" class="logo" src="{% static 'img/white.png'%}"/>
-                        														</div> <!-- /controls -->
-                        													</div>
-                        													<div class="control-group">
-                        														<label class="control-label" for="Fson">Contact person</label>
+                                                  <div class="control-group">
+                                                    <label class="control-label" for="birthday">Birthday</label>
+                                                    <div class="controls">
+                                                      <input required type="date" class="span2" name = "birthday" id="birthday" value="">
+                                                      <img id="logoDate" class="logo" src="{% static 'img/white.png'%}"/>
+                                                    </div> <!-- /controls -->
+                                                  </div>
+                                                  <div class="control-group">
+                        														<label class="control-label" for="Fson">Contact Person</label>
                         														<div class="controls">
                         															<input required type="text" placeholder="e.g. Kayle Tiu"  class="span2" onkeyup="check(this.value,'logoContactperson')"  name = "contactperson" id="contactperson" value="">
                         															<img id="logoContactperson" class="logo" src="{% static 'img/white.png'%}"/>
                         														</div> <!-- /controls -->
                         													</div> <!-- /control-group -->
-                        													<div class="control-group">
+                                                  <div class="control-group">
                         														<label class="control-label" for="birthday">Contact Number</label>
                         														<div class="controls">
                         															<input required maxlength="11" type="text" placeholder="e.g. 09062268410"  class="span2" onkeyup="checkNumber(this.value,'logoContactNum')" name = "contactnum" id="contactnum" value="">
                         															<img id="logoContactNum" class="logo" src="{% static 'img/white.png'%}"/>
                         														</div> <!-- /controls -->
                         													</div>
-                        													<div class="control-group">
+                                                  <div class="control-group">
                         															<label class="control-label" for="radiobtns">Heart Rate</label>
                         																										<div class="controls">
                         																											 <div class="input-prepend input-append">
@@ -330,42 +306,50 @@ overflow-y: auto;
 
 
                         													</div> <!-- /control-group -->
+                                                  <div class="control-group">
+                                                    <label class="control-label" for="radiobtns">Doctor(s)</label>
+                                                                          <div class="controls">
+                                                                            <div class="form-group">
+
+                                                                              <div id = "listOfDoctor">
+                                                                                <select class="span2" name="doctors" id="doctors">
+                                                                                  {% for doctors in doctors_list %}
+                                                                                    <option value="{{ doctors.idDoctor }}">Dr. {{doctors.firstName}} {{ doctors.lastName }}</option>
+                                                                                  {% endfor %}
+                                                                                </select>
+
+                                                                                <button type="button" class ="btn" id="assignDoctor">+</button>
+                                                                              </div>
+                                                                              <br></br>
+
+                                                                              <div class="table-wrapper-scroll-y">
+
+                                                                                  <label class="control-label" for="tableDoctors">Assigned Doctor(s)</label>
+                                                                              <table class="table table-bordered" id="tableDoctors">
+
+                                                                                <tbody id="doctorTable">
 
 
+                                                                                </tbody>
+                                                                              </table>
 
-                        													<div class="control-group">
-                        														<label class="control-label" for="radiobtns">Doctor(s)</label>
-                        																									<div class="controls">
-                        																										<div class="form-group">
-
-                        																											<div id = "listOfDoctor">
-                        																												<select class="span2" name="doctors" id="doctors">
-                        																													{% for doctors in doctors_list %}
-                        																														<option value="{{ doctors.idDoctor }}">Dr. {{doctors.firstName}} {{ doctors.lastName }}</option>
-                        																													{% endfor %}
-                        																												</select>
-
-                        																												<button type="button" class ="btn" id="assignDoctor">+</button>
-                        																											</div>
-                        																											<br></br>
-
-                        																											<div class="table-wrapper-scroll-y">
-
-                        																													<label class="control-label" for="tableDoctors">Assigned Doctor(s)</label>
-                          																										<table class="table table-bordered" id="tableDoctors">
-
-                        																										    <tbody id="doctorTable">
+                                                                            </div>
 
 
-                        																										    </tbody>
-                          																										</table>
+                                                                            </div>
+                                                                            </div>	<!-- /controls -->
+                                                  </div> <!-- /control-group -->
 
-                        																										</div>
+                        													<div class="control-group">	<label class="control-label"><input id ="chkCodeudor" type="checkbox" onclick="showPrompt(this.checked)" >
+</label>
+																									<div class="controls">
+																										<div class="input-prepend input-append">
+																										 <p >Restrictions on Religion</p>
+																										</div>
+																									</div>
+													</div>
 
 
-                        																										</div>
-                        																										</div>	<!-- /controls -->
-                        													</div> <!-- /control-group -->
 
 
                         <!--
@@ -382,7 +366,7 @@ overflow-y: auto;
 
 
                         												</fieldset>
-                        												<br></br>
+
                         												<!-- <div align = "center">
                         													<button type="button" id="addButton" class="btn btn-primary">Add</button>
                         													<button type="button" class="btn">Cancel</button>
@@ -391,35 +375,84 @@ overflow-y: auto;
                         											</form>
 
 
-                                              <div align = "center">
-													<a href="#myModal" type ="button" role="button" onclick="getCurrentSize()" class="btn btn-primary" data-toggle="modal">Add</a>
-
-                                                    <!-- Modal -->
-                                                    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                      <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                        <h3 id="myModalLabel">Confirm dialog</h3>
-                                                      </div>
-                                                      <div class="modal-body">
-                                                        <p>Please tap your ID to proceed!</p>
-
-                      																	<img id="imageTag" src="{% static 'img/scanid.png'%}" class ="animated bounce"/ >
 
 
-
-
-                                                      </div>
-                                                      <div class="modal-footer">
-                                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                                                        <button type="button" id="addButton" class="btn btn-primary">Confirm</button>
-                                                      </div>
-                                                    </div>
-
-
-													<a href="#viewpatients" data-toggle="tab"><button type="button" class="btn">Cancel</button></a>
-												</div>
 
 											</div>
+                      <br>
+                      <div align = "center">
+  <a href="#myModal" type ="button" role="button" onclick="getCurrentSize()" class="btn btn-primary" data-toggle="modal">Add</a>
+
+                            <!-- Modal -->
+                            <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="myModalLabel">Confirm dialog</h3>
+                              </div>
+                              <div class="modal-body">
+
+                                <ul class="nav nav-tabs">
+                                  <li class="active" style="width:50%;text-align:center"><a href="#create" data-toggle="tab" onclick="check1()"><b>Confirm with ID</b></a></li>
+
+                                    <li style="width:50%;text-align:center"><a href="#login" data-toggle="tab" onclick="check()"><b>Confirm with Username</b></a></li>
+                                </ul>
+                                <div id="myTabContent" class="tab-content">
+                                  <div class="tab-pane fade" id="login">
+                                    <form class="form-horizontal" action='' method="POST" id="login">
+                                      {% csrf_token %}
+                                      <fieldset>
+                                        <div id="legend">
+                                          <legend class="" style ="font-size:15px;">Login to proceed!</legend>
+                                        </div>
+                                        <br>
+                                        <div class="form-group">
+                                          <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="">
+                                        </div>
+                                        <br>
+                                        <div class="form-group">
+                                          <input type="password" name="password" id="password" tabindex="1" class="form-control" placeholder="Password" value="">
+                                        </div>
+                                        <br>
+                                        <p id="error" style="color:red;"></p>
+
+                                        <div class="form-group">
+                                          <a class="btn btn-primary" id="loginButton"> Log in</a></div>
+                                        <br>
+                                      </fieldset>
+                                    </form>
+                                  </div>
+                                  <div class="tab-pane active in" id="create">
+                                    <form id="tab" class="form-horizontal" action='' method="POST">
+                                      {% csrf_token %}
+                                      <fieldset>
+                                        <div id="legend">
+                                          <legend class="" style ="font-size:15px;">Tap your ID to proceed!</legend>
+                                        </div>
+                                        <div class = "form-group">
+                                          <img id="imageId" src="{% static 'img/tap.png'%}"/ >
+                                        </div>
+                                      </fieldset
+                                    </form>
+                                  </div>
+
+                              </div>
+
+
+
+
+
+
+                              </div>
+                              <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                                <button type="button" id="addButton" class="btn btn-primary">Confirm</button>
+                              </div>
+                            </div>
+
+
+  <a href="#viewpatients" data-toggle="tab"><button type="button" class="btn">Cancel</button></a>
+</div>
+<br>
 
 
 
@@ -449,25 +482,7 @@ overflow-y: auto;
 
 
 
-<div class="footer">
 
-	<div class="footer-inner">
-
-		<div class="container">
-
-			<div class="row">
-
-    			<div class="span12">
-    				&copy; 2013 <a href="#">Bootstrap Responsive Admin Template</a>.
-    			</div> <!-- /span12 -->
-
-    		</div> <!-- /row -->
-
-		</div> <!-- /container -->
-
-	</div> <!-- /footer-inner -->
-
-</div> <!-- /footer -->
 
 <script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
 <audio id="myAudio">
