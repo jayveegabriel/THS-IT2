@@ -26,7 +26,13 @@
 							<fieldset>
 								<div class="control-group">
 									<br>
-									<div class="controls">
+									<div class ="controls" align ="right">
+										<button class ="btn btn-primary" onclick="myFunction()">Disable Users</button>
+
+									</div>
+									<div class="controls" >
+
+
 									 	<table class="table table-bordered" id="example">
 									 	<thead>
 						          <tr>
@@ -228,11 +234,12 @@
 
 <script src="{% static 'js/bootstrap.js'%}"></script>
 <script src="{% static 'js/base.js'%}"></script>
-<script type="text/javascript" charset="utf8" src="{% static 'js/dataTables.js'%}"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/dataTable.min.js'%}"></script>
 <audio id="myAudio">
 	<source src="{% static 'sounds/tap.mp3' %}" type="audio/mpeg">
 </audio>
 <script>
+	var table = $('#example').DataTable();
 	function nicoleTest(chkCodeudorr){
 		console.log(chkCodeudorr);
 		var checkBox = document.getElementById("chkCodeudorr");
@@ -256,9 +263,18 @@
 	        });
 	});
 	var isScanned = false;
-$(document).ready(function() {
-    $('#example').DataTable();
-} );
+	$(document).ready(function() {
+	    var table = $('#example').DataTable();
+			table.columns([4]).visible(false);
+
+	} );
+
+function myFunction(){
+
+		table.columns( [0,1,2,3,4,5] ).visible( true );
+
+
+}
 function checkPassword(logo){
 	var password = $("#password").val();
 	var cpassword = $("#cpassword").val();
