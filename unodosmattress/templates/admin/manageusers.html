@@ -7,6 +7,10 @@
 	  height: 25px;
 	  width: 25px;
 	}
+
+	.disableBtns {
+		display: none;
+	}
 </style>
 <div class="main">
 	<div class="main-inner">
@@ -21,13 +25,60 @@
 				<div class="tab-content">
                 <!--Add patient --->
                 <!---View Patients -->
+
+
+
+
+
+
+
+
 					<div class="tab-pane active" id="viewusers" >
 						<div class ="widget-content">
 							<fieldset>
 								<div class="control-group">
 									<br>
+
+								
 									<div class ="controls" align ="right">
-										<button class ="btn btn-primary" onclick="myFunction()">Disable Users</button>
+
+										<button class ="btn btn-danger disableBtns" id="cancelUserBtn">Cancel</button>
+										<a href="#myModal" data-toggle="modal"><button class ="btn btn-success disableBtns" id="saveUserBtn" onclick="updateModalContent()">Save</button></a>
+										<!-- <a href="#myModal" type="button" role="button" class="btn btn-success disableBtns" data-toggle="modal">Save</a> -->
+										<button class ="btn btn-primary" id="disableUserBtn" onclick="showButtons()">Disable Users</button>
+
+     <!-- Modal -->
+			                            <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			                              <div class="modal-header">
+			                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			                                <h3 align="left">Confirm dialog</h3>
+			                              </div>
+			                              <div class="modal-body">
+
+			                              		<table class="table table-bordered">
+			                              			<thead>
+			                              				<tr>
+			                              					<th>Firstname</th>
+			                              					<th>Lastname</th>
+			                              					<th>Usertype</th>
+			                              					<th>Change status to</th>
+			                              				</tr>
+			                              			</thead>
+			                              			<tbody id="modalBody">
+			                              				
+			                              			</tbody>
+			                              		</table>
+
+
+			                              </div>
+			                              <div class="modal-footer">
+			                                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			                                <button type="button" id="confirmButton" class="btn btn-primary">Confirm</button>
+			                              </div>
+			                            </div>
+
+
+
 
 									</div>
 									<div class="controls" >
@@ -46,13 +97,23 @@
 		              	</thead>
 									 	<tbody>
 										 {% for user in users_list %}
-											<tr>
+											<tr id="{{user.id}}">
 												<td style ="text-align:center;">{{ user.firstName }}</td>
 												<td style ="text-align:center;">{{ user.lastName }}</td>
 											 	<td style ="text-align:center;">{{ user.middleName }}</td>
 											 	<td style ="text-align:center;">{{ user.userType }}</td>
 
-												<td style="text-align:center;"><input id ="chkCodeudorr" type="checkbox" onclick="nicoleTest({{ user.id }})" >
+												<td style="text-align:center;">
+													{% if user.accountStatus == "Active" %}
+													
+														<input class="checkedUsers" onclick="addToList('{{user.id}}')" checked type="checkbox">
+													{% endif %}
+													{% if user.accountStatus == "Inactive" %}
+													
+														<input class="checkedUsers" onclick="addToList('{{user.id}}')" type="checkbox">
+													{% endif %}
+
+<!-- 
 
 													<div class="modal fade" id="myModal" role="dialog">
 											 			<div class="modal-dialog">
@@ -72,7 +133,7 @@
 															 </div>
 														 </div>
 											 	 		</div>
-										 			</div>
+										 			</div> -->
 
 												</td>
 
@@ -82,7 +143,7 @@
 										 {% endfor %}
 										</tbody>
 									</table>
-								</div> <!-- /controls - <!-- /control-group-->
+								</div> 
 							</div>
 							<br></br>
 						</div>
@@ -239,18 +300,37 @@
 	<source src="{% static 'sounds/tap.mp3' %}" type="audio/mpeg">
 </audio>
 <script>
-	var table = $('#example').DataTable();
-	function nicoleTest(chkCodeudorr){
-		console.log(chkCodeudorr);
-		var checkBox = document.getElementById("chkCodeudorr");
-		if (checkBox.checked == true){
-			console.log("elo");
+	var checked = new Array();
+	function addToList(id){
+		isFound = false;
+		for(i = 0; i < checked.length; i++){
+			if(checked[i] == id){
+				isFound = true;
+				checked.pop(i);
+			}
 		}
-		else{
-			console.log("Stupid");
+		if(!isFound){
+
+			checked.push(id);
+		}
+
+
+	}
+	function updateModalContent(){
+		
+		for(i = 0; i < checked.length; i++){
+
+			var firstname =$("#"+checked[i])[0].children[0].innerHTML;
+			var lastname =$("#"+checked[i])[0].children[1].innerHTML;
+			
+			var usertype =$("#"+checked[i])[0].children[3].innerHTML;
+			console.log($("#"+checked[i])[0].children[4].children[0]);
 		}
 
 	}
+
+	var table = $('#example').DataTable();
+	
 	$(function()
 	{
 	  $('#chkCodeudor').click(function()
@@ -269,12 +349,15 @@
 
 	} );
 
-function myFunction(){
+function showButtons(){
+	$(".disableBtns").show();
+	$("#disableUserBtn").hide();	
 
-		table.columns( [0,1,2,3,4,5] ).visible( true );
+		table.columns( [4] ).visible( true );
 
 
 }
+
 function checkPassword(logo){
 	var password = $("#password").val();
 	var cpassword = $("#cpassword").val();
@@ -312,6 +395,12 @@ function check(input, logo){
 			document.getElementById(logo).src ="{% static 'img/cross.jpg' %}";
 		}
 	}
+$("#cancelUserBtn").click(function(){
+	$(".disableBtns").hide();
+	$("#disableUserBtn").show();
+
+		table.columns( [4] ).visible( false );
+});
 
 
 $("#acc").click(function(){

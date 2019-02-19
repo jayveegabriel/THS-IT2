@@ -60,7 +60,7 @@ def readRFID():
 
 
 t = threading.Thread(target=readRFID)
-t.start()
+# t.start()
 
 
 def ajaxGetCurrentRFIDs(request):
@@ -596,11 +596,11 @@ def manageusers(request):
 	count.append({"r":r})
 	for x in range(0,len(d1)):
 
-		users.append({'id':d1[x].pk, "username":d1[x].username,"firstName":d1[x].firstName, "middleName":d1[x].middleName, "lastName":d1[x].lastName, "userType":"Doctor"})
+		users.append({'id':d1[x].pk, "username":d1[x].username,"firstName":d1[x].firstName, "middleName":d1[x].middleName, "lastName":d1[x].lastName, "userType":"Doctor","accountStatus":d1[x].accountStatus})
 
 	for z in range(0, len(e1)):
-		users.append({'id':e1[z].pk, "username":e1[z].username,"firstName":e1[z].firstName, "middleName":e1[z].middleName, "lastName":e1[z].lastName, "userType":e1[z].usertype})
-	context = {"users_list": users, "rfid_count": count}
+		users.append({'id':e1[z].pk, "username":e1[z].username,"firstName":e1[z].firstName, "middleName":e1[z].middleName, "lastName":e1[z].lastName, "userType":e1[z].usertype,"accountStatus":e1[z].accountStatus})
+	context = {"users_list": users, "rfid_count": count}	
 	return render(request, 'admin/manageusers.html', context)
 
 def managebeds(request):

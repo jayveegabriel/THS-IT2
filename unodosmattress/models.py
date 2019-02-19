@@ -96,6 +96,7 @@ class Doctor(models.Model):
 	username = models.CharField(max_length=45)
 	password = models.CharField(max_length=45)
 	rfid = models.CharField(max_length=30)
+	accountStatus = models.CharField(max_length=45, default="Active")
 
 
 class Patient_Doctors(models.Model):
@@ -120,6 +121,7 @@ class Employee(models.Model):
 	password = models.CharField(max_length=45)
 	usertype = models.CharField(max_length=45)
 	rfid = models.CharField(max_length=30, null = True)
+	accountStatus = models.CharField(max_length=45, default="Active")
 
 class RFID(models.Model):
 	idRFID = models.AutoField(primary_key=True)
