@@ -134,7 +134,12 @@ class News(models.Model):
 	time = models.TimeField()
 	idPatient = models.ForeignKey(Patient, on_delete=models.CASCADE, null = True)
 
-#
-# class Notification(models.Model):
-# 	idNotification = models.AutoField(primary_key=True)
-# 	idBeds = models.ForeignKey(Beds, on_delete=models.CASCADE)
+
+class Notification(models.Model):
+	idNotification = models.AutoField(primary_key=True)
+	date = models.DateField()	
+	time = models.TimeField()
+	bedNumber = models.IntegerField()
+	body = models.CharField(max_length=100)
+	
+

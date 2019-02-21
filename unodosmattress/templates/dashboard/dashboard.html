@@ -252,9 +252,9 @@
        <div class ="tab-content">
          <div class="tab-pane active" id="tileview">
                  <div class="row">
-                   <div class = "span3">
-
           {% for patient in patients_list %}
+
+                   <div class = "span3">
 
                   <div class="widget " id = "{{patient.idPatient_id }}">
                     <div class="widget-header" > <i class="icon-user"></i>
@@ -265,73 +265,75 @@
                     <!-- /widget-header -->
 
 
-                    <div class="widget-content" align = "center" id ="bed">
-                          <p><b>{{ patient.lastName}}, {{ patient.firstName}}</b></p>
-                  				{% if patient.positionPatient == "RIGHT SIDE" %}
-                  						<img src="{% static 'img/rightsidepos.png'%}"/ >
-                  				{% endif %}
-                  				{% if patient.positionPatient == "RIGHT FETAL" %}
-                  						<img src="{% static 'img/rightfetalpos.png'%}"/ >
-                  				{% endif %}
-                  				{% if patient.positionPatient == "LEFT SIDE" %}
-                  						<img src="{% static 'img/leftsidepos.png'%}"/ >
-                  				{% endif %}
-                  				{% if patient.positionPatient == "LEFT FETAL" %}
-                  						<img src="{% static 'img/leftfetalpos.png'%}"/ >
-                  				{% endif %}
-                  				{% if patient.positionPatient == "BACK" %}
-                  						<img src="{% static 'img/backpos.png'%}"/ >
-                  				{% endif %}
-                  				{% if patient.positionPatient == "NONE" %}
-                  						<img src="{% static 'img/none.png'%}"/ >
-                  				{% endif %}
-                  <div class ="widget-table action-table">
-                      <table class=" widget-table table" >
+                                  <div class="widget-content" align = "center" id ="bed">
+                                        <p><b>{{ patient.lastName}}, {{ patient.firstName}}</b></p>
+                                        {% if patient.positionPatient == "RIGHT SIDE" %}
+                                            <img src="{% static 'img/rightsidepos.png'%}"/ >
+                                        {% endif %}
+                                        {% if patient.positionPatient == "RIGHT FETAL" %}
+                                            <img src="{% static 'img/rightfetalpos.png'%}"/ >
+                                        {% endif %}
+                                        {% if patient.positionPatient == "LEFT SIDE" %}
+                                            <img src="{% static 'img/leftsidepos.png'%}"/ >
+                                        {% endif %}
+                                        {% if patient.positionPatient == "LEFT FETAL" %}
+                                            <img src="{% static 'img/leftfetalpos.png'%}"/ >
+                                        {% endif %}
+                                        {% if patient.positionPatient == "BACK" %}
+                                            <img src="{% static 'img/backpos.png'%}"/ >
+                                        {% endif %}
+                                        {% if patient.positionPatient == "NONE" %}
+                                            <img src="{% static 'img/none.png'%}"/ >
+                                        {% endif %}
+                                        <div class ="widget-table action-table">
+                                                        <table class=" widget-table table" >
 
-                        <thead >
-                          <tr>
-                            <th  style="text-align:center; font-size:15px;">{{patient.positionPatient}}</th>
+                                                          <thead >
+                                                            <tr>
+                                                              <th  style="text-align:center; font-size:15px;">{{patient.positionPatient}}</th>
 
-                          </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                      </table>
-                      <table class="widget-table table" >
+                                                            </tr>
+                                                          </thead>
+                                                          <tbody>
+                                                          </tbody>
+                                                        </table>
+                                                        <table class="widget-table table" >
 
-                        <thead >
-                          <tr>
-                            <th width="50%" style="text-align:center;font-size:15px">{{ patient.heartRate }} BPM</th>
-                            <th width="50%"  style="text-align:center;font-size:15px">{{ patient.temperature }}˚C</th>
+                                                          <thead >
+                                                            <tr>
+                                                              <th width="50%" style="text-align:center;font-size:15px">{{ patient.heartRate }} BPM</th>
+                                                              <th width="50%"  style="text-align:center;font-size:15px">{{ patient.temperature }}˚C</th>
 
-                          </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <table class="widget-table table" >
+                                                            </tr>
+                                                          </thead>
+                                                          <tbody>
+                                                          </tbody>
+                                                      </table>
+                                                      <table class="widget-table table" >
 
-                      <thead >
-                        <tr>
-                          <th  width="25%"  style="text-align:center; font-size:10px;">{{ patient.minHeartRate }} BPM <br><span style="color:grey;"> MIN</span> </th>
-                          <th  width="25%" style="text-align:center; font-size:10px;">{{ patient.maxHeartRate }} BPM <br><span style="color:grey;"> MAX </span></th>
-                          <th  width="25%" style="text-align:center;  font-size:10px;">{{ patient.minTemp }}˚C <br><span style="color:grey;"> MIN </span></th>
-                          <th  width="25%" style="text-align:center;  font-size:10px;">{{ patient.maxTemp }}˚C <br><span style="color:grey;"> MAX  </span></th>
-                        </tr>
-                      </thead>
+                                                        <thead >
+                                                          <tr>
+                                                            <th  width="25%"  style="text-align:center; font-size:10px;">{{ patient.minHeartRate }} BPM <br><span style="color:grey;"> MIN</span> </th>
+                                                            <th  width="25%" style="text-align:center; font-size:10px;">{{ patient.maxHeartRate }} BPM <br><span style="color:grey;"> MAX </span></th>
+                                                            <th  width="25%" style="text-align:center;  font-size:10px;">{{ patient.minTemp }}˚C <br><span style="color:grey;"> MIN </span></th>
+                                                            <th  width="25%" style="text-align:center;  font-size:10px;">{{ patient.maxTemp }}˚C <br><span style="color:grey;"> MAX  </span></th>
+                                                          </tr>
+                                                        </thead>
 
-                      <tbody>
-                      </tbody>
-                  </table>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
 
-                  </div>
-                    </div>
-
-                  </div>
-                </div>
+                                        </div>
+                            </div>
+</div>
+                
+      </div>
                 {% endfor %}
 
-      </div>
+
+
+
       <!-- /row -->
     </div>
     </div>
@@ -398,6 +400,7 @@
 
               <!-- /row -->
             </div>
+
 
             </div>
 

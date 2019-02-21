@@ -81,6 +81,11 @@ def clickButton(request,idBed):
 	notificationList.append(b)
 	newNotificationList.append(b)
 
+	now = datetime.datetime.now()
+	date = now.date()
+	time = now.time()
+	n = Notification(date=date,time=time,bedNumber=idBed,body="Bed #"+idBed+" needs your assistance! Please respond immediately.")
+	n.save()
 	return HttpResponse()
 
 
