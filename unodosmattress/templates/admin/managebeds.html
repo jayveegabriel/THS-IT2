@@ -383,6 +383,83 @@ overflow-y: auto;
                        </div>
 
                       {% endfor %}
+                        <div class = "span3" align ="center" id = "spanBed{{bed.idBeds}}">
+                         <div class="widget widget-table action-table" >
+                           <div class="widget-header" > <i class="icon-medkit"></i>
+                             <h3>Add Bed</h3>
+
+                           </div>
+                           <!-- /widget-header -->
+
+
+                           <div class="widget-content" align = "center" id="bed">
+
+                             <img src="{% static 'img/bed.png'%}"/ >
+                             <table class="table " align ="center">
+                               <thead>
+                                 <tr>
+
+                                   <th></th>
+                                   </tr>
+                                 </thead>
+                                 <tbody>
+                                   <tr>
+
+                                     <td>Status:</td>
+                                     </tr>
+                               <tfoot align ="center" >
+                                 <tr>
+                                   <th> <a class="btn bt" href="#addModal{{bed.idBeds}}" role="button" data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>
+    <!-- Modal -->
+                                                    <div id="addModal{{bed.idBeds}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                      <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        <h3 id="myModalLabel">Add Bed</h3>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <form id="add-bed" class="form-horizontal" method = "POST" action=".">
+                                                         {% csrf_token %}
+                                                         <fieldset>
+                                                           <div class="control-group">
+                                                             <label class="control-label" for="bednumber">Bed #</label>
+                                                             <div class="controls">
+                                                               <input type="number" class="span1" value="{{bed.bedNumber}}" name = "bednumber" id="bed{{ bed.pk }}" value="">
+                                                             </div> <!-- /controls -->
+
+
+
+
+                                                        </div> <!-- /control-group -->
+                                                        </fieldset>
+
+
+
+
+
+
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                        <button type="button" class="btn btn-primary" onclick="addBed({{ bed.pk }});">Save</button>
+                                                      </div>
+                                                      </form>
+                                                    </div>
+
+
+
+
+
+                                   </th>
+                                 </tr>
+                               </tfoot>
+                             </table>
+                           </div>
+                         </div>
+                       </div>
+                       </div>
+
+
+                       
                       </div>
 
 											</div>
@@ -465,7 +542,7 @@ function getUpdatedArray(oldArray, newArray){
 $(document).ready(function() {
   {% for beds in beds_list %}
 
-    bedsArray.push(new bedObject({{beds.idBeds}}, {{beds.bedNumber}}, "{{beds.bedStatus}}"));
+    bedsArray.push(new bedObject("{{beds.idBeds}}", "{{beds.bedNumber}}", "{{beds.bedStatus}}"));
   {% endfor %}
 
     window.setInterval(function(){

@@ -247,16 +247,28 @@ def	loginUsername (request): #ADDED
 		if  Employee.objects.filter(username=username,password=password).exists() or Doctor.objects.filter(username=username,password=password).exists():
 			if Employee.objects.filter(username=username,password=password).exists():
 				e1 = Employee.objects.get(username=username,password=password)
-				if e1.usertype == 'Nurse':
+				if e1.usertype == 'Nurse' and e1.accountStatus == "Active":
 					position = 'Nurse'
 					request.session['position'] = "NURSE"
-				else:
+				elif e1.usertype == "Admin" and e1.accountStatus == "Active":
 					position = "Admin"
 					request.session['position'] = "ADMIN"
+				else:
+					data = {
+						'is_match': False
+					}
+					return JsonResponse(data)
 			else:
-				position = "Doctor"
-				request.session['position'] = "DOCTOR"
-				request.session['id'] = Doctor.objects.get(username=username).idDoctor
+				d1 = Doctor.objects.get(username=username, password=password)
+				if d1.accountStatus == "Active":
+					position = "Doctor"
+					request.session['position'] = "DOCTOR"
+					request.session['id'] = Doctor.objects.get(username=username).idDoctor
+				else:
+					data = {
+						'is_match': False
+					}
+					return JsonResponse(data)
 			data = {
 				'is_match': True,
 				'position': position,
@@ -698,6 +710,23 @@ def ajaxSetBedAvailable(request):
 	}
 	result = client.action(schema, action, params=params)
 
+	return HttpResponse()
+
+def updateAccountStatus(request):
+
+	ids = request.GET.getlist('ids[]')
+	usertypes = request.GET.getlist('usertypes[]')
+	statuses = request.GET.getlist('statuses[]')
+
+	for x in range(0, len(ids)):
+		if usertypes[x] == "Doctor":
+			d1 = Doctor.objects.get(pk=ids[x])
+			d1.accountStatus = statuses[x]
+			d1.save()
+		else:
+			e1 = Employee.objects.get(pk=ids[x])
+			e1.accountStatus = statuses[x]
+			e1.save()
 	return HttpResponse()
 
 def ajaxUpdateBedStatus(request):

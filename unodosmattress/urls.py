@@ -78,6 +78,7 @@ urlpatterns = [
     url(r'^ajax/ajaxUpdateBedStatus/$', views.ajaxUpdateBedStatus, name="ajaxUpdateBedStatus"),
     url(r'^ajax/ajaxRefreshAvailableBeds/$', views.ajaxRefreshAvailableBeds, name="ajaxRefreshAvailableBeds"),
     url(r'^ajax/ajaxRefreshUnavailableBeds/$', views.ajaxRefreshUnavailableBeds, name="ajaxRefreshUnavailableBeds"),
+    url(r'^ajax/updateAccountStatus/$', views.updateAccountStatus, name="updateAccountStatus"),
 
 
     #doctor
