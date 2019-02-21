@@ -81,24 +81,25 @@ overflow-y: auto;
 <div class="main">
 	<div class="main-inner">
 	    <div class="container" align ="center">
-        <select class ="span2">
-          <option>Select Room No.</option>
-          <option>R01</option>
-          <option>R02</option>
-        <select>
-        <h4>List of Beds at Room No. R01</h4>
-        <hr>
+
         <div class ="tabbable">
           <ul class="nav nav-tabs">
 						<li class="active" style="width:33%;text-align:center"><a href="#viewbeds" data-toggle="tab"><i class="icon-eye-open"></i><b> View Beds</b></a></li>
 					  <li style="width:34%;text-align:center"><a href="#editbeds" data-toggle="tab"><i class="icon-pencil"></i><b> Edit Beds</b></a></li>
-            <li style="width:33%;text-align:center"><a href="#addbed" data-toggle="tab"<i class="icon-plus-sign"></i><b> Add Bed</b></a></li>
-					</ul><br>
+             <li style="width:33%;text-align:center"><a href="#addbed" data-toggle="tab"><i class="icon-plus-sign"></i><b> Add Bed</b></a></li>
+          	</ul><br>
           <div class ="tab-content">
             <div class="tab-pane active" id="viewbeds" align ="center">
               <div class ="widget-content">
                 <div class="pricing-plans plans-3">
 
+                  <select class ="span2">
+                    <option>Select Room No.</option>
+                    <option>R01</option>
+                    <option>R02</option>
+                  <select>
+                  <h4>List of Beds at Room No. R01</h4>
+                  <hr>
 						<div class="plan-container">
 					        <div class="plan gray">
 						        <div class="plan-header">
@@ -233,6 +234,13 @@ overflow-y: auto;
               <div class ="tab-content">
                 <div class="tab-pane active" id="viewbeds" align ="center">
                   <div class ="widget-content">
+                    <select class ="span2">
+                      <option>Select Room No.</option>
+                      <option>R01</option>
+                      <option>R02</option>
+                    <select>
+                    <h4>List of Beds at Room No. R01</h4>
+                    <hr>
                     <div class="pricing-plans plans-2">
 
 						<div class="plan-container">
@@ -305,14 +313,16 @@ overflow-y: auto;
                   <div class="tab-pane" id="addbed" >
 										<div class ="container" >
                     <div class ="widget-content">
+                      <div class ="container" id ="label">
+                      <h3>NO PENDING BEDS</h3>
+                      <h4>Please press the button to add a bed!</h4>
+                      <hr>
+                      </div>
 										   <div class ="row" id="bedRow">
                             {% for bed in beds_list %}
 												<div class = "span3" align ="center" id = "spanBed{{bed.idBeds}}">
  												 <div class="widget widget-table action-table" >
- 													 <div class="widget-header" > <i class="icon-medkit"></i>
- 														 <h3>Add Bed</h3>
 
- 													 </div>
  													 <!-- /widget-header -->
 
 
@@ -327,10 +337,7 @@ overflow-y: auto;
                                    </tr>
                                  </thead>
                                  <tbody>
-    															 <tr>
 
-    																 <td>Status:</td>
-                                     </tr>
  															 <tfoot align ="center" >
  																 <tr>
  																	 <th> <a class="btn bt" href="#addModal{{bed.idBeds}}" role="button" data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>
@@ -383,18 +390,16 @@ overflow-y: auto;
                        </div>
 
                       {% endfor %}
-                        <div class = "span3" align ="center" id = "spanBed{{bed.idBeds}}">
-                         <div class="widget widget-table action-table" >
-                           <div class="widget-header" > <i class="icon-medkit"></i>
-                             <h3>Add Bed</h3>
 
-                           </div>
+                        <div class = "span2" align ="center" id = "spanBed{{bed.idBeds}}">
+                         <div class="widget widget-table action-table" >
+
                            <!-- /widget-header -->
 
 
                            <div class="widget-content" align = "center" id="bed">
 
-                             <img src="{% static 'img/bed.png'%}"/ >
+                             <img src="{% static 'img/addbed.png'%}"/ >
                              <table class="table " align ="center">
                                <thead>
                                  <tr>
@@ -403,13 +408,10 @@ overflow-y: auto;
                                    </tr>
                                  </thead>
                                  <tbody>
-                                   <tr>
 
-                                     <td>Status:</td>
-                                     </tr>
                                <tfoot align ="center" >
                                  <tr>
-                                   <th> <a class="btn bt" href="#addModal{{bed.idBeds}}" role="button" data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>
+                                    <th  style="text-align:center"> <a href="#addModal{{bed.idBeds}}"  data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>
     <!-- Modal -->
                                                     <div id="addModal{{bed.idBeds}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                       <div class="modal-header">
@@ -420,7 +422,17 @@ overflow-y: auto;
                                                         <form id="add-bed" class="form-horizontal" method = "POST" action=".">
                                                          {% csrf_token %}
                                                          <fieldset>
+                                                           <div class ="control-group">
+                                                               <label class="control-label" for="bednumber">Room #</label>
+                                                               <div class="controls" >
+                                                                 <select class ="span2">
+                                                                   <option>R01</option>
+                                                                   <option>R02</option>
+                                                                 <select>
+                                                               </div>
+                                                          </div>
                                                            <div class="control-group">
+
                                                              <label class="control-label" for="bednumber">Bed #</label>
                                                              <div class="controls">
                                                                <input type="number" class="span1" value="{{bed.bedNumber}}" name = "bednumber" id="bed{{ bed.pk }}" value="">
@@ -459,7 +471,7 @@ overflow-y: auto;
                        </div>
 
 
-                       
+
                       </div>
 
 											</div>
