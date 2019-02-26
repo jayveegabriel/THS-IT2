@@ -228,6 +228,7 @@
               <td style="width:80%; font-size:10px;">13:19:00 PM</td>
 
             </tr> -->
+
           </tbody>
         </table>
 
@@ -242,6 +243,17 @@
   <div class="main-inner">
     <div class="container">
       <div class ="tabbable">
+
+                  <select class ="span2 roomDropdown">
+                    <option disabled>Select Room No.</option>
+                    {% for r in rooms %}
+                      <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
+                    {% endfor %}
+
+                  <select>
+
+                    <input type="checkbox" id="checkboxAutoAdjust" />
+                    Prioritization feature
         <ul class ="nav nav-tabs">
           <li class="active" style="width:50%;text-align:center">
                  <a href="#tileview" data-toggle="tab"><i class="icon-th-large"> </i><b> Tile View</b></a>
@@ -251,85 +263,86 @@
              <br>
        <div class ="tab-content">
          <div class="tab-pane active" id="tileview">
-                 <div class="row">
-          {% for patient in patients_list %}
+                 <div class="row" id="tileTable">
 
-                   <div class = "span3">
+        {% for bed in default_room.get_occupied_beds_dashboard %}
+          {% with bed.get_current_patient.idPatient as patient %}
+               <div class = "span3">
+                 <div class="widget " id = "{{patient.idPatient_id }}">
+                 <div class="widget-header" > <i class="icon-user"></i>
+                   <h3>Bed #{{ bed.bedNumber }}</h3>
+                   <!-- <span class="badge badge-danger"></span> -->
 
-                  <div class="widget " id = "{{patient.idPatient_id }}">
-                    <div class="widget-header" > <i class="icon-user"></i>
-                      <h3>Bed #{{ patient.bedNumber }}</h3>
-                       <span class="badge badge-danger">5</span>
-
-                    </div>
-                    <!-- /widget-header -->
+                </div>
+                <!-- /widget-header -->
 
 
-                                  <div class="widget-content" align = "center" id ="bed">
-                                        <p><b>{{ patient.lastName}}, {{ patient.firstName}}</b></p>
-                                        {% if patient.positionPatient == "RIGHT SIDE" %}
-                                            <img src="{% static 'img/rightsidepos.png'%}"/ >
-                                        {% endif %}
-                                        {% if patient.positionPatient == "RIGHT FETAL" %}
-                                            <img src="{% static 'img/rightfetalpos.png'%}"/ >
-                                        {% endif %}
-                                        {% if patient.positionPatient == "LEFT SIDE" %}
-                                            <img src="{% static 'img/leftsidepos.png'%}"/ >
-                                        {% endif %}
-                                        {% if patient.positionPatient == "LEFT FETAL" %}
-                                            <img src="{% static 'img/leftfetalpos.png'%}"/ >
-                                        {% endif %}
-                                        {% if patient.positionPatient == "BACK" %}
-                                            <img src="{% static 'img/backpos.png'%}"/ >
-                                        {% endif %}
-                                        {% if patient.positionPatient == "NONE" %}
-                                            <img src="{% static 'img/none.png'%}"/ >
-                                        {% endif %}
-                                        <div class ="widget-table action-table">
-                                                        <table class=" widget-table table" >
+                              <div class="widget-content" align = "center" id ="bed">
+                                    <p><b>{{bed.get_current_patient.idPatient.lastName}}, {{bed.get_current_patient.idPatient.firstName}}</b></p>
+                                    {% if patient.get_position == "RIGHT SIDE" %}
+                                        <img src="{% static 'img/rightsidepos.png'%}"/ >
+                                    {% endif %}
+                                    {% if patient.get_position == "RIGHT FETAL" %}
+                                        <img src="{% static 'img/rightfetalpos.png'%}"/ >
+                                    {% endif %}
+                                    {% if patient.get_position == "LEFT SIDE" %}
+                                        <img src="{% static 'img/leftsidepos.png'%}"/ >
+                                    {% endif %}
+                                    {% if patient.get_position == "LEFT FETAL" %}
+                                        <img src="{% static 'img/leftfetalpos.png'%}"/ >
+                                    {% endif %}
+                                    {% if patient.get_position == "BACK" %}
+                                        <img src="{% static 'img/backpos.png'%}"/ >
+                                    {% endif %}
+                                    {% if patient.get_position == "NONE" %}
+                                        <img src="{% static 'img/none.png'%}"/ >
+                                    {% endif %}
+                                    <div class ="widget-table action-table">
+                                                    <table class=" widget-table table" >
 
-                                                          <thead >
-                                                            <tr>
-                                                              <th  style="text-align:center; font-size:15px;">{{patient.positionPatient}}</th>
+                                                      <thead >
+                                                        <tr>
+                                                          <th  style="text-align:center; font-size:15px;">{{patient.get_position}}</th>
 
-                                                            </tr>
-                                                          </thead>
-                                                          <tbody>
-                                                          </tbody>
-                                                        </table>
-                                                        <table class="widget-table table" >
-
-                                                          <thead >
-                                                            <tr>
-                                                              <th width="50%" style="text-align:center;font-size:15px">{{ patient.heartRate }} BPM</th>
-                                                              <th width="50%"  style="text-align:center;font-size:15px">{{ patient.temperature }}˚C</th>
-
-                                                            </tr>
-                                                          </thead>
-                                                          <tbody>
-                                                          </tbody>
-                                                      </table>
-                                                      <table class="widget-table table" >
-
-                                                        <thead >
-                                                          <tr>
-                                                            <th  width="25%"  style="text-align:center; font-size:10px;">{{ patient.minHeartRate }} BPM <br><span style="color:grey;"> MIN</span> </th>
-                                                            <th  width="25%" style="text-align:center; font-size:10px;">{{ patient.maxHeartRate }} BPM <br><span style="color:grey;"> MAX </span></th>
-                                                            <th  width="25%" style="text-align:center;  font-size:10px;">{{ patient.minTemp }}˚C <br><span style="color:grey;"> MIN </span></th>
-                                                            <th  width="25%" style="text-align:center;  font-size:10px;">{{ patient.maxTemp }}˚C <br><span style="color:grey;"> MAX  </span></th>
-                                                          </tr>
-                                                        </thead>
-
-                                                        <tbody>
-                                                        </tbody>
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                      </tbody>
                                                     </table>
+                                                    <table class="widget-table table" >
 
-                                        </div>
-                            </div>
-</div>
-                
-      </div>
-                {% endfor %}
+                                                      <thead >
+                                                        <tr>
+                                                          <th width="50%" style="text-align:center;font-size:15px">{{ patient.get_heartrate }} BPM</th>
+                                                          <th width="50%"  style="text-align:center;font-size:15px">{{ patient.get_temperature }}˚C</th>
+
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                      </tbody>
+                                                  </table>
+                                                  <table class="widget-table table" >
+
+                                                    <thead >
+                                                      <tr>
+                                                        <th  width="25%"  style="text-align:center; font-size:10px;">{{ patient.minHeartRate }} BPM <br><span style="color:grey;"> MIN</span> </th>
+                                                        <th  width="25%" style="text-align:center; font-size:10px;">{{ patient.maxHeartRate }} BPM <br><span style="color:grey;"> MAX </span></th>
+                                                        <th  width="25%" style="text-align:center;  font-size:10px;">{{ patient.minTemp }}˚C <br><span style="color:grey;"> MIN </span></th>
+                                                        <th  width="25%" style="text-align:center;  font-size:10px;">{{ patient.maxTemp }}˚C <br><span style="color:grey;"> MAX  </span></th>
+                                                      </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+
+                                    </div>
+                        </div>
+        </div>
+            
+        </div>
+        {% endwith %}
+            {% endfor %}
 
 
 
@@ -353,35 +366,24 @@
 
                           </tr>
                         </thead>
-                        <tbody>
-                          <tr>
+                        <tbody id="listTable">
+
+                      {% for bed in default_room.get_occupied_beds_dashboard %}
+                        {% with bed.get_current_patient.idPatient as patient %}
+
+                          <tr style="border: 2px solid red;">
                             <td style="text-align:center;"><span class="badge badge-danger" style ="text-align:right;">3</span></td>
-                            <td style="text-align:center;">3</td>
-                            <td style="text-align:center;">Carlos, Eduard L.</td>
-                            <td style="text-align:center;color:red;">75 BPM</td>
-                            <td style="text-align:center;color:red;">37 ℃</td>
-                            <td style="text-align:center;">Right Fetal</td>
-                            <td style="text-align:center;">Normal</td>
-                          </tr>
-                          <tr>
-                            <td style="text-align:center;"><span class="badge badge-warning" style ="text-align:right;">2</span></td>
-                            <td style="text-align:center;">2</td>
-                            <td style="text-align:center;">Gabriel, Jayvee table.</td>
-                            <td style="text-align:center;color:orange;">70 BPM</td>
-                            <td style="text-align:center;">35 ℃</td>
-                            <td style="text-align:center;">Left Side</td>
-                            <td style="text-align:center;">Normal</td>
-                          </tr>
-                          <tr>
-                            <td style="text-align:center;"><span class="badge " style ="text-align:right;">1</span></td>
-                            <td style="text-align:center;">1</td>
-                            <td style="text-align:center;">Tiu, Kayle E.</td>
-                            <td style="text-align:center;">70 BPM</td>
-                            <td style="text-align:center;">35 ℃</td>
-                            <td style="text-align:center;">Back</td>
+                            <td style="text-align:center;">{{bed.bedNumber}}</td>
+                            <td style="text-align:center;">{{patient.lastName}}, {{patient.firstName}}</td>
+                            <td style="text-align:center;color:red;">{{patient.get_heartrate}} BPM</td>
+                            <td style="text-align:center;color:red;">{{patient.get_temperature}} ℃</td>
+                            <td style="text-align:center;">{{patient.get_position}}</td>
                             <td style="text-align:center;">Normal</td>
                           </tr>
 
+
+                        {% endwith %}
+                       {% endfor %}
 
 
 
@@ -425,568 +427,222 @@
 </audio>
 <script src="{% static 'js/base.js'%}"></script>
 <script>
+  var rightSidePos = new Image();
+  var rightFetalPos = new Image();
+  var leftSidePos = new Image();
+  var leftFetalPos = new Image();
+  var backPos = new Image();
+  var nonePos = new Image();
 
-
-
-
-  function patientobject(idPatient,firstName,lastName, heartRate,temperature,bedNumber, minTemp, maxTemp, minHeartRate, maxHeartRate,patientStatus,positionPatient){
-      this.idPatient = idPatient;
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.heartRate = heartRate;
-      this.temperature = temperature;
-      this.bedNumber = bedNumber;
-      this.minTemp = minTemp;
-      this.maxTemp = maxTemp;
-      this.minHeartRate = minHeartRate;
-      this.maxHeartRate = maxHeartRate;
-      this.diffMinHR = heartRate - minHeartRate;
-      this.diffMaxHR = maxHeartRate - heartRate;
-      this.diffMinTEMP = temperature - minTemp;
-      this.diffMaxTEMP = maxTemp - temperature;
-      this.score = 0;
-			this.positionPatient = positionPatient;
-      this.patientStatus = patientStatus;
-      this.status = 0;
-      if(this.diffMinHR >= this.diffMaxHR){
-        this.toCompareHR = this.diffMaxHR;
-      }
-      else{
-        this.toCompareHR = this.diffMinHR;
-      }
-      if(this.diffMinTEMP >= this.diffMaxTEMP){
-        this.toCompareTEMP = this.diffMaxTEMP;
-      }
-      else{
-        this.toCompareTEMP = this.diffMinTEMP;
-      }
-      if(this.toCompareHR < 0 || this.toCompareTEMP < 0 ){
-        this.status = 2;
-      }
-      else if(this.toCompareHR <= 10 && this.toCompareHR >= 0 || this.toCompareTEMP <= 0.2 && this.toCompareTEMP >= 0){
-        this.status = 1;
-      }
-      else{
-        this.status = 0;
-      }
-      if(this.patientStatus == "STARTING"){
-        this.status = 3;
-      }
+  function preload(){
+    rightSidePos.src = "{% static 'img/rightsidepos.png'%}";
+    rightFetalPos.src = "{% static 'img/rightfetalpos.png'%}";
+    leftSidePos.src = "{% static 'img/leftsidepos.png'%}";
+    leftFetalPos.src = "{% static 'img/leftfetalpos.png'%}";
+    backPos.src ="{% static 'img/backpos.png'%}";
+    nonePos.src = "{% static 'img/none.png'%}";
   }
 
   $(document).ready(function(){
-    $("#dropdownLi").click(function(){
-      $.ajax({
-        url: '/ajax/ajaxClearNewNotifications/',
-        data: {
+    preload();
+    $(".roomDropdown").change(function(){
+      var idRoom = this.value;
+      updateDashboard(idRoom);
 
-        },
-        dataType: 'json',
-        success: function (data){
 
-          $("#badgeData").attr("data-badge",0);
 
-        }
-      });
     });
+
     window.setInterval(function(){
-      $.ajax({
-        url: '/ajax/ajaxGetNewNotificationsSize/',
-        data: {
+      updateDashboard($(".roomDropdown").val());
 
-        },
-        dataType: 'json',
-        success: function (data){
-          var size = data[0].size;
-
-          $("#badgeData").attr("data-badge",size);
-
-        }
-      });
-      $.ajax({
-        url: '/ajax/ajaxGetNotifications/',
-        data: {
-
-        },
-        dataType: 'json',
-        success: function (data){
-          console.log(data);
-          var qwe = "";
-          for(var l = 0; l < data.length; l++){
-            qwe += '<tr>'+
-              '<td style="width:30%;"><button class="btn btn-warning">Bed '+ data[l].bedNumber +'</button></td>'+
-              '<td style="width:70%; font-size:10px;">needs your assistance!</td>'+
-
-            '</tr>';
-
-          }
-          $("#notifBody").html(qwe);
-
-        }
-      });
-
-    },2000);
-
-    $("#clearTable").click(function(){
-      $("#logTable").html("");
-    });
-      var udata = [0];
-      if (udata >= 70) {
-        document.getElementById("bed").style.background = '#FFBABA';
-        document.getElementById("bed").style.color = '#D8000C';
-      }
-      else if (udata >= 51 && udata < 70)
-      {
-        document.getElementById("bed").style.background = '#FEEFB3';
-        document.getElementById("bed").style.color = '#9F6000';
-      }
-			window.setInterval(function(){
-				$.ajax({
-					url: '/ajax/ajaxGetClicked/',
-					data: {
-
-					},
-					dataType: 'json',
-					success: function (data){
-						$.ajax({
-							url: '/ajax/ajaxClearClicked/',
-							data: {
-
-							},
-							dataType: 'json',
-							success: function (data2){
-
-							}
-						});
-						var aw = "";
-						for(var x = 0; x < data.length; x++){
-							document.getElementById("myAudio").play();
-							var temp = data[x].bedNumber;
-							var aw = '<div class="alert bedNo'+ temp + ' alert-danger alert-dismissable fade in" id="">'+
-									'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'+
-									'BED# ' + temp +
-								'</div>';
-
-								$("#containerDiv").append(aw);
-								setTimeout(function(){
-									$(".bedNo"+temp).alert('close');
-								},5000);
-
-						}
-
-
-
-					}
-				});
-			},2000);
-
-
-
-      window.setInterval(function(){
-        $.ajax({
-      		url: '/ajax/ajaxUpdateDashboard/',
-      		data: {
-
-      		},
-      		dataType: 'json',
-      		success: function (patient){
-            var patientList = new Array();
-
-            for(var i = 0; i< patient.length; i++){
-              var idPatient = patient[i].idPatient_id;
-              var firstName = patient[i].firstName;
-              var lastName = patient[i].lastName;
-              var heartRate = patient[i].heartRate;
-              var lastName = patient[i].lastName;
-              var temperature = patient[i].temperature;
-              var bedNumber = patient[i].bedNumber;
-              var minTemp = patient[i].minTemp;
-              var maxTemp = patient[i].maxTemp;
-              var minHeartRate = patient[i].minHeartRate;
-              var maxHeartRate = patient[i].maxHeartRate;
-              var patientStatus = patient[i].patientStatus;
-							var positionPatient = patient[i].positionPatient;
-              var p1 = new patientobject(idPatient,firstName,lastName, heartRate,temperature,bedNumber, minTemp, maxTemp, minHeartRate, maxHeartRate, patientStatus,positionPatient);
-              patientList.push(p1);
-
-            }
-
-            var arrangedList = new Array();
-
-
-            //arranges from lowest to heighest
-            for(var i = 0; i < patientList.length; i++){
-              for(var j = 0; j < patientList.length - 1; j++){
-                if(patientList[i].toCompareHR < patientList[j].toCompareHR){
-                  var temp = patientList[j];
-                  patientList[j] = patientList[i];
-                  patientList[i] = temp;
-                }
-              }
-            }
-
-            //assigning if critical or warning
-            for(var i=0; i < patientList.length; i++){
-              if(patientList[i].toCompareHR < 0){
-                patientList[i].score = patientList[i].score + (patient.length - i)*2;
-              }
-              else{
-
-                patientList[i].score = patientList[i].score + patient.length - i;
-              }
-
-            }
-
-            //arranges from lowest to heighest
-            for(var i = 0; i < patientList.length; i++){
-              for(var j = 0; j < patientList.length - 1; j++){
-                if(patientList[i].toCompareTEMP < patientList[j].toCompareTEMP){
-                  var temp = patientList[j];
-                  patientList[j] = patientList[i];
-                  patientList[i] = temp;
-                }
-              }
-            }
-
-            //assigning if critical or warning
-            for(var i=0; i < patientList.length; i++){
-              if(patientList[i].toCompareTEMP < 0){
-                patientList[i].score = patientList[i].score + (patient.length - i)*2;
-              }
-              else{
-
-                patientList[i].score = patientList[i].score + patient.length - i;
-              }
-            }
-
-            //sorting using the final score.
-            for(var i = 0; i < patientList.length; i++){
-              for(var j = 0; j < patientList.length - 1; j++){
-                if(patientList[i].score > patientList[j].score){
-                  var temp = patientList[j];
-                  patientList[j] = patientList[i];
-                  patientList[i] = temp;
-                }
-              }
-            }
-            var wew = "";
-            var counter = 0;
-
-
-            for(var i = 0; i < patientList.length; i++){
-              if( patientList[i].status == 2 || patientList[i].status == 1){
-
-                //FOR OLIE SANDEL
-
-
-                var tempBadge = counter + 1;
-                counter += 1;
-                wew += '<div class = "span3">'+
-                  '<div class="widget" id = "' + patientList[i].idPatient +'">'+
-                    '<div class="widget-header" > <i class="icon-user"></i>'+
-                      '<h3>Bed #' +  patientList[i].bedNumber + '</h3>'+
-                       '<span class="badge badge-danger">'+ tempBadge  +'</span>'+
-
-                  '  </div>'+
-
-
-
-                  '  <div class="widget-content" align = "center" id ="bed">'+
-    '    <p><b>'+ patientList[i].lastName +', ' + patientList[i].firstName + '</b></p>';
-									if(patientList[i].positionPatient == "RIGHT FETAL"){
-										wew += '<img src="../static/img/rightfetalpos.png"/>';
-									}
-									if(patientList[i].positionPatient == "RIGHT SIDE"){
-										wew += '<img src="../static/img/rightsidepos.png"/>';
-									}
-									if(patientList[i].positionPatient == "LEFT FETAL"){
-										wew += '<img src="../static/img/leftfetalpos.png"/>';
-									}
-									if(patientList[i].positionPatient == "LEFT SIDE"){
-										wew += '<img src="../static/img/leftsidepos.png"/>';
-									}
-									if(patientList[i].positionPatient == "BACK"){
-										wew += '<img src="../static/img/backpos.png"/>';
-									}
-									if(patientList[i].positionPatient == "NONE"){
-										wew += '<img src="../static/img/none.png"/>';
-									}
-                  wew += '<div class ="widget-table action-table">';
-
-                      // '<img src="../static/img/newback.png"/>'+
-
-                      wew += '<table class="widget-table table" >'+
-
-                        '<thead >'+
-                          '<tr>'+
-                            '<th  style="text-align:center; font-size:15px;">' + patientList[i].positionPatient + '</th>'+
-
-                          '</tr>'+
-                      '  </thead>'+
-                        '<tbody>'+
-                        '</tbody>'+
-                    ' </table>'+
-                      '<table class="widget-table table">'+
-
-                        '<thead >'+
-                        '  <tr>'+
-                            '<th width="50%" style="text-align:center;font-size:15px">' + patientList[i].heartRate + ' BPM</th>'+
-                            '<th width="50%"  style="text-align:center;font-size:15px">'+ patientList[i].temperature+ '˚C</th>'+
-
-                          '</tr>'+
-                        '</thead>'+
-                      '<tbody>'+
-                      '</tbody>'+
-                  '</table>'+
-                  '<table class="widget-table table" >'+
-
-                      '  <thead >'+
-                      '  <tr>'+
-                        '<th width="25%" style="text-align:center; font-size:10px;">'+ patientList[i].minHeartRate +' BPM <br><span style="color:grey;"> MIN</span> </th>'+
-                        '<th width="25%" style="text-align:center; font-size:10px;">' + patientList[i].maxHeartRate+ ' BPM <br><span style="color:grey;"> MAX </span></th>'+
-                        '<th width="25%" style="text-align:center; font-size:10px;"> '+ patientList[i].minTemp+'˚C <br><span style="color:grey;"> MIN </span></th>'+
-                        '<th width="25%" style="text-align:center; font-size:10px;">' + patientList[i].maxTemp +'˚C <br><span style="color:grey;"> MAX </span></th>'+
-                        '</tr></thead>'+
-
-                    '  <tbody>'+
-                      '</tbody>'+
-                  '</table>'+
-
-                    '</div>'+
-
-                  '</div>'+
-                  '</div>'+
-                '</div>';
-
-
-
-                //FOR OLIE SANDEL
-              }
-
-            }
-
-
-            for(var i = 0; i < patientList.length; i++){
-              if(patientList[i].status == 3){
-
-                                var tempBadge = counter + 1;
-                                counter += 1;
-                                wew += '<div class = "span3">'+
-                                  '<div class="widget" id = "' + patientList[i].idPatient +'">'+
-                                    '<div class="widget-header" > <i class="icon-user"></i>'+
-                                      '<h3>Bed #' +  patientList[i].bedNumber + '</h3>'+
-                                       '<span class="badge badge-danger">'+ tempBadge  +'</span>'+
-
-                                  '  </div>'+
-
-
-
-                                  '  <div class="widget-content" align = "center" id ="bed">'+
-                    '    <p><b>'+ patientList[i].lastName +', ' + patientList[i].firstName + '</b></p>';
-                									if(patientList[i].positionPatient == "RIGHT FETAL"){
-                										wew += '<img src="../static/img/rightfetalpos.png"/>';
-                									}
-                									if(patientList[i].positionPatient == "RIGHT SIDE"){
-                										wew += '<img src="../static/img/rightsidepos.png"/>';
-                									}
-                									if(patientList[i].positionPatient == "LEFT FETAL"){
-                										wew += '<img src="../static/img/leftfetalpos.png"/>';
-                									}
-                									if(patientList[i].positionPatient == "LEFT SIDE"){
-                										wew += '<img src="../static/img/leftsidepos.png"/>';
-                									}
-                									if(patientList[i].positionPatient == "BACK"){
-                										wew += '<img src="../static/img/backpos.png"/>';
-                									}
-                									if(patientList[i].positionPatient == "NONE"){
-                										wew += '<img src="../static/img/none.png"/>';
-                									}
-                                  wew += '<div class ="widget-table action-table">';
-
-                                      // '<img src="../static/img/newback.png"/>'+
-
-                                      wew += '<table class="widget-table table" >'+
-
-                                        '<thead >'+
-                                          '<tr>'+
-                                            '<th  style="text-align:center; font-size:15px;">' + patientList[i].positionPatient + '</th>'+
-
-                                          '</tr>'+
-                                      '  </thead>'+
-                                        '<tbody>'+
-                                        '</tbody>'+
-                                    ' </table>'+
-                                      '<table class="widget-table table">'+
-
-                                        '<thead >'+
-                                        '  <tr>'+
-                                            '<th width="50%" style="text-align:center;font-size:15px">' + patientList[i].heartRate + ' BPM</th>'+
-                                            '<th width="50%"  style="text-align:center;font-size:15px">'+ patientList[i].temperature+ '˚C</th>'+
-
-                                          '</tr>'+
-                                        '</thead>'+
-                                      '<tbody>'+
-                                      '</tbody>'+
-                                  '</table>'+
-                                  '<table class="widget-table table" >'+
-
-                                      '  <thead >'+
-                                      '  <tr>'+
-                                        '<th width="25%" style="text-align:center; font-size:10px;">'+ patientList[i].minHeartRate +' BPM <br><span style="color:grey;"> min</span> </th>'+
-                                        '<th width="25%" style="text-align:center; font-size:10px;">' + patientList[i].maxHeartRate+ ' BPM <br><span style="color:grey;"> max </span></th>'+
-                                        '<th width="25%" style="text-align:center; font-size:10px;"> '+ patientList[i].minTemp+'˚C <br><span style="color:grey;"> min </span></th>'+
-                                        '<th width="25%" style="text-align:center; font-size:10px;">' + patientList[i].maxTemp +'˚C <br><span style="color:grey;"> max  </span></th>'+
-                                        '</tr></thead>'+
-
-                                    '  <tbody>'+
-                                      '</tbody>'+
-                                  '</table>'+
-
-                                    '</div>'+
-
-                                  '</div>'+
-                                  '</div>'+
-                                '</div>';
-
-
-
-
-              }
-
-            }
-
-            for(var i = 0; i < patientList.length; i++){
-              if(patientList[i].status == 0){
-
-                                var tempBadge = counter + 1;
-                                counter += 1;
-                                wew += '<div class = "span3">'+
-                                  '<div class="widget" id = "' + patientList[i].idPatient +'">'+
-                                    '<div class="widget-header" > <i class="icon-user"></i>'+
-                                      '<h3>Bed #' +  patientList[i].bedNumber + '</h3>'+
-                                       '<span class="badge badge-danger">'+ tempBadge  +'</span>'+
-
-                                  '  </div>'+
-
-
-
-                                  '  <div class="widget-content" align = "center" id ="bed">'+
-                    '    <p><b>'+ patientList[i].lastName +', ' + patientList[i].firstName + '</b></p>';
-                									if(patientList[i].positionPatient == "RIGHT FETAL"){
-                										wew += '<img src="../static/img/rightfetalpos.png"/>';
-                									}
-                									if(patientList[i].positionPatient == "RIGHT SIDE"){
-                										wew += '<img src="../static/img/rightsidepos.png"/>';
-                									}
-                									if(patientList[i].positionPatient == "LEFT FETAL"){
-                										wew += '<img src="../static/img/leftfetalpos.png"/>';
-                									}
-                									if(patientList[i].positionPatient == "LEFT SIDE"){
-                										wew += '<img src="../static/img/leftsidepos.png"/>';
-                									}
-                									if(patientList[i].positionPatient == "BACK"){
-                										wew += '<img src="../static/img/backpos.png"/>';
-                									}
-                									if(patientList[i].positionPatient == "NONE"){
-                										wew += '<img src="../static/img/none.png"/>';
-                									}
-                                  wew += '<div class ="widget-table action-table">';
-
-                                      // '<img src="../static/img/newback.png"/>'+
-
-                                      wew += '<table class="widget-table table" >'+
-
-                                        '<thead >'+
-                                          '<tr>'+
-                                            '<th  style="text-align:center; font-size:15px;">' + patientList[i].positionPatient + '</th>'+
-
-                                          '</tr>'+
-                                      '  </thead>'+
-                                        '<tbody>'+
-                                        '</tbody>'+
-                                    ' </table>'+
-                                      '<table class="widget-table table">'+
-
-                                        '<thead >'+
-                                        '  <tr>'+
-                                            '<th width="50%" style="text-align:center;font-size:15px">' + patientList[i].heartRate + ' BPM</th>'+
-                                            '<th width="50%"  style="text-align:center;font-size:15px">'+ patientList[i].temperature+ ' ˚C</th>'+
-
-                                          '</tr>'+
-                                        '</thead>'+
-                                      '<tbody>'+
-                                      '</tbody>'+
-                                  '</table>'+
-                                  '<table class="widget-table table" >'+
-
-                                      '  <thead >'+
-                                      '  <tr>'+
-                                        '<th width="25%" style="text-align:center; font-size:10px;">'+ patientList[i].minHeartRate +' BPM <br><span style="color:grey;"> MIN</span> </th>'+
-                                        '<th width="25%" style="text-align:center; font-size:10px;">' + patientList[i].maxHeartRate+ ' BPM <br><span style="color:grey;"> MAX </span></th>'+
-                                        '<th width="25%" style="text-align:center; font-size:10px;"> '+ patientList[i].minTemp+'˚C <br><span style="color:grey;"> MIN </span></th>'+
-                                        '<th width="25%" style="text-align:center; font-size:10px;">' + patientList[i].maxTemp +' ˚C <br><span style="color:grey;"> MAX  </span></th>'+
-                                        '</tr></thead>'+
-
-                                    '  <tbody>'+
-                                      '</tbody>'+
-                                  '</table>'+
-
-                                    '</div>'+
-
-                                  '</div>'+
-                                  '</div>'+
-                                '</div>';
-
-
-
-
-              }
-            }
-            $("#divRow").html(wew);
-            for(var q = 0; q < patientList.length; q++){
-              if(patientList[q].patientStatus == "ON BED"){
-                if(patientList[q].status == 2){
-										var d = new Date();
-
-                    document.getElementById(patientList[q].idPatient).style.boxShadow = "0px 0px 10px 4px red";
-                    var tempText = '<tr>'+
-                      '<td style="width:20%;"><button class="btn btn-danger">'+ patientList[q].bedNumber+'</button></td>'+
-                      '<td style="width:80%; font-size:10px;">'+ d.toLocaleTimeString() + '</td>'+
-
-                    '</tr>';
-                    $("#logTable").prepend(tempText);
-
-											// document.getElementById("myAudio").play();
-                }
-
-                else if(patientList[q].status == 1){
-                  document.getElementById(patientList[q].idPatient).style.boxShadow = "0px 0px 10px 4px orange";
-                  var tempText = '<tr>'+
-                    '<td style="width:20%;"><button class="btn btn-warning">'+ patientList[q].bedNumber+'</button></td>'+
-                    '<td style="width:80%; font-size:10px;">'+ d.toLocaleTimeString() + '</td>'+
-
-                  '</tr>';
-
-                  $("#logTable").prepend(tempText);
-
-                }
-
-              }
-              else {
-                  document.getElementById(patientList[q].idPatient).style.boxShadow = "0px 0px 10px 4px grey";
-
-              }
-
-            }
-      		}
-      	});
-      },2000);
-
-
+    }, 1000);
   });
 
+  function listMaker(bedNumber,lastName,firstName,heartRate,temperature, position,condition){
+      
+       if(condition == "critical"){ 
+        wew = '<tr style="box-shadow:0px 0px 4px 2px red">';
+       }
+       else if(condition == "warning"){
+        wew = '<tr style="box-shadow:0px 0px 4px 2px orange">';
+       }
+       else if(condition == "starting"){    
+        wew = '<tr style="box-shadow:0px 0px 4px 2px grey">';
+       }
+       else{
+        wew = '<tr style="box-shadow:0px 0px 4px 2px">';
+       }
+       wew +='<td style="text-align:center;"><span class="badge badge-danger" style ="text-align:right;">3</span></td>'+
+             '<td style="text-align:center;">' + bedNumber + '</td>'+
+             '<td style="text-align:center;">' + lastName + ',' + firstName + '</td>' +
+             '<td style="text-align:center;color:red;">' + heartRate + 'BPM</td>'+
+             '<td style="text-align:center;color:red;">'+ temperature + '℃</td>'+
+             '<td style="text-align:center;">'+ position +'</td>'+
+             '<td style="text-align:center;">Normal</td></tr>';
+      return wew;
+ } 
+  function tileMaker(idPatient, bedNumber,firstName,lastName,position,heartRate,temperature,minHeartRate,maxHeartRate, minTemp,maxTemp,condition){
+      waw = '<div class = "span3">';
 
+      if(condition == "critical"){
+        waw += '<div class="widget" style="box-shadow:0px 0px 10px 4px red" id = "'+ idPatient+'">';
+      }
+      else if(condition == "warning"){
+        waw += '<div class="widget" style="box-shadow:0px 0px 10px 4px orange" id = "'+ idPatient+'">';
+      }
+      else if(condition == "starting"){
 
+        waw += '<div class="widget" style="box-shadow:0px 0px 10px 4px grey" id = "'+ idPatient+'">';
+      }
+      else{
+
+        waw += '<div class="widget" id = "'+ idPatient+'">';        
+      }
+      waw += '<div class="widget-header"><i class="icon-user"></i><h3>Bed #'+bedNumber+'</h3>';
+      waw += '</div><div class="widget-content" align = "center" id ="bed"><p>';
+      waw += '<b>'+ lastName+', '+firstName+'</b></p>';
+
+      if(position == "RIGHT SIDE"){
+        image = rightSidePos;
+      }
+      if(position == "RIGHT FETAL"){
+        image = rightFetalPos;
+      }
+      if(position == "LEFT SIDE"){
+        image = leftSidePos;
+      }
+      if(position == "LEFT FETAL"){
+        image = leftFetalPos ;
+      }
+      if(position == "BACK"){
+        image = backPos;
+      }
+      if(position == "NONE"){
+        image = nonePos;
+      }
+
+      waw += '<img src="'+image.src+'" />';
+      // waw += image;
+      waw += '<div class ="widget-table action-table"><table class=" widget-table table" >';
+      waw += '<thead><tr><th style="text-align:center; font-size:15px;">' + position+'</th>';
+      waw += '</tr></thead><tbody></tbody></table><table class="widget-table table"><thead><tr>';
+      waw += '<th width="50%" style="text-align:center;font-size:15px">'+heartRate+' BPM</th>';
+      waw += '<th width="50%"  style="text-align:center;font-size:15px">'+temperature+'˚C</th>';
+      waw += '</tr></thead><tbody></tbody></table><table class="widget-table table"><thead ><tr>';
+      waw += '<th  width="25%"  style="text-align:center; font-size:10px;">'+minHeartRate+ 'BPM <br><span style="color:grey;"> MIN</span></th>';
+      waw += '<th  width="25%" style="text-align:center; font-size:10px;">'+maxHeartRate+' BPM <br><span style="color:grey;"> MAX </span></th>';
+      waw += '<th  width="25%" style="text-align:center;  font-size:10px;">'+minTemp+'˚C <br><span style="color:grey;"> MIN </span></th>';
+      waw += '<th  width="25%" style="text-align:center;  font-size:10px;">'+maxTemp+'˚C <br><span style="color:grey;"> MAX  </span></th>';
+      waw += '</tr></thead><tbody></tbody></table></div></div></div></div>';
+      return waw;
+
+  }
+  function patientobject(idPatient, toCompareHR, toCompareTEMP, status,firstName,lastName, heartRate,temperature,bedNumber, minTemp, maxTemp, minHeartRate, maxHeartRate, positionPatient){
+    this.idPatient = idPatient;
+    this.score = 0;
+    this.toCompareHR = toCompareHR;
+    this.toCompareTEMP = toCompareTEMP;
+    this.status = status;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.heartRate = heartRate;
+    this.temperature = temperature;
+    this.bedNumber = bedNumber;
+    this.minTemp = minTemp;
+    this.maxTemp = maxTemp;
+    this.minHeartRate = minHeartRate;
+    this.maxHeartRate = maxHeartRate;
+    this.positionPatient = positionPatient;
+  }
+  function updateDashboard(idRoom){
+    
+    
+    $.ajax({
+        url: '/ajax/ajaxGetUpdatedDashboard/',
+        data: {
+          "idRoom":idRoom,
+        },
+        dataType: 'json',
+        success: function (data){
+            var isChecked = $("#checkboxAutoAdjust").prop("checked");
+            var tileTable = "";
+            var listTable = "";
+
+            if(!isChecked){
+              data.patients.forEach(function(a){
+                listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.position,a.condition);
+                tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.position, a.heartRate, a.temperature, a.minhr,a.maxhr, a.mint,a.maxt,a.condition);
+               });
+            }
+
+            else{
+              var patientList = new Array();
+              var patient = data.patients;
+              data.patients.forEach(function(a){
+                var p1 = new patientobject(a.idPatient, a.toCompareHR, a.toCompareTEMP, a.condition,a.firstName, a.lastName, a.heartRate, a.temperature, a.bedNumber, a.mint, a.maxt, a.minhr, a.maxhr, a.position);
+                patientList.push(p1);
+              });
+                //arranges from lowest to highest
+              for(var i = 0; i < patientList.length; i++){
+                for(var j = 0; j < patientList.length - 1; j++){
+                  if(patientList[i].toCompareHR < patientList[j].toCompareHR){
+                    var temp = patientList[j];
+                    patientList[j] = patientList[i];
+                    patientList[i] = temp;
+                  }
+                }
+              }
+              //assigning if critical or warning
+              for(var i=0; i < patientList.length; i++){
+                if(patientList[i].toCompareHR < 0){
+                  patientList[i].score = patientList[i].score + (patient.length - i)*2;
+                }
+                else{
+                  patientList[i].score = patientList[i].score + patient.length - i;
+                }
+              }
+               //arranges from lowest to highest
+              for(var i = 0; i < patientList.length; i++){
+                for(var j = 0; j < patientList.length - 1; j++){
+                  if(patientList[i].toCompareTEMP < patientList[j].toCompareTEMP){
+                    var temp = patientList[j];
+                    patientList[j] = patientList[i];
+                    patientList[i] = temp;
+                  }
+                }
+              }
+              //assigning if critical or warning
+              for(var i=0; i < patientList.length; i++){
+                if(patientList[i].toCompareTEMP < 0){
+                  patientList[i].score = patientList[i].score + (patient.length - i)*2;
+                }
+                else{
+                  patientList[i].score = patientList[i].score + patient.length - i;
+                }
+              }
+              //sorting using the final score.
+              for(var i = 0; i < patientList.length; i++){
+                for(var j = 0; j < patientList.length - 1; j++){
+                  if(patientList[i].score > patientList[j].score){
+                    var temp = patientList[j];
+                    patientList[j] = patientList[i];
+                    patientList[i] = temp;
+                  }
+                }
+              }
+              patientList.forEach(function(a){
+                if(a.status == "warning" || a.status == "critical"){
+                  listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status);
+                  tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status);
+                }
+              });   
+            }
+            $("#tileTable").html(tileTable);
+            $("#listTable").html(listTable);
+        }
+      });
+  }
 </script>
 
 <!--

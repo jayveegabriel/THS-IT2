@@ -489,45 +489,26 @@
 	}
 
 	function displayCharts(heartRateData, temperatureData){
+		console.log(heartRateData);
 		Highcharts.chart('hr', {
-				chart: {
-						type: 'spline',
-						scrollablePlotArea: {
-								minWidth: 600,
-								scrollPositionX: 1
-						}
-				},
+				
 				title: {
 						text: 'Heart Rate Report'
 				},
 				subtitle: {
 						text: '2018-11-26'
 				},
-				xAxis: {
-						type: 'datetime',
-						labels: {
-								overflow: 'justify'
-						}
-				},
+				// xAxis: {
+				// 		type: 'datetime',
+				// 		labels: {
+				// 				overflow: 'justify'
+				// 		}
+				// },
 				yAxis: {
 						title: {
 								text: 'Heart Rate (BPM)'
 						},
-						minorGridLineWidth: 0,
-						gridLineWidth: 0,
-						alternateGridColor: null,
-						plotBands: [ { // Light breeze
-								from: "{{minHeartRate}}",
-								to: "{{maxHeartRate}}",
-								color: 'rgba(0,255,0,0.2)',
-								label: {
-										text: 'Normal',
-										style: {
-												color: '#606060'
-										}
-								}
-						},
-	 ]
+						
 				},
 				tooltip: {
 
@@ -536,19 +517,25 @@
 
 				},
 				plotOptions: {
-						spline: {
-								lineWidth: 1,
-								states: {
-										hover: {
-												lineWidth: 1
-										}
-								},
-								marker: {
-										enabled: false
-								},
-								pointInterval: 60000, // one hour 60000 if 1 second
-								pointStart: Date.UTC(2018, 2, 13, 0, 0, 0) // start day and time
+						// spline: {
+						// 		lineWidth: 1,
+						// 		states: {
+						// 				hover: {
+						// 						lineWidth: 1
+						// 				}
+						// 		},
+						// 		marker: {
+						// 				enabled: false
+						// 		},
+						// 		// pointInterval: 60000, // one hour 60000 if 1 second
+						// 		pointStart: 2018 // start day and time
 
+						// }
+						series: {
+							label:{
+								connectorAllowed: false
+							},
+							pointStart: 2010
 						}
 				},
 				series: [{
@@ -556,14 +543,10 @@
 					color: Highcharts.getOptions().colors[5],
 					fillOpacity: 0.5,
 						name: "{{firstName}}",
-						data: heartRateData
+						data: [0,0,0,10,10,10,20,20,20,40,30]
 
 				}, ],
-				navigation: {
-						menuItemStyle: {
-								fontSize: '10px'
-						}
-				}
+				
 		});
 
 		Highcharts.chart('temp', {
