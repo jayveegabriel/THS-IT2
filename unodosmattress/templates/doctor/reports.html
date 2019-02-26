@@ -134,104 +134,63 @@
 
 	<a class ="animated slideInUp" href="{% url 'unodosmattress:patients' %}"><i class="icon-arrow-left"></i> Back</a>
 
-
-
-
-
 	<div class="main-inner">
-
+		<br>
 	    <div class="container" >
-
 				<div class="row">
 					<div class="span2">
-
 	      		<div class="widget">
-
-
-
 	      		</div> <!-- /widget -->
-
       		</div> <!-- /span4 -->
 					<div class="span4">
-
 	      		<div class="widget">
-
 	      			<div class="widget-content" align ="center">
-
 			      		<h4>Choose a Type</h4>
 								<br>
 								<form id="type" class="form-horizontal" method = "POST" action=".">
 									{% csrf_token %}
 								 <fieldset>
-
-
-																						 <div class="form-group">
-
-																							 <select class="form-control" id="selecttype"  onchange="filterReport()">
-																								 <option value ="0">All</option>
-																								 <option value ="1">Heart Rate</option>
-																								 <option value ="2">Temperature</option>
-																								 <option value ="3">Position</option>
-																							 <select>
-
-																						 </div>	<!-- /controls -->
+									 <div class="form-group">
+									 	<select class="form-control" id="selecttype"  onchange="filterReport()">
+											<option value ="0">All</option>
+											<option value ="1">Heart Rate</option>
+											<option value ="2">Temperature</option>
+									 		<option value ="3">Position</option>
+									 	<select>
+									 </div>	<!-- /controls -->
 									  <!-- /control-group -->
 								</fieldset>
-
 								<!--1<img id ="image" src="{% static 'img/blank.png'%}"  / >!-->
-
 								</form>
-
 		      		</div> <!-- /widget-content -->
-
 	      		</div> <!-- /widget -->
-
       		</div> <!-- /span4 -->
 					<div class="span4">
 						<div class="widget">
-
 	      		<div id="target-3" class="widget">
-
 	      			<div class="widget-content" align ="center">
-
-
 			      		<h4>Choose a QD</h4>
 								<br>
 								<form id="patient" class="form-horizontal" method = "POST" action=".">
 									{% csrf_token %}
 								 <fieldset>
-
-
-																						 <div class="form-group">
-
-																							 <select class="form-control" id="selectqd" onchange="changeQ()">
-
-																								 <option value ="1">q1min</option>
-																								 <option value ="2">q15min</option>
-
-																							 <select>
-
-																						 </div>	<!-- /controls -->
+									 <div class="form-group">
+										 <select class="form-control" id="selectqd" onchange="changeQ()">
+											<option value ="1">q1min</option>
+											<option value ="2">q15min</option>
+									 	<select>
+								 	</div>	<!-- /controls -->
 									  <!-- /control-group -->
 								</fieldset>
-
 								<!-- <img src="{% static 'img/blank.png'%}"  / >!-->
-
 								</form>
-
 		      		</div> <!-- /widget-content -->
-
 	      		</div> <!-- /widget -->
-
       		</div> <!-- /span4 -->
+					</div>
 					<div class="span2">
-
 	      		<div class="widget">
-
-
-
 	      		</div> <!-- /widget -->
-
       		</div> <!-- /span4 -->
 
 				</div>
@@ -239,7 +198,7 @@
 
 
 				<div class ="row">
- 	      	<div class="span6">
+ 	      	<div class="span7">
  						<div class="widget" id="heartRateWidget">
  					     <div class="widget-content" >
  									<div class ="timeline-wrapper" id="hr" style="min-height: 400px; min-width: 380px">
@@ -248,7 +207,7 @@
  						</div>
 					</div>
 
-					<div class="span6">
+					<div class="span5">
  						<div class="widget" id="heartRateWidget2">
  					     <div class="widget-content"  style = "overflow-y:auto;height:400px;">
 								 <div class ="" align ="center">
@@ -283,14 +242,14 @@
 				</div>
 
 				<div class ="row">
-					<div class ="span6">
+					<div class ="span7">
 						<div class="widget" id="temperatureWidget">
 							 <div class="widget-content" >
 								<div id="temp" style="height: 400px; min-width: 380px"></div>
 									</div>
 					  </div>
 					</div>
-					<div class ="span6">
+					<div class ="span5">
 						<div class="widget" id="temperatureWidget2">
 							 <div class="widget-content" style = "overflow-y:auto;height:400px;" >
 								 <div class ="" align ="center">
