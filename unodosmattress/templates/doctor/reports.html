@@ -504,6 +504,16 @@
 				// 				overflow: 'justify'
 				// 		}
 				// },
+				xAxis: {
+			        type: 'time',
+			        // dateTimeLabelFormats: { // don't display the dummy year
+			        //     month: '%e. %b',
+			        //     year: '%b'
+			        // },
+			        title: {
+			            text: 'Date'
+			        }
+			    },
 				yAxis: {
 						title: {
 								text: 'Heart Rate (BPM)'
@@ -517,25 +527,12 @@
 
 				},
 				plotOptions: {
-						// spline: {
-						// 		lineWidth: 1,
-						// 		states: {
-						// 				hover: {
-						// 						lineWidth: 1
-						// 				}
-						// 		},
-						// 		marker: {
-						// 				enabled: false
-						// 		},
-						// 		// pointInterval: 60000, // one hour 60000 if 1 second
-						// 		pointStart: 2018 // start day and time
-
-						// }
+						
 						series: {
 							label:{
 								connectorAllowed: false
 							},
-							pointStart: 2010
+
 						}
 				},
 				series: [{
@@ -543,7 +540,13 @@
 					color: Highcharts.getOptions().colors[5],
 					fillOpacity: 0.5,
 						name: "{{firstName}}",
-						data: [0,0,0,10,10,10,20,20,20,40,30]
+						data: [["00:00:10", 70],
+						["00:00:10", 70],
+						["00:00:20", 70],
+						["00:00:30", 70],
+						["00:00:40", 70],
+						["00:00:50", 70],
+						["00:00:60", 70],]
 
 				}, ],
 				
