@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 
+
 # Create your models here.
 #class Ref_HeartRate(models.Model):
 #	idRef_HeartRate = models.AutoField(primary_key=True)
@@ -23,10 +24,60 @@ class Ref_Temp(models.Model):
 # 	name = models.CharField(max_length=45)
 
 
+class Room(models.Model):
+	idRoom = models.AutoField(primary_key=True)
+	roomNumber = models.CharField(max_length=45)
+	@property
+	def get_beds(self):
+		return Beds.objects.filter(idRoom_id=self.idRoom)
+
+	@property
+	def get_occupied_beds(self):
+		return Beds.objects.filter(idRoom_id=self.idRoom,bedStatus="Occupied").values()
+
+
+	@property
+	def get_occupied_beds_dashboard(self):
+		return Beds.objects.filter(idRoom_id=self.idRoom,bedStatus="Occupied")
+
+
+	@property
+	def get_occupied_size(self):
+		return len(Beds.objects.filter(idRoom_id=self.idRoom,bedStatus="Occupied"))
+	
+	@property
+	def get_available_beds(self):
+		return Beds.objects.filter(idRoom_id=self.idRoom,bedStatus="Available").values()
+
+	@property
+	def get_available_size(self):
+		return len(Beds.objects.filter(idRoom_id=self.idRoom,bedStatus="Available"))
+
+	@property
+	def get_unavailable_beds(self):
+		return Beds.objects.filter(idRoom_id=self.idRoom,bedStatus="Unavailable").values()
+
+	@property
+	def get_unavailable_size(self):
+		return len(Beds.objects.filter(idRoom_id=self.idRoom,bedStatus="Unavailable"))
+
+
+	
+
+
+
 class Beds(models.Model):
 	idBeds = models.AutoField(primary_key=True)
 	bedNumber = models.IntegerField(default=0)
 	bedStatus = models.CharField(max_length=45)
+	idRoom = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+	@property
+	def get_current_patient(self):
+		return Patient_Table.objects.select_related("idPatient").get(idBeds=self.idBeds,idBeds__bedStatus="Occupied")
+
+	
+	
 
 
 class Patient(models.Model):
@@ -35,7 +86,7 @@ class Patient(models.Model):
 	middleName = models.CharField(max_length=45)
 	lastName = models.CharField(max_length=45)
 	birthDate = models.DateField()
-	religion = models.CharField(max_length=45)
+
 	minTemp = models.FloatField(default=0)
 	maxTemp = models.FloatField(default=0)
 	minHeartRate = models.IntegerField(default=0)
@@ -44,6 +95,63 @@ class Patient(models.Model):
 	contactNum = models.CharField(max_length=11) #changethis
 	bedNumber = models.ForeignKey(Beds, on_delete=models.CASCADE)
 	status = models.CharField(max_length=45)
+	restrictions = models.CharField(max_length=20, default="false")
+	count = models.IntegerField(default=0)
+	@property
+	def get_position(self):
+		return Position.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').position
+
+	@property
+	def get_heartrate(self):
+		return HeartRate.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').heartRate
+
+	@property
+	def get_temperature(self):
+		return Temperature.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').temperature
+	
+	@property
+	def toCompareHR(self):
+
+
+		diffMinHR = self.get_heartrate - self.minHeartRate
+		diffMaxHR = self.maxHeartRate - self.get_heartrate
+		if diffMinHR >= diffMaxHR:
+			toCompareHR = diffMaxHR
+		else:
+			toCompareHR = diffMinHR
+
+		return toCompareHR
+	
+	@property
+	def toCompareTEMP(self):
+		diffMinTEMP = self.get_temperature - self.minTemp
+		diffMaxTEMP = self.maxTemp - self.get_temperature
+
+		
+
+		if diffMinTEMP >= diffMaxTEMP:
+			toCompareTEMP = diffMaxTEMP
+		else:
+			toCompareTEMP = diffMinTEMP
+
+
+		return toCompareTEMP
+	
+	@property
+	def get_patient_condition(self):
+		# normal, warning, critical
+		condition = "normal"
+		
+		if self.toCompareHR < 0 or self.toCompareTEMP < 0:
+			condition = "critical"
+		elif self.toCompareHR <= 10 and self.toCompareHR >= 0 or self.toCompareTEMP <= 0.3 and self.toCompareTEMP >= 0:
+			condition = "warning"
+		else:
+			condition = "normal"
+		if self.status == "STARTING":
+			condition = "starting"
+		return condition
+	
 
 class Position(models.Model):
 	idPosition = models.AutoField(primary_key=True)
@@ -134,7 +242,14 @@ class News(models.Model):
 	time = models.TimeField()
 	idPatient = models.ForeignKey(Patient, on_delete=models.CASCADE, null = True)
 
-#
-# class Notification(models.Model):
-# 	idNotification = models.AutoField(primary_key=True)
-# 	idBeds = models.ForeignKey(Beds, on_delete=models.CASCADE)
+
+class Notification(models.Model):
+	idNotification = models.AutoField(primary_key=True)
+	date = models.DateField()	
+	time = models.TimeField()
+	bedNumber = models.IntegerField()
+	body = models.CharField(max_length=100)
+	
+	@staticmethod
+	def get_dates():
+		return Notification.objects.values('date').distinct().order_by('-date')

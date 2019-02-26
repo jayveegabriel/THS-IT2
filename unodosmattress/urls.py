@@ -33,7 +33,7 @@ urlpatterns = [
     # url(r'^reports/$', views.reports, name="reports"),
     url(r'^viewpatients/(?P<idPatient>[0-9]+)/$', views.viewpatients, name="viewpatients"),
     # path('/viewpatients/<int:idPatient/', views.viewpatients, name="viewpatients"),
-    url(r'^ajax/addPatient/$', views.ajaxAddPatient, name="ajaxAddPatient"),
+        
     url(r'^ajax/displayDoctors/$', views.ajaxDisplayDoctors, name="ajaxDisplayDoctors"),
     url(r'^ajax/getAvailableBeds/$', views.ajaxGetAvailableBeds, name="ajaxGetAvailableBeds"),
     url(r'^ajax/ajaxGetPatients/$', views.ajaxGetPatients, name="ajaxGetPatients"),
@@ -95,4 +95,10 @@ urlpatterns = [
 
 
 
+
+    #newly added
+    url(r'^ajax/ajaxSelectRoom/',views.ajaxSelectRoom, name="ajaxSelectRoom"),
+    url(r'^ajax/ajaxConfirmationUsername/',views.ajaxConfirmationUsername, name="ajaxConfirmationUsername"),
+    url(r'^ajax/ajaxGetUpdatedDashboard/',views.ajaxGetUpdatedDashboard, name="ajaxGetUpdatedDashboard"),
+    
 ]

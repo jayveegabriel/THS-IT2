@@ -448,45 +448,36 @@
 	}
 
 	function displayCharts(heartRateData, temperatureData){
+		console.log(heartRateData);
 		Highcharts.chart('hr', {
-				chart: {
-						type: 'spline',
-						scrollablePlotArea: {
-								minWidth: 600,
-								scrollPositionX: 1
-						}
-				},
+				
 				title: {
 						text: 'Heart Rate Report'
 				},
 				subtitle: {
 						text: '2018-11-26'
 				},
+				// xAxis: {
+				// 		type: 'datetime',
+				// 		labels: {
+				// 				overflow: 'justify'
+				// 		}
+				// },
 				xAxis: {
-						type: 'datetime',
-						labels: {
-								overflow: 'justify'
-						}
-				},
+			        type: 'time',
+			        // dateTimeLabelFormats: { // don't display the dummy year
+			        //     month: '%e. %b',
+			        //     year: '%b'
+			        // },
+			        title: {
+			            text: 'Date'
+			        }
+			    },
 				yAxis: {
 						title: {
 								text: 'Heart Rate (BPM)'
 						},
-						minorGridLineWidth: 0,
-						gridLineWidth: 0,
-						alternateGridColor: null,
-						plotBands: [ { // Light breeze
-								from: "{{minHeartRate}}",
-								to: "{{maxHeartRate}}",
-								color: 'rgba(0,255,0,0.2)',
-								label: {
-										text: 'Normal',
-										style: {
-												color: '#606060'
-										}
-								}
-						},
-	 ]
+						
 				},
 				tooltip: {
 
@@ -495,18 +486,11 @@
 
 				},
 				plotOptions: {
-						spline: {
-								lineWidth: 1,
-								states: {
-										hover: {
-												lineWidth: 1
-										}
-								},
-								marker: {
-										enabled: false
-								},
-								pointInterval: 60000, // one hour 60000 if 1 second
-								pointStart: Date.UTC(2018, 2, 13, 0, 0, 0) // start day and time
+						
+						series: {
+							label:{
+								connectorAllowed: false
+							},
 
 						}
 				},
@@ -515,14 +499,16 @@
 					color: Highcharts.getOptions().colors[5],
 					fillOpacity: 0.5,
 						name: "{{firstName}}",
-						data: heartRateData
+						data: [["00:00:10", 70],
+						["00:00:10", 70],
+						["00:00:20", 70],
+						["00:00:30", 70],
+						["00:00:40", 70],
+						["00:00:50", 70],
+						["00:00:60", 70],]
 
 				}, ],
-				navigation: {
-						menuItemStyle: {
-								fontSize: '10px'
-						}
-				}
+				
 		});
 
 		Highcharts.chart('temp', {

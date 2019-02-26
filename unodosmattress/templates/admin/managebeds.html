@@ -93,12 +93,14 @@ overflow-y: auto;
               <div class ="widget-content">
                 <div class="pricing-plans plans-3">
 
-                  <select class ="span2">
-                    <option>Select Room No.</option>
-                    <option>R01</option>
-                    <option>R02</option>
+                  <select class ="span2 roomDropdown" id="viewbedsDropdown">
+                    <option disabled>Select Room No.</option>
+                    {% for r in rooms %}
+                      <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
+                    {% endfor %}
+
                   <select>
-                  <h4>List of Beds at Room No. R01</h4>
+                  <h4>List of Beds at Room No. <span class="roomNumberSpan">{{default_room.roomNumber}}</span></h4>
                   <hr>
 						<div class="plan-container">
 					        <div class="plan gray">
@@ -107,28 +109,28 @@ overflow-y: auto;
 						        		OCCUPIED
 					        		</div> <!-- /plan-title -->
 						          <div class="plan-price">
-					           	 <span class="value" id="availableSpan">{{occupiedBedsSize}}</span><span class="term"> </span>
+					           	 <span class="value" id="occupiedSizeSpan">{{default_room.get_occupied_size}}</span><span class="term"> </span>
 								      </div> <!-- /plan-price -->
 						        </div> <!-- /plan-header -->
 
 								<div class="plan-actions">
                   <div class="table-wrapper-scroll-y">
                     <table class="table table-bordered ">
-                      <tbody id = "availableBedsTable">
-                        {% if availableBedsSize == 0%}
+                      <tbody id = "occupiedBedsTable" class="bedsTable">
+                        {% if default_room.get_occupied_size == 0%}
                         <tr>
                         <td style="text-align: center;">
                           <h3>NO BEDS</h3>
                         </td>
                         </tr>
                         {% endif %}
-                        {% if availableBedsSize > 0 %}
-                        {% for bed in availableBeds %}
-                        <tr>
-                          <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
-                          <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
-                        </tr>
-                        {% endfor %}
+                        {% if default_room.get_occupied_size > 0 %}
+                          {% for bed in default_room.get_occupied_beds %}
+                          <tr>
+                            <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                            <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
+                          </tr>
+                          {% endfor %}  
                         {% endif%}
                       </tbody>
                     </table>
@@ -149,28 +151,28 @@ overflow-y: auto;
 					        		</div> <!-- /plan-title -->
 
                       <div class="plan-price">
-                          <span class="value" id="availableSpan">{{availableBedsSize}}</span><span class="term"> </span>
+                          <span class="value" id="availableSizeSpan">{{default_room.get_available_size}}</span><span class="term"> </span>
                      </div>
 						        </div> <!-- /plan-header -->
 
 								<div class="plan-actions">
                   <div class="table-wrapper-scroll-y">
                     <table class="table table-bordered ">
-                      <tbody>
-                        {% if occupiedBedsSize == 0%}
+                      <tbody id="availableBedsTable" class="bedsTable">
+                        {% if default_room.get_available_size == 0%}
                         <tr>
                         <td style="text-align: center;">
                           <h3>NO BEDS</h3>
                         </td>
                         </tr>
                         {% endif %}
-                        {% if occupiedBedsSize > 0 %}
-                        {% for bed in occupiedBeds %}
-                        <tr>
-                        <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
-                        <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
-                        </tr>
-                        {% endfor %}
+                        {% if default_room.get_available_size > 0 %}
+                          {% for bed in default_room.get_available_beds %}
+                          <tr>
+                          <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                          <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
+                          </tr>
+                          {% endfor %}
                         {% endif%}
                       </tbody>
                     </table>
@@ -189,30 +191,29 @@ overflow-y: auto;
 					        		</div> <!-- /plan-title -->
 
                       <div class="plan-price">
-                          <span class="value" id="availableSpan">{{unavailableBedsSize}}</span><span class="term"> </span>
+                          <span class="value" id="unavailableSizeSpan">{{default_room.get_unavailable_size}}</span><span class="term"> </span>
                      </div>
 
 						        </div> <!-- /plan-header -->
 
-
 								<div class="plan-actions">
                   <div class="table-wrapper-scroll-y">
                     <table class="table table-bordered ">
-                      <tbody>
-                        {% if occupiedBedsSize == 0%}
+                      <tbody id="unavailableBedsTable" class="bedsTable">
+                        {% if default_room.get_unavailable_size == 0%}
                         <tr>
                         <td style="text-align: center;">
                           <h3>NO BEDS</h3>
                         </td>
                         </tr>
                         {% endif %}
-                        {% if occupiedBedsSize > 0 %}
-                        {% for bed in occupiedBeds %}
-                        <tr>
-                        <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
-                        <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
-                        </tr>
-                        {% endfor %}
+                        {% if default_room.get_unavailable_size > 0 %}
+                          {% for bed in default_room.get_unavailable_beds %}
+                          <tr>
+                          <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                          <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
+                          </tr>
+                          {% endfor %}
                         {% endif%}
                       </tbody>
                     </table>
@@ -230,16 +231,30 @@ overflow-y: auto;
               </div>
             </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="tab-pane" id="editbeds" align ="center">
               <div class ="tab-content">
                 <div class="tab-pane active" id="viewbeds" align ="center">
                   <div class ="widget-content">
-                    <select class ="span2">
-                      <option>Select Room No.</option>
-                      <option>R01</option>
-                      <option>R02</option>
+                    <select class ="span2 roomDropdown" id="editBedsDropdown">
+                      <option disabled>Select Room No.</option>
+                      {% for r in rooms %}
+                        <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
+                      {% endfor %}
+                      
                     <select>
-                    <h4>List of Beds at Room No. R01</h4>
+                    <h4>List of Beds at Room No. <span class="roomNumberSpan">{{default_room.roomNumber}}</span></h4>
                     <hr>
                     <div class="pricing-plans plans-2">
 
@@ -252,7 +267,7 @@ overflow-y: auto;
 					        		</div> <!-- /plan-title -->
 
                       <div class="plan-price">
-                          <span class="value" id="availableSpan">{{availableBedsSize}}</span><span class="term"> </span>
+                          <span class="value" id="availableEditSpan">{{default_room.get_available_size}}</span><span class="term"> </span>
                      </div>
 
 						        </div> <!-- /plan-header -->
@@ -261,7 +276,7 @@ overflow-y: auto;
 
 								<div class="plan-actions">
                   <ol data-draggable="target" id="Available">
-                  {% for bed in availableBeds %}
+                  {% for bed in default_room.get_available_beds %}
                     <li data-draggable="item" id="{{bed.idBeds}}">Bed #{{bed.bedNumber}}</li>
                   {% endfor %}
                   </ol>
@@ -281,7 +296,7 @@ overflow-y: auto;
 					        		</div> <!-- /plan-title -->
 
                       <div class="plan-price">
-                          <span class="value" id="availableSpan">{{unavailableBedsSize}}</span><span class="term"> </span>
+                          <span class="value" id="unavailableEditSpan">{{default_room.get_unavailable_size}}</span><span class="term"> </span>
                      </div>
 
 						        </div> <!-- /plan-header -->
@@ -290,7 +305,7 @@ overflow-y: auto;
 
 								<div class="plan-actions">
                   <ol data-draggable="target" id="Unavailable">
-                    {% for bed in unavailableBeds %}
+                    {% for bed in default_room.get_unavailable_beds %}
                     <li data-draggable="item" id="{{bed.idBeds}}">Bed #{{bed.bedNumber}}</li>
                     {% endfor %}
                   </ol>
@@ -310,6 +325,15 @@ overflow-y: auto;
                 </div>
                 </div>
                 </div>
+
+
+
+
+
+
+
+
+
                   <div class="tab-pane" id="addbed" >
 										<div class ="container" >
                     <div class ="widget-content">
@@ -795,13 +819,213 @@ function updateBeds(){
 </script>
 
 <script>
+
+  
+
+
+
+
+
+
+// function ajaxRefreshAvailableBeds(){
+//   $.ajax({
+//     url: '/ajax/ajaxRefreshAvailableBeds/',
+//     data: {
+
+//     },
+//     dataType: 'json',
+//     success: function (data){
+//       var wew = "";
+//       $("#availableBedsSize").html(data.length);
+
+//       for(var i = 0; i < data.length; i++){
+//         wew += '<tr>'+
+//           '<td style="width:20%;text-align:center;"><img src="/static/img/bedicon.png"/></td>'+
+//         '  <td style="width:80%; font-size:15px;">Bed #' + data[i].bedNumber+ '</td>'+
+
+//         '</tr>';
+//       }
+//       $("#availableBedsTable").html(wew);
+//       $("#availableSpan").html(data.length);
+//     }
+//   });
+// }
+// function ajaxRefreshUnavailableBeds(){
+//   $.ajax({
+//     url: '/ajax/ajaxRefreshUnavailableBeds/',
+//     data: {
+
+//     },
+//     dataType: 'json',
+//     success: function (data){
+//       var waw = "";
+//       $("#unavailableBedsSize").html(data.length);
+//       for(var i = 0; i < data.length; i++){
+//         waw += '<tr>'+
+//           '<td style="width:20%;text-align:center;"><img src="/static/img/bedicon.png"/></td>'+
+//         '  <td style="width:80%; font-size:15px;">Bed #' + data[i].bedNumber+ '</td>'+
+
+//         '</tr>';
+//       }
+//       $("#unavailableBedsTable").html(waw);
+//       $("#unavailableSpan").html(data.length);
+//     }
+//   });
+// }
+
+
+
+
+// NEWLY ADDED
+
+function tableMaker(bedNumber){
+    wew = '<tr>';
+    var image = "{% static 'img/bedicon.png' %}";
+    wew += '<td style="width:20%;text-align:center;"><img src="' + image + '"/ ></td>';
+    wew += '<td style="width:80%; font-size:15px;">Bed #' +bedNumber+ '</td>';
+    wew += '</tr>';
+    return wew;
+}
+
+function tableMakerNoBeds(){
+    wew = '<tr><td style="text-align: center;"><h3>NO BEDS</h3></td></tr>';
+    return wew;
+}
+
+function draggableMaker(idBeds, bedNumber){
+    wew = '<li data-draggable="item" id="' + idBeds + '">Bed #' + bedNumber +'</li>';
+    return wew;     
+
+}
+
+$(".roomDropdown").change(function(){
+    temp = this.value;
+    $("#viewbedsDropdown").val(temp);
+    $("#editBedsDropdown").val(temp); 
+
+    $(".roomNumberSpan").html($("#viewbedsDropdown option:selected").text()); 
+    refresh(temp);
+    
+
+
+});
+
+function refresh(temp){
+
+
+    $.ajax({
+      url: '/ajax/ajaxSelectRoom/',
+      data: {
+        "pk":temp,
+      },
+      dataType: 'json',
+      success: function (data){
+        $("#occupiedSizeSpan").html(data.occupiedBedSize);
+        $("#availableSizeSpan").html(data.availableBedsSize);
+        $("#unavailableSizeSpan").html(data.unavailableBedsSize);
+
+        var occupiedBeds = data.beds.occupiedBeds;
+        var availableBeds = data.beds.availableBeds;
+        var unavailableBeds = data.beds.unavailableBeds;
+
+        $(".bedsTable").empty();
+        occupiedBedsBody = "";
+        availableBedsBody = "";
+        unavailableBedsBody = "";
+
+        availableBedsDraggable = "";
+        unavailableBedsDraggable = "";
+
+
+        if(data.occupiedBedSize == '0'){
+          occupiedBedsBody += tableMakerNoBeds();
+        }
+        else{
+          occupiedBeds.forEach(function(a){
+            occupiedBedsBody += tableMaker(a.bedNumber);
+          });
+        }
+        
+        if(data.availableBedsSize == '0'){
+          availableBedsBody += tableMakerNoBeds();
+        }
+        else{
+          availableBeds.forEach(function(b){
+            availableBedsBody += tableMaker(b.bedNumber);
+            availableBedsDraggable += draggableMaker(b.idBeds,b.bedNumber);
+          });
+        }
+
+        if(data.unavailableBedsSize == '0'){
+          unavailableBedsBody += tableMakerNoBeds();
+        }
+        else{
+          unavailableBeds.forEach(function(c){
+            unavailableBedsBody += tableMaker(c.bedNumber);
+            unavailableBedsDraggable += draggableMaker(c.idBeds,c.bedNumber);
+          });
+        }
+
+        $("#occupiedBedsTable").html(occupiedBedsBody);
+        $("#availableBedsTable").html(availableBedsBody);
+        $("#unavailableBedsTable").html(unavailableBedsBody);
+
+        $("#availableEditSpan").html(data.availableBedsSize);
+        $("#unavailableEditSpan").html(data.unavailableBedsSize);
+
+        $("#Available").html(availableBedsDraggable);
+        $("#Unavailable").html(unavailableBedsDraggable);
+        reset();
+      }
+    });
+}
+
+
+
+function reset(){
+  (function(){
+    if(!document.querySelectorAll || !('draggable' in document.createElement('span')) || window.opera){ 
+      return; 
+    }
+    for(var items = document.querySelectorAll('[data-draggable="item"]'), len = items.length, i = 0; i < len; i ++){
+        items[i].setAttribute('draggable', 'true');
+    }
+    var item = null;
+
+    document.addEventListener('dragstart', function(e){
+        item = e.target;
+        e.dataTransfer.setData('text', '');
+    }, false);
+    document.addEventListener('dragover', function(e){
+        if(item){
+            e.preventDefault();
+        }
+    }, false);
+    document.addEventListener('drop', function(e){
+        if(e.target.getAttribute('data-draggable') == 'target')
+        {
+          e.target.appendChild(item);
+
+          e.preventDefault();
+        }
+    }, false);
+    document.addEventListener('dragend', function(e){
+        item = null;
+    }, false);
+
+  })();
+}
+
+
 $(document).ready(function() {
+    reset();
     $('#example').DataTable();
 
 
     $("#saveButton").click(function(){
       var available = $("#Available").children();
       var unavailable = $("#Unavailable").children();
+
       var aList = new Array();
       var uList = new Array();
       for(var i = 0; i < available.length; i++){
@@ -810,7 +1034,6 @@ $(document).ready(function() {
       for(var o = 0; o < unavailable.length; o++){
         uList.push(unavailable[o].id);
       }
-
       $.ajax({
         url: '/ajax/ajaxUpdateBedStatus/',
         data: {
@@ -820,153 +1043,14 @@ $(document).ready(function() {
         dataType: 'json',
         success: function (data){
           alert("The status of the bed is successfully updated!");
-          ajaxRefreshAvailableBeds();
-
-          ajaxRefreshUnavailableBeds();
+          
+          var temp = $("#editBedsDropdown").val(); 
+          refresh(temp);
         }
       });
     });
 } );
 
 
-
-
-
-      $.ajax({
-        url: '/ajax/ajaxUpdateBedStatus/',
-        data: {
-        },
-        dataType: 'json',
-        success: function (data){
-
-        }
-      });
-
-
-
-
-(function()
-{
-
-    //exclude older browsers by the features we need them to support
-    //and legacy opera explicitly so we don't waste time on a dead browser
-    if
-    (
-        !document.querySelectorAll
-        ||
-        !('draggable' in document.createElement('span'))
-        ||
-        window.opera
-    )
-    { return; }
-
-    //get the collection of draggable items and add their draggable attribute
-    for(var
-        items = document.querySelectorAll('[data-draggable="item"]'),
-        len = items.length,
-        i = 0; i < len; i ++)
-    {
-        items[i].setAttribute('draggable', 'true');
-    }
-
-    //variable for storing the dragging item reference
-    //this will avoid the need to define any transfer data
-    //which means that the elements don't need to have IDs
-    var item = null;
-
-    //dragstart event to initiate mouse dragging
-    document.addEventListener('dragstart', function(e)
-    {
-        //set the item reference to this element
-        item = e.target;
-
-        //we don't need the transfer data, but we have to define something
-        //otherwise the drop action won't work at all in firefox
-        //most browsers support the proper mime-type syntax, eg. "text/plain"
-        //but we have to use this incorrect syntax for the benefit of IE10+
-        e.dataTransfer.setData('text', '');
-
-    }, false);
-
-    //dragover event to allow the drag by preventing its default
-    //ie. the default action of an element is not to allow dragging
-    document.addEventListener('dragover', function(e)
-    {
-        if(item)
-        {
-            e.preventDefault();
-        }
-
-    }, false);
-
-    //drop event to allow the element to be dropped into valid targets
-    document.addEventListener('drop', function(e)
-    {
-        //if this element is a drop target, move the item here
-        //then prevent default to allow the action (same as dragover)
-        if(e.target.getAttribute('data-draggable') == 'target')
-        {
-            e.target.appendChild(item);
-
-            e.preventDefault();
-        }
-
-    }, false);
-
-    //dragend event to clean-up after drop or abort
-    //which fires whether or not the drop target was valid
-    document.addEventListener('dragend', function(e)
-    {
-        item = null;
-
-    }, false);
-
-})();
-
-function ajaxRefreshAvailableBeds(){
-  $.ajax({
-    url: '/ajax/ajaxRefreshAvailableBeds/',
-    data: {
-
-    },
-    dataType: 'json',
-    success: function (data){
-      var wew = "";
-      $("#availableBedsSize").html(data.length);
-
-      for(var i = 0; i < data.length; i++){
-        wew += '<tr>'+
-          '<td style="width:20%;text-align:center;"><img src="/static/img/bedicon.png"/></td>'+
-        '  <td style="width:80%; font-size:15px;">Bed #' + data[i].bedNumber+ '</td>'+
-
-        '</tr>';
-      }
-      $("#availableBedsTable").html(wew);
-      $("#availableSpan").html(data.length);
-    }
-  });
-}
-function ajaxRefreshUnavailableBeds(){
-  $.ajax({
-    url: '/ajax/ajaxRefreshUnavailableBeds/',
-    data: {
-
-    },
-    dataType: 'json',
-    success: function (data){
-      var waw = "";
-      $("#unavailableBedsSize").html(data.length);
-      for(var i = 0; i < data.length; i++){
-        waw += '<tr>'+
-          '<td style="width:20%;text-align:center;"><img src="/static/img/bedicon.png"/></td>'+
-        '  <td style="width:80%; font-size:15px;">Bed #' + data[i].bedNumber+ '</td>'+
-
-        '</tr>';
-      }
-      $("#unavailableBedsTable").html(waw);
-      $("#unavailableSpan").html(data.length);
-    }
-  });
-}
 </script>
 {% endblock content %}

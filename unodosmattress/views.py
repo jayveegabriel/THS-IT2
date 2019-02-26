@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404,HttpResponseRedirect
 from django.db import connection
 from . models import  *
 import coreapi
@@ -17,6 +17,7 @@ from django.core import serializers
 from django.utils.dateparse import parse_date
 import threading
 import serial
+import json
 import time
 
 position = ''
@@ -81,6 +82,11 @@ def clickButton(request,idBed):
 	notificationList.append(b)
 	newNotificationList.append(b)
 
+	now = datetime.datetime.now()
+	date = now.date()
+	time = now.time()
+	n = Notification(date=date,time=time,bedNumber=idBed,body="Bed #"+idBed+" needs your assistance! Please respond immediately.")
+	n.save()
 	return HttpResponse()
 
 
@@ -132,75 +138,82 @@ def ajaxClearClicked(request):
 	buttonClicked.clear()
 	return HttpResponse()
 
-def	loginUsername (request): #ADDED
-	global position
+# def	loginUsername (request): #ADDED
+# 	global position
 
-	username = request.GET.get('username')
-	password = request.GET.get('password')
+# 	username = request.GET.get('username')
+# 	password = request.GET.get('password')
 
-	n = Employee.objects.filter(username=username).exists()
-	d = Doctor.objects.filter(username=username).exists()
+# 	n = Employee.objects.filter(username=username).exists()
+# 	d = Doctor.objects.filter(username=username).exists()
 
-	if n == True or d == True:
-		print(n,d)
-		if  Employee.objects.filter(username=username,password=password).exists() or Doctor.objects.filter(username=username,password=password).exists():
-			if Employee.objects.filter(username=username,password=password).exists():
-				e1 = Employee.objects.get(username=username,password=password)
-				if e1.usertype == 'Nurse':
-					position = 'Nurse'
-					request.session['position'] = "NURSE"
-				else:
-					position = "Admin"
-					request.session['position'] = "ADMIN"
-			else:
-				position = "Doctor"
-				request.session['position'] = "DOCTOR"
-			data = {
-				'is_match': True,
-				'position': position,
-			}
-	else:
-		data = {
-			'is_match': False
-		}
-	print(data)
-	return JsonResponse(data)
+# 	if n == True or d == True:
+# 		print(n,d)
+# 		if  Employee.objects.filter(username=username,password=password).exists() or Doctor.objects.filter(username=username,password=password).exists():
+# 			if Employee.objects.filter(username=username,password=password).exists():
+# 				e1 = Employee.objects.get(username=username,password=password)
+# 				if e1.usertype == 'Nurse':
+# 					position = 'Nurse'
+# 					request.session['position'] = "NURSE"
+# 				else:
+# 					position = "Admin"
+# 					request.session['position'] = "ADMIN"
+# 			else:
+# 				position = "Doctor"
+# 				request.session['position'] = "DOCTOR"
+# 			data = {
+# 				'is_match': True,
+# 				'position': position,
+# 			}
+# 	else:
+# 		data = {
+# 			'is_match': False
+# 		}
+# 	print(data)
+# 	return JsonResponse(data)
 
 
 def notifications(request):
-	return render(request, 'dashboard/notifications.html')
+	if request.method == "POST":
+		n = Notification.objects.all().delete()
+		return HttpResponseRedirect(reverse('unodosmattress:notifications'))	
+	n = Notification.objects.all()
+	wew = []
+	for x in range(0, len(n)):
+		wew.append({"date":n[x].date,"time":n[x].time,"bedNumber":n[x].bedNumber,"body":n[x].body})
+	context = {"notif_list":wew, "dates":Notification.get_dates}
+	return render(request, 'dashboard/notifications.html',context)
 
 #Nurse
-def dashboard(request):
+# def dashboard(request):
 
-	session_position = request.session.get('position','none')
-	if session_position == "NURSE":
-		global notificationList
-		global newNotificationList
-		notificationList.reverse()
-		what = []
-		for x in range(0, len(notificationList)):
-			what.append({"bedNumber":notificationList[x].bedNumber})
-		notificationList.reverse()
+# 	session_position = request.session.get('position','none')
+# 	if session_position == "NURSE":
+# 		global notificationList
+# 		global newNotificationList
+# 		notificationList.reverse()
+# 		what = []
+# 		for x in range(0, len(notificationList)):
+# 			what.append({"bedNumber":notificationList[x].bedNumber})
+# 		notificationList.reverse()
 
 
-		patients = Patient.objects.values('idPatient')
-		wew = []
-		for x in range(0,len(patients)):
-			checkObj = HeartRate.objects.filter(idPatient_id  = patients[x]['idPatient']).select_related('idPatient').exists()
-			checkObj2 = Temperature.objects.filter(idPatient_id = patients[x]['idPatient']).select_related('idPatient').exists()
-			checkObj3 = Position.objects.filter(idPatient_id = patients[x]['idPatient']).select_related('idPatient').exists()
-			if checkObj and checkObj2 and checkObj3:
-				obj = HeartRate.objects.filter(idPatient_id = patients[x]['idPatient']).select_related('idPatient').latest('date','time')
-				obj2 = Temperature.objects.filter(idPatient_id = patients[x]['idPatient']).select_related('idPatient').latest('date','time')
-				obj3 = Position.objects.filter(idPatient_id = patients[x]['idPatient']).select_related('idPatient').latest('date','time')
-				if obj.idPatient.status == "ON BED" or obj.idPatient.status == "STARTING":
-					wew.append({"idPatient_id": patients[x]['idPatient'], "positionPatient":obj3.position.upper(),"firstName":obj.idPatient.firstName.upper(), "lastName":obj.idPatient.lastName.upper(),"heartRate":obj.heartRate,"temperature":obj2.temperature, "bedNumber":obj.idPatient.bedNumber.bedNumber,"minHeartRate":obj.idPatient.minHeartRate, "maxHeartRate":obj.idPatient.maxHeartRate, "minTemp":obj.idPatient.minTemp, "maxTemp":obj.idPatient.maxTemp, "patientStatus":obj.idPatient.status})
+# 		patients = Patient.objects.values('idPatient')
+# 		wew = []
+# 		for x in range(0,len(patients)):
+# 			checkObj = HeartRate.objects.filter(idPatient_id  = patients[x]['idPatient']).select_related('idPatient').exists()
+# 			checkObj2 = Temperature.objects.filter(idPatient_id = patients[x]['idPatient']).select_related('idPatient').exists()
+# 			checkObj3 = Position.objects.filter(idPatient_id = patients[x]['idPatient']).select_related('idPatient').exists()
+# 			if checkObj and checkObj2 and checkObj3:
+# 				obj = HeartRate.objects.filter(idPatient_id = patients[x]['idPatient']).select_related('idPatient').latest('date','time')
+# 				obj2 = Temperature.objects.filter(idPatient_id = patients[x]['idPatient']).select_related('idPatient').latest('date','time')
+# 				obj3 = Position.objects.filter(idPatient_id = patients[x]['idPatient']).select_related('idPatient').latest('date','time')
+# 				if obj.idPatient.status == "ON BED" or obj.idPatient.status == "STARTING":
+# 					wew.append({"idPatient_id": patients[x]['idPatient'], "positionPatient":obj3.position.upper(),"firstName":obj.idPatient.firstName.upper(), "lastName":obj.idPatient.lastName.upper(),"heartRate":obj.heartRate,"temperature":obj2.temperature, "bedNumber":obj.idPatient.bedNumber.bedNumber,"minHeartRate":obj.idPatient.minHeartRate, "maxHeartRate":obj.idPatient.maxHeartRate, "minTemp":obj.idPatient.minTemp, "maxTemp":obj.idPatient.maxTemp, "patientStatus":obj.idPatient.status})
 
-		context = {"patients_list": wew, 'position': request.session.get('position', 'none'), "notifications":what, "notificationSize":len(notificationList), "newNotificationList":len(newNotificationList)}
-		return render(request, 'dashboard/dashboard.html',context)
-	return render(request, 'blocked.html')
-
+# 		context = {"patients_list": wew, 'position': request.session.get('position', 'none'), "notifications":what, "notificationSize":len(notificationList), "newNotificationList":len(newNotificationList)}
+# 		return render(request, 'dashboard/dashboard.html',context)
+# 	return render(request, 'blocked.html')
 
 
 #Nurse AJAX
@@ -342,27 +355,83 @@ def loginChecker (request): ##FINALCHANGED
 #Nurse
 def managepatients(request):
 
+
+
 	session_position = request.session.get('position','none')
 	if session_position == "NURSE":
-		global notificationList
-		global newNotificationList
-		notificationList.reverse()
-		what = []
-		for x in range(0, len(notificationList)):
-			what.append({"bedNumber":notificationList[x].bedNumber})
-		notificationList.reverse()
+		if request.method == "POST":
+			bedNumber = request.POST.get("bednumber")
+			firstName = request.POST.get("firstname")
+			middleName = request.POST.get("middlename")
+			lastName = request.POST.get("lastname")
+			birthDate = request.POST.get("birthday")
+			contactperson = request.POST.get("contactperson")
+			contactNum = request.POST.get("contactnum")
+			minHeartRate = request.POST.get("minhr")
+			maxHeartRate = request.POST.get("maxhr")
+			minTemp = request.POST.get("mint")
+			maxTemp = request.POST.get("maxt")
+			doctors = request.POST.getlist("doctors[]")
 
 
-		patients_list = Patient.objects.all().select_related('bedNumber')
+			bday = parse_date(birthDate)
+			# age = (datetime.now().date() - bday).days / 365.25
+			print(bday)
+			doctors = request.GET.getlist('doctors[]')
 
-		beds_list = Beds.objects.filter(bedStatus = "Available")
-		doctors_list = Doctor.objects.all()
+			patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED")
+			patient_var.save()
 
-		context = {'patients_list': patients_list,'beds_list': beds_list, 'doctors_list': doctors_list,"notifications":what, "notificationSize":len(notificationList), "newNotificationList":len(newNotificationList)}
+			patient_bed = Patient_Table(idBeds_id=bedNumber, idPatient_id=patient_var.pk)
+			patient_bed.save()
+			try:
+				client = coreapi.Client()
+				schema = client.get("http://192.168.100.214:8000/docs")
+				action = ["patient","create"]
+				params = {
+					"idPatient": patient_var.pk
+				}
+				result = client.action(schema, action, params=params)
+			except:
+				print("WACK NO CONNECTION")
+
+			for x in range(0, len(doctors)):
+				print(doctors[x])
+				patient_doctor = Patient_Doctors( Doctor_id = int(doctors[x]), Patient_id = patient_var.pk)
+				patient_doctor.save()
+			body = "Your patient, " + str(patient_var.firstName) + " " + str(patient_var.lastName) + ", is now in the recovery room."
+			now = datetime.datetime.now()
+			date = now.date()
+			time = now.time()
+			news = News(body=body, date=date, time=time, idPatient_id= patient_var.pk)
+			news.save()
+			bed = Beds.objects.get(pk = bedNumber)
+			bed.bedStatus = "Occupied"
+			bed.save()
+
+
+        	
+			return HttpResponseRedirect(reverse('unodosmattress:managepatients'))
+		else:
+			global notificationList
+			global newNotificationList
+			notificationList.reverse()
+			what = []
+			for x in range(0, len(notificationList)):
+				what.append({"bedNumber":notificationList[x].bedNumber})
+			notificationList.reverse()
+
+
+			patients_list = Patient.objects.all().select_related('bedNumber')
+
+			beds_list = Beds.objects.filter(bedStatus = "Available")
+			doctors_list = Doctor.objects.all()
+
+			context = {'patients_list': patients_list,'beds_list': beds_list, 'doctors_list': doctors_list,"notifications":what, "notificationSize":len(notificationList), "newNotificationList":len(newNotificationList)}
 
 
 
-		return render(request, 'dashboard/managepatients.html',context)
+			return render(request, 'dashboard/managepatients.html',context)
 	return render(request, 'blocked.html')
 # #Nurse
 # def managebeds(request):
@@ -466,52 +535,52 @@ def ajaxGetAvailableBeds(request):
 
 	return JsonResponse (beds_array, safe=False)
 
-#Nurse AJAX
-def ajaxAddPatient(request):
-	firstName = request.GET.get('firstName')
-	middleName = request.GET.get('middleName')
-	lastName = request.GET.get('lastName')
-	birthDate = request.GET.get('birthDate')
-	religion = request.GET.get('religion')
-	minTemp = request.GET.get('minTemp')
-	maxTemp = request.GET.get('maxTemp')
-	minHeartRate = request.GET.get('minHeartRate')
-	maxHeartRate = request.GET.get('maxHeartRate')
-	contactperson = request.GET.get('contactperson')
-	contactNum = request.GET.get('contactNum')
-	bedNumber = request.GET.get('bedNumber')
-	bday = parse_date(birthDate)
-	# age = (datetime.now().date() - bday).days / 365.25
-	print(bday)
-	doctors = request.GET.getlist('doctors[]')
+# #Nurse AJAX
+# def ajaxAddPatient(request):
+# 	firstName = request.GET.get('firstName')
+# 	middleName = request.GET.get('middleName')
+# 	lastName = request.GET.get('lastName')
+# 	birthDate = request.GET.get('birthDate')
+# 	religion = request.GET.get('religion')
+# 	minTemp = request.GET.get('minTemp')
+# 	maxTemp = request.GET.get('maxTemp')
+# 	minHeartRate = request.GET.get('minHeartRate')
+# 	maxHeartRate = request.GET.get('maxHeartRate')
+# 	contactperson = request.GET.get('contactperson')
+# 	contactNum = request.GET.get('contactNum')
+# 	bedNumber = request.GET.get('bedNumber')
+# 	bday = parse_date(birthDate)
+# 	# age = (datetime.now().date() - bday).days / 365.25
+# 	print(bday)
+# 	doctors = request.GET.getlist('doctors[]')
 
-	patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, religion = religion, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED")
-	patient_var.save()
+# 	patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, religion = religion, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED")
+# 	patient_var.save()
 
-	patient_bed = Patient_Table(idBeds_id=bedNumber, idPatient_id=patient_var.pk)
-	patient_bed.save()
+# 	patient_bed = Patient_Table(idBeds_id=bedNumber, idPatient_id=patient_var.pk)
+# 	patient_bed.save()
 
-	client = coreapi.Client()
-	schema = client.get("http://192.168.100.214:8000/docs")
-	action = ["patient","create"]
-	params = {
-		"idPatient": patient_var.pk
-	}
-	result = client.action(schema, action, params=params)
+# 	client = coreapi.Client()
+# 	schema = client.get("http://192.168.100.214:8000/docs")
+# 	action = ["patient","create"]
+# 	params = {
+# 		"idPatient": patient_var.pk
+# 	}
+# 	result = client.action(schema, action, params=params)
 
-	for x in range(0, len(doctors)):
-		patient_doctor = Patient_Doctors( Doctor_id = doctors[x], Patient_id = patient_var.pk)
-		patient_doctor.save()
-	body = "Your patient, " + str(patient_var.firstName) + " " + str(patient_var.lastName) + ", is now in the recovery room."
-	now = datetime.datetime.now()
-	date = now.date()
-	time = now.time()
-	news = News(body=body, date=date, time=time, idPatient_id= patient_var.pk)
-	news.save()
-	bed = Beds.objects.get(pk = bedNumber)
-	bed.bedStatus = "Occupied"
-	bed.save()
-	return HttpResponse()
+# 	for x in range(0, len(doctors)):
+# 		patient_doctor = Patient_Doctors( Doctor_id = doctors[x], Patient_id = patient_var.pk)
+# 		patient_doctor.save()
+# 	body = "Your patient, " + str(patient_var.firstName) + " " + str(patient_var.lastName) + ", is now in the recovery room."
+# 	now = datetime.datetime.now()
+# 	date = now.date()
+# 	time = now.time()
+# 	news = News(body=body, date=date, time=time, idPatient_id= patient_var.pk)
+# 	news.save()
+# 	bed = Beds.objects.get(pk = bedNumber)
+# 	bed.bedStatus = "Occupied"
+# 	bed.save()
+# 	return HttpResponse()
 
 def ajaxGetPatients(request):
 
@@ -616,13 +685,12 @@ def manageusers(request):
 	return render(request, 'admin/manageusers.html', context)
 
 def managebeds(request):
+
+	rooms = Room.objects.all()
 	beds_list = Beds.objects.filter(bedStatus="Pending")
-	availableBeds = Beds.objects.filter(bedStatus="Available")
-	unavailableBeds = Beds.objects.filter(bedStatus="Unavailable")
+	
 
-	occupiedBeds = Beds.objects.filter(bedStatus="Occupied")
-
-	context = {'beds_list': beds_list,'availableBeds':availableBeds, 'unavailableBeds':unavailableBeds, 'occupiedBeds':occupiedBeds, 'availableBedsSize': len(availableBeds), 'unavailableBedsSize':len(unavailableBeds), 'occupiedBedsSize':len(occupiedBeds)}
+	context = {'beds_list': beds_list,'rooms':rooms,'default_room':rooms[0]}
 
 	return render(request, 'admin/managebeds.html',context)
 
@@ -1014,3 +1082,66 @@ def doctorhome(request):
 
 
 	return render(request, 'doctor/home.html',context)
+
+#newly added
+def ajaxSelectRoom(request):
+	idRoom = request.GET.get("pk")
+	room = Room.objects.get(pk=idRoom)	
+	occupiedBeds = room.get_occupied_beds
+	occupiedArray = []
+	availableBeds = room.get_available_beds
+	availableArray = []
+	unavailableBeds = room.get_unavailable_beds
+	unavailableArray = []
+
+	for x in range(0, len(occupiedBeds)):
+		occupiedArray.append({"bedNumber":occupiedBeds[x]["bedNumber"]})
+
+	for x in range(0, len(availableBeds)):
+		availableArray.append({"idBeds":availableBeds[x]["idBeds"], "bedNumber":availableBeds[x]["bedNumber"]})
+
+	for x in range(0, len(unavailableBeds)):
+		unavailableArray.append({"idBeds":availableBeds[x]["idBeds"], "bedNumber":unavailableBeds[x]["bedNumber"]})
+
+	wew = {"idRoom":room.pk, "roomNumber":room.roomNumber, "occupiedBedSize":room.get_occupied_size,
+			"availableBedsSize":room.get_available_size,"unavailableBedsSize":room.get_unavailable_size,
+			"beds":{"occupiedBeds":occupiedArray,"availableBeds":availableArray,"unavailableBeds":unavailableArray}}
+	return JsonResponse(wew,safe=False)
+
+def ajaxConfirmationUsername(request):
+	username = request.GET.get("username")
+	password = request.GET.get("password")
+	wew = "okay"
+	try:
+		employee = Employee.objects.get(username=username, password=password, usertype="Nurse")
+		if employee:
+			wew = "okay"
+	except:
+		wew = "notOkay"
+
+	return JsonResponse({"isOkay":wew}, safe=False) 
+
+def dashboard(request):
+
+	session_position = request.session.get('position','none')
+	if session_position == "NURSE":
+		rooms = Room.objects.all()
+
+		context = {"rooms":rooms,"default_room":rooms[0]}
+		print(rooms[0].get_occupied_beds[0])
+		return render(request, 'dashboard/dashboard.html',context)
+	return render(request, 'blocked.html')
+
+def ajaxGetUpdatedDashboard(request):
+	idRoom = request.GET.get("idRoom")
+	rooms = Room.objects.get(pk=idRoom)
+	beds = rooms.get_occupied_beds_dashboard
+	patientsArray = []
+	for x in range(0, len(beds)):
+		patient = beds[x].get_current_patient.idPatient
+		patientsArray.append({"idPatient":patient.idPatient, "firstName":patient.firstName,"lastName":patient.lastName,"bedNumber":patient.bedNumber.bedNumber
+			,"heartRate":patient.get_heartrate, "temperature":patient.get_temperature, "position":patient.get_position,
+			"mint":patient.minTemp, "maxt":patient.maxTemp, "minhr":patient.minHeartRate,"maxhr":patient.maxHeartRate,"condition":patient.get_patient_condition,
+			"toCompareHR":patient.toCompareHR,"toCompareTEMP":patient.toCompareTEMP})
+	return JsonResponse({"patients":patientsArray}, safe=False)
+

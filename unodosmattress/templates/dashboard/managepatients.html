@@ -144,6 +144,13 @@ overflow-y: auto;
 
 	</div>
 
+
+
+
+
+
+
+
 <div class="main">
 	<div class="main-inner">
 	    <div class="container">
@@ -205,7 +212,7 @@ overflow-y: auto;
                       <br>
 
 
-                        											 <form id="add-patient" class="form-horizontal" method = "POST" action=".">
+                        											 <form id="add-patient" class="form-horizontal" method = "post" action="">
                         												 {% csrf_token %}
                         												<fieldset>
 
@@ -223,6 +230,25 @@ overflow-y: auto;
                         																<!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
                         															</div> <!-- /controls -->
                         														</div> <!-- /control-group -->
+                                                  <div class="control-group">
+                                                    <label class="control-label" for="firstname">First Name</label>
+                                                    <div class="controls">
+
+                                                      <input required type="text" placeholder="e.g. Jayvee" class="span2" onkeyup="check(this.value,'logoFirstName')"  name = "firstname" id="firstname" value="" />
+                                                      <img id="logoFirstName" class="logo" src="{% static 'img/white.png'%}"/>
+                                                    </div> <!-- /controls -->
+                                                  </div> <!-- /control-group -->
+
+
+                                                    <div class="control-group">
+                                                    <label class="control-label" for="middlename">Middle Name</label>
+                                                    <div class="controls">
+                                                      <input required type="text" placeholder="e.g. Tomas"  class="span2" onkeyup="check(this.value,'logoMiddleName')"  name = "middlename" id="middlename" value="">
+                                                      <img id="logoMiddleName" class="logo" src="{% static 'img/white.png'%}"/>
+                                                    </div> <!-- /controls -->
+                                                  </div>
+
+                                                  
                                                     <div class="control-group">
                           														<label class="control-label" for="lastname">Last Name</label>
                           														<div class="controls">
@@ -230,21 +256,8 @@ overflow-y: auto;
                           															<img id="logoLastName" class="logo" src="{% static 'img/white.png'%}"/>
                           														</div> <!-- /controls -->
                           													</div> <!-- /control-group -->
-                        													<div class="control-group">
-                        														<label class="control-label" for="firstname">First Name</label>
-                        														<div class="controls">
-
-                        															<input required type="text" placeholder="e.g. Jayvee" class="span2" onkeyup="check(this.value,'logoFirstName')"  name = "firstname" id="firstname" value="" />
-                        															<img id="logoFirstName" class="logo" src="{% static 'img/white.png'%}"/>
-                        														</div> <!-- /controls -->
-                        													</div> <!-- /control-group -->
-                        													<div class="control-group">
-                        														<label class="control-label" for="middlename">Middle Name</label>
-                        														<div class="controls">
-                        															<input required type="text" placeholder="e.g. Tomas"  class="span2" onkeyup="check(this.value,'logoMiddleName')"  name = "middlename" id="middlename" value="">
-                        															<img id="logoMiddleName" class="logo" src="{% static 'img/white.png'%}"/>
-                        														</div> <!-- /controls -->
-                        													</div>
+                        												
+                        													
 
                                                   <div class="control-group">
                                                     <label class="control-label" for="birthday">Birthday</label>
@@ -269,18 +282,18 @@ overflow-y: auto;
                         													</div>
                                                   <div class="control-group">
                         															<label class="control-label" for="radiobtns">Heart Rate</label>
-                        																										<div class="controls">
-                        																											 <div class="input-prepend input-append">
-                        																												 <input class="span1" onkeyup="checkMinMax()" onchange="checkMinMax()" value="60" id="minhr" type="number">
-                        																													<span class="add-on">MIN</span>
-                        																													<input class="span1" onkeyup="checkMinMax()" onchange="checkMinMax()" value="100" id="maxhr" type="number">
-                        																													<span class="add-on" style ="font-size: 12px">MAX</span>
+      																										<div class="controls">
+      																											 <div class="input-prepend input-append">
+      																												 <input class="span1" name="minhr" onkeyup="checkMinMax()" onchange="checkMinMax()" value="60" id="minhr" type="number">
+      																													<span class="add-on">MIN</span>
+      																													<input class="span1" name="maxhr" onkeyup="checkMinMax()" onchange="checkMinMax()" value="100" id="maxhr" type="number">
+      																													<span class="add-on" style ="font-size: 12px">MAX</span>
 
 
-                        																												</div>
+      																												</div>
 
-                        																												<img id="logoHeartRate" class="logo" src="{% static 'img/check.jpg'%}"/>
-                        																										</div>
+      																												<img id="logoHeartRate" class="logo" src="{% static 'img/check.jpg'%}"/>
+      																										</div>
                         																											<!-- /controls -->
                         														</div>
 
@@ -290,9 +303,9 @@ overflow-y: auto;
                         															<label class="control-label" for="radiobtns">Temperature</label>
                         																										<div class="controls">
                         																											 <div class="input-prepend input-append">
-                        																												 <input class="span1" onchange="checkMinMaxTemp()" onkeyup="checkMinMaxTemp()"  value="35" id="mint" type="number">
+                        																												 <input class="span1" name="mint" onchange="checkMinMaxTemp()" onkeyup="checkMinMaxTemp()"  value="35" id="mint" type="number">
                         																													<span class="add-on">MIN</span>
-                        																													<input class="span1" onchange="checkMinMaxTemp()" onkeyup="checkMinMaxTemp()" value="37" id="maxt" type="number">
+                        																													<input class="span1" name="maxt" onchange="checkMinMaxTemp()" onkeyup="checkMinMaxTemp()" value="37" id="maxt" type="number">
                         																													<span class="add-on" style ="font-size: 12px">MAX</span>
 
                         																												</div>
@@ -340,7 +353,8 @@ overflow-y: auto;
                                                                             </div>	<!-- /controls -->
                                                   </div> <!-- /control-group -->
 
-                        													<div class="control-group">	<label class="control-label"><input id ="chkCodeudor" type="checkbox" onclick="showPrompt(this.checked)" >
+                        													<div class="control-group">	<label class="control-label">
+                                                    <input id ="chkCodeudor" type="checkbox" onclick="alert(this.checked)" >
 </label>
 																									<div class="controls">
 																										<div class="input-prepend input-append">
@@ -372,7 +386,6 @@ overflow-y: auto;
                         													<button type="button" class="btn">Cancel</button>
                         												</div>-->
 
-                        											</form>
 
 
 
@@ -381,7 +394,7 @@ overflow-y: auto;
 											</div>
                       <br>
                       <div align = "center">
-  <a href="#myModal" type ="button" role="button" onclick="getCurrentSize()" class="btn btn-primary" data-toggle="modal">Add</a>
+           <a type ="button" role="button" id="addButtonShowModal" onclick="getCurrentSize()" class="btn btn-primary" data-toggle="modal">Add</a>
 
                             <!-- Modal -->
                             <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -391,15 +404,20 @@ overflow-y: auto;
                               </div>
                               <div class="modal-body">
 
+
+
+
                                 <ul class="nav nav-tabs">
                                   <li class="active" style="width:50%;text-align:center"><a href="#create" data-toggle="tab" onclick="check1()"><b>Confirm with ID</b></a></li>
 
                                     <li style="width:50%;text-align:center"><a href="#login" data-toggle="tab" onclick="check()"><b>Confirm with Username</b></a></li>
                                 </ul>
+
+
+                                <!-- CONFIRM BY LOGGING IN-->
                                 <div id="myTabContent" class="tab-content">
                                   <div class="tab-pane fade" id="login">
-                                    <form class="form-horizontal" action='' method="POST" id="login">
-                                      {% csrf_token %}
+
                                       <fieldset>
                                         <div id="legend">
                                           <legend class="" style ="font-size:15px;">Login to proceed!</legend>
@@ -415,14 +433,18 @@ overflow-y: auto;
                                         <br>
                                         <p id="error" style="color:red;"></p>
 
-                                        <div class="form-group">
-                                          <a class="btn btn-primary" id="loginButton"> Log in</a></div>
+                                        <div class="form-group"><a class="btn btn-primary" onclick="confirmUsername()" id="loginButton"> Log in</a></div>
                                         <br>
                                       </fieldset>
-                                    </form>
+
+
+                                 
                                   </div>
+
+
+
+                                <!--  TAP THE ID -->
                                   <div class="tab-pane active in" id="create">
-                                    <form id="tab" class="form-horizontal" action='' method="POST">
                                       {% csrf_token %}
                                       <fieldset>
                                         <div id="legend">
@@ -431,23 +453,24 @@ overflow-y: auto;
                                         <div class = "form-group">
                                           <img id="imageId" src="{% static 'img/tap.png'%}"/ >
                                         </div>
-                                      </fieldset
-                                    </form>
+                                      </fieldset>
                                   </div>
 
-                              </div>
-
-
-
-
-
-
-                              </div>
-                              <div class="modal-footer">
+                              <!-- <div class="modal-footer">
                                 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                                <button type="button" id="addButton" class="btn btn-primary">Confirm</button>
+                                <button type="submit" id="addButton" class="btn btn-primary">Confirm</button>
+                              </div> -->
                               </div>
+
+
+
+
+
+
+                              </div>
+                             
                             </div>
+                               </form>
 
 
   <a href="#viewpatients" data-toggle="tab"><button type="button" class="btn">Cancel</button></a>
@@ -496,7 +519,96 @@ overflow-y: auto;
 var tempSize;
 var isTapped;
 var tempID = "";
+
+$(document).ready(function(){
+    $("#addButtonShowModal").click(function(){
+        var bednumber = $("#bednumber").val();
+        var firstname = $("#firstname").val();
+        var lastname = $("#lastname").val();
+        var middlename = $("#middlename").val();
+        // var religion = $("#religion").val();
+        var birthday = $("#birthday").val();
+        var contactperson = $("#contactperson").val();
+        var contactnum = $("#contactnum").val();
+        var minhr = $("#minhr").val();
+        var maxhr = $("#maxhr").val();
+        var mint = $("#mint").val();
+        var maxt = $("#maxt").val();
+        var isOkay = true;
+        if(bednumber == ""){
+          isOkay = false;
+          alert("No beds available");
+        }
+        else if(firstname == ""){
+          isOkay = false;
+          alert("Please enter the first name");
+        }
+        else if(middlename == ""){
+          isOkay = false;
+          alert("Please enter the middle name");
+        }
+        else if(lastname == ""){
+          isOkay = false;
+          alert("Please enter the last name");
+        }
+        else if(birthday == ""){
+          isOkay = false;
+          alert("Please enter the birthday");
+        }
+
+        else if(contactperson == ""){
+          isOkay = false;
+          alert("Please enter the contact person");
+        }
+
+        else if(contactnum == ""){
+          isOkay = false;
+          alert("Please enter the contact number");
+        }
+        else if(minhr == ""){
+          isOkay = false;
+          alert("Please enter the minimum heart rate");
+        }
+        else if(maxhr == ""){
+          isOkay = false;
+          alert("Please enter the maximum heart rate");
+        }
+        else if(mint == ""){
+          isOkay = false;
+          alert("Please enter the minimum temperature");
+        }
+
+        else if(maxt == ""){
+          isOkay = false;
+          alert("Please enter the maximum temperature");
+        }
+        else if(doctors.length == 0){
+          isOkay = false;
+          alert("Please assign at least one doctor");
+        }
+        else if(parseInt(minhr) >= parseInt(maxhr)){
+          isOkay = false;
+          alert("Minimum heart rate must be less than the maximum");
+        }
+        else if(parseFloat(mint) >= parseFloat(maxt)){
+          isOkay = false;
+          alert("Minimum temperature must be less than the maximum");
+        }
+        // else if(!isTapped){
+        //   isOkay = false;
+
+        // }
+        if(isOkay){
+          $("#addButtonShowModal").attr("href","#myModal");
+        }
+
+
+    });
+
+});
 function getCurrentSize(){
+
+  // $("#addButtonShowModal").attr("href","#myModal");
   $.ajax({
     url: '/ajax/ajaxGetCurrentRFIDs/',
     data: {
@@ -700,7 +812,7 @@ $(document).ready(function() {
 							var aw = "";
 							aw += '<tr id="cancelRow' + data[0].idDoctor+ '">'+
 
-								'<td style="width:80%">'+ data[0].firstName + ' ' + data[0].lastName+ '</td>'+
+								'<td style="width:80%">'+ data[0].firstName + ' ' + data[0].lastName+ '<input type="hidden" name="doctors[]" value="'+data[0].idDoctor+'"></td>'+
 								'<td style="width:20%"><button type="button" class ="btn btn-danger" id="cancelButton'+ data[0].idDoctor+'">-</button></td>'+
 
 							'</tr>';
@@ -722,137 +834,131 @@ $(document).ready(function() {
 				}
 		});
 
-$("#addButton").click(function(){
+// $("#addButton").click(function(){
 
-  var bednumber = $("#bednumber").val();
+//   var bednumber = $("#bednumber").val();
 
-  var firstname = $("#firstname").val();
-	var lastname = $("#lastname").val();
-	var middlename = $("#middlename").val();
-	var religion = $("#religion").val();
+//   var firstname = $("#firstname").val();
+// 	var lastname = $("#lastname").val();
+// 	var middlename = $("#middlename").val();
+// 	var religion = $("#religion").val();
 
-	var birthday = $("#birthday").val();
-	var contactperson = $("#contactperson").val();
-	var contactnum = $("#contactnum").val();
-	var minhr = $("#minhr").val();
-	var maxhr = $("#maxhr").val();
-	var mint = $("#mint").val();
-	var maxt = $("#maxt").val();
-	var isOkay = true;
-	if(bednumber == ""){
-		isOkay = false;
-		alert("No beds available");
-	}
-	else if(firstname == ""){
-		isOkay = false;
-		alert("Please enter the first name");
-	}
-	else if(middlename == ""){
-  	isOkay = false;
-		alert("Please enter the middle name");
-	}
-	else if(lastname == ""){
-		isOkay = false;
-		alert("Please enter the last name");
-	}
-	else if(birthday == ""){
-		isOkay = false;
-		alert("Please enter the birthday");
-	}
+// 	var birthday = $("#birthday").val();
+// 	var contactperson = $("#contactperson").val();
+// 	var contactnum = $("#contactnum").val();
+// 	var minhr = $("#minhr").val();
+// 	var maxhr = $("#maxhr").val();
+// 	var mint = $("#mint").val();
+// 	var maxt = $("#maxt").val();
+// 	var isOkay = true;
+// 	if(bednumber == ""){
+// 		isOkay = false;
+// 		alert("No beds available");
+// 	}
+// 	else if(firstname == ""){
+// 		isOkay = false;
+// 		alert("Please enter the first name");
+// 	}
+// 	else if(middlename == ""){
+//   	isOkay = false;
+// 		alert("Please enter the middle name");
+// 	}
+// 	else if(lastname == ""){
+// 		isOkay = false;
+// 		alert("Please enter the last name");
+// 	}
+// 	else if(birthday == ""){
+// 		isOkay = false;
+// 		alert("Please enter the birthday");
+// 	}
 
-	else if(contactperson == ""){
-		isOkay = false;
-		alert("Please enter the contact person");
-	}
+// 	else if(contactperson == ""){
+// 		isOkay = false;
+// 		alert("Please enter the contact person");
+// 	}
 
-	else if(contactnum == ""){
-		isOkay = false;
-		alert("Please enter the contact number");
-	}
-	else if(minhr == ""){
-		isOkay = false;
-		alert("Please enter the minimum heart rate");
-	}
-	else if(maxhr == ""){
-		isOkay = false;
-		alert("Please enter the maximum heart rate");
-	}
-	else if(mint == ""){
-		isOkay = false;
-		alert("Please enter the minimum temperature");
-	}
+// 	else if(contactnum == ""){
+// 		isOkay = false;
+// 		alert("Please enter the contact number");
+// 	}
+// 	else if(minhr == ""){
+// 		isOkay = false;
+// 		alert("Please enter the minimum heart rate");
+// 	}
+// 	else if(maxhr == ""){
+// 		isOkay = false;
+// 		alert("Please enter the maximum heart rate");
+// 	}
+// 	else if(mint == ""){
+// 		isOkay = false;
+// 		alert("Please enter the minimum temperature");
+// 	}
 
-	else if(maxt == ""){
-		isOkay = false;
-		alert("Please enter the maximum temperature");
-	}
-	else if(doctors.length == 0){
-		isOkay = false;
-		alert("Please assign at least one doctor");
-	}
-	else if(parseInt(minhr) >= parseInt(maxhr)){
-		isOkay = false;
-		alert("Minimum heart rate must be less than the maximum");
-	}
-	else if(parseFloat(mint) >= parseFloat(maxt)){
-		isOkay = false;
-		alert("Minimum temperature must be less than the maximum");
-	}
-  else if(!isTapped){
-    isOkay = false;
+// 	else if(maxt == ""){
+// 		isOkay = false;
+// 		alert("Please enter the maximum temperature");
+// 	}
+// 	else if(doctors.length == 0){
+// 		isOkay = false;
+// 		alert("Please assign at least one doctor");
+// 	}
+// 	else if(parseInt(minhr) >= parseInt(maxhr)){
+// 		isOkay = false;
+// 		alert("Minimum heart rate must be less than the maximum");
+// 	}
+// 	else if(parseFloat(mint) >= parseFloat(maxt)){
+// 		isOkay = false;
+// 		alert("Minimum temperature must be less than the maximum");
+// 	}
+//   else if(!isTapped){
+//     isOkay = false;
 
-  }
-
-
-	if(isOkay){
-		$.ajax({
-			url: '/ajax/addPatient/',
-			data: {
-				'doctors[]': doctors,
-				'firstName': firstname,
-				'middleName': middlename,
-				'lastName': lastname,
-				'birthDate': birthday,
-				'religion': religion,
-				'minTemp': mint,
-				'maxTemp': maxt,
-				'minHeartRate': minhr,
-				'maxHeartRate': maxhr,
-				'contactperson': contactperson,
-				'contactNum': contactnum,
-				'bedNumber':bednumber
-			},
-			dataType: 'json',
-			success: function (data){
-
-		    $("#firstname").val("");
-		    $("#lastname").val("");
-				$("#middlename").val("");
-				$("#religion").val("");
-				$("#birthday").val("");
-				$("#contactperson").val("");
-				$("#contactnum").val("");
-				$("#minhr").val("");
-			 	$("#maxhr").val("");
-				$("#mint").val("");
-				$("#maxt").val("");
-				doctors.length = 0;
-				alert("Success! A new patient has been added.");
-				updateBeds();
-        window.location.href = "{% url 'unodosmattress:managepatients' %}";
+//   }
 
 
-			}
-		});
-	}
+// 	if(isOkay){
+// 		$.ajax({
+// 			url: '/ajax/addPatient/',
+// 			data: {
+// 				'doctors[]': doctors,
+// 				'firstName': firstname,
+// 				'middleName': middlename,
+// 				'lastName': lastname,
+// 				'birthDate': birthday,
+// 				'religion': religion,
+// 				'minTemp': mint,
+// 				'maxTemp': maxt,
+// 				'minHeartRate': minhr,
+// 				'maxHeartRate': maxhr,
+// 				'contactperson': contactperson,
+// 				'contactNum': contactnum,
+// 				'bedNumber':bednumber
+// 			},
+// 			dataType: 'json',
+// 			success: function (data){
+
+// 		    $("#firstname").val("");
+// 		    $("#lastname").val("");
+// 				$("#middlename").val("");
+// 				$("#religion").val("");
+// 				$("#birthday").val("");
+// 				$("#contactperson").val("");
+// 				$("#contactnum").val("");
+// 				$("#minhr").val("");
+// 			 	$("#maxhr").val("");
+// 				$("#mint").val("");
+// 				$("#maxt").val("");
+// 				doctors.length = 0;
+// 				alert("Success! A new patient has been added.");
+// 				updateBeds();
+//         window.location.href = "{% url 'unodosmattress:managepatients' %}";
 
 
+// 			}
+// 		});
+// 	}
+// });
 
-
-
-
-
-});
 function updateBeds(){
 
 	$.ajax({
@@ -914,5 +1020,23 @@ $("#ViewPatientsButton").click(function(){
 });
 
 
+//NEWLY ADDED
+function confirmUsername(){
+  var username = $("#username").val();
+  var password = $("#password").val();
 
+  $.ajax({
+    url: '/ajax/ajaxConfirmationUsername/',
+    data: {
+      "username":username,
+      "password":password,
+    },
+    dataType: 'json',
+    success: function (data){
+      if(data.isOkay == "okay"){
+        $("#add-patient").submit();
+      }
+    }
+  });
+}
 </script>
