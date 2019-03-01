@@ -134,112 +134,70 @@
 
 	<a class ="animated slideInUp" href="{% url 'unodosmattress:patients' %}"><i class="icon-arrow-left"></i> Back</a>
 
-
-
-
-
 	<div class="main-inner">
-
+		<br>
 	    <div class="container" >
-
 				<div class="row">
 					<div class="span2">
-
 	      		<div class="widget">
-
-
-
 	      		</div> <!-- /widget -->
-
       		</div> <!-- /span4 -->
 					<div class="span4">
-
 	      		<div class="widget">
-
 	      			<div class="widget-content" align ="center">
-
 			      		<h4>Choose a Type</h4>
 								<br>
 								<form id="type" class="form-horizontal" method = "POST" action=".">
 									{% csrf_token %}
 								 <fieldset>
-
-
-																						 <div class="form-group">
-
-																							 <select class="form-control" id="selecttype"  onchange="filterReport()">
-																								 <option value ="0">All</option>
-																								 <option value ="1">Heart Rate</option>
-																								 <option value ="2">Temperature</option>
-																								 <option value ="3">Position</option>
-																							 <select>
-
-																						 </div>	<!-- /controls -->
+									 <div class="form-group">
+									 	<select class="form-control" id="selecttype"  onchange="filterReport()">
+											<option value ="0">All</option>
+											<option value ="1">Heart Rate</option>
+											<option value ="2">Temperature</option>
+									 		<option value ="3">Position</option>
+									 	<select>
+									 </div>	<!-- /controls -->
 									  <!-- /control-group -->
 								</fieldset>
-
 								<!--1<img id ="image" src="{% static 'img/blank.png'%}"  / >!-->
-
 								</form>
-
 		      		</div> <!-- /widget-content -->
-
 	      		</div> <!-- /widget -->
-
       		</div> <!-- /span4 -->
 					<div class="span4">
 						<div class="widget">
-
 	      		<div id="target-3" class="widget">
-
 	      			<div class="widget-content" align ="center">
-
-
 			      		<h4>Choose a QD</h4>
 								<br>
 								<form id="patient" class="form-horizontal" method = "POST" action=".">
 									{% csrf_token %}
 								 <fieldset>
-
-
-																						 <div class="form-group">
-
-																							 <select class="form-control" id="selectqd" onchange="changeQ()">
-
-																								 <option value ="1">q1min</option>
-																								 <option value ="2">q15min</option>
-
-																							 <select>
-
-																						 </div>	<!-- /controls -->
+									 <div class="form-group">
+										 <select class="form-control" id="selectqd" onchange="changeQ()">
+											<option value ="1">q1min</option>
+											<option value ="2">q15min</option>
+									 	<select>
+								 	</div>	<!-- /controls -->
 									  <!-- /control-group -->
 								</fieldset>
-
 								<!-- <img src="{% static 'img/blank.png'%}"  / >!-->
-
 								</form>
-
 		      		</div> <!-- /widget-content -->
-
 	      		</div> <!-- /widget -->
-
       		</div> <!-- /span4 -->
+					</div>
 					<div class="span2">
-
 	      		<div class="widget">
-
-
-
 	      		</div> <!-- /widget -->
-
       		</div> <!-- /span4 -->
 
 				</div>
 
 
-
 				<div class ="row">
- 	      	<div class="span6">
+ 	      	<div class="span7">
  						<div class="widget" id="heartRateWidget">
  					     <div class="widget-content" >
  									<div class ="timeline-wrapper" id="hr" style="min-height: 400px; min-width: 380px">
@@ -248,7 +206,7 @@
  						</div>
 					</div>
 
-					<div class="span6">
+					<div class="span5">
  						<div class="widget" id="heartRateWidget2">
  					     <div class="widget-content"  style = "overflow-y:auto;height:400px;">
 								 <div class ="" align ="center">
@@ -283,14 +241,14 @@
 				</div>
 
 				<div class ="row">
-					<div class ="span6">
+					<div class ="span7">
 						<div class="widget" id="temperatureWidget">
 							 <div class="widget-content" >
 								<div id="temp" style="height: 400px; min-width: 380px"></div>
 									</div>
 					  </div>
 					</div>
-					<div class ="span6">
+					<div class ="span5">
 						<div class="widget" id="temperatureWidget2">
 							 <div class="widget-content" style = "overflow-y:auto;height:400px;" >
 								 <div class ="" align ="center">
@@ -324,9 +282,21 @@
  				</div>
 
 
+				<div class ="row" id = "positionWidget">
+ 	      	<div class="span12">
+ 						<div class="widget" >
+ 					     <div class="widget-content" >
+ 									<div class ="timeline-wrapper" id="container" style="min-height: 400px; min-width: 380px">
+									</div>
+ 						   </div>
+ 						</div>
+					</div>
 
 
+				</div>
 
+
+<!--
 
 					<div class="row" id="positionWidget">
 						<div class="span12">
@@ -345,7 +315,7 @@
 
 										<div class="body">
 											<div id="timeline" class="body" style="padding-top: 2%;" >
-												<!-- <div id="line" style="height: 100%; width: 100%; margin: 0 auto"></div> -->
+
 												<div id="scroll" class="timeline-wrapper">
 													<div id= "container" class="timeline-content-day">
 														<div id="itemline" class="timeline-line"></div>
@@ -396,7 +366,7 @@
 																	<span>None</span>
 																</a>
 															</div>
-														</div> -->
+														</div> 
 
 													</div>
 
@@ -490,8 +460,153 @@
 
 	function displayCharts(heartRateData, temperatureData){
 		console.log(heartRateData);
+		// Data retrieved from http://vikjavev.no/ver/index.php?spenn=2d&sluttid=16.06.2015.
+
+Highcharts.chart('container', {
+  chart: {
+    type: 'spline',
+    scrollablePlotArea: {
+      minWidth: 600,
+      scrollPositionX: 1
+    }
+  },
+  title: {
+    text: 'Wind speed during two days'
+  },
+  subtitle: {
+    text: '13th & 14th of February, 2018 at two locations in Vik i Sogn, Norway'
+  },
+  xAxis: {
+    type: 'datetime',
+    labels: {
+      overflow: 'justify'
+    }
+  },
+  yAxis: {
+    title: {
+      text: 'Wind speed (m/s)'
+    },
+    minorGridLineWidth: 0,
+    gridLineWidth: 0,
+    alternateGridColor: null,
+    plotBands: [{ // Light air
+      from: 0.3,
+      to: 1.5,
+      color: 'rgba(68, 170, 213, 0.1)',
+      label: {
+        text: 'Light air',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // Light breeze
+      from: 1.5,
+      to: 3.3,
+      color: 'rgba(0, 0, 0, 0)',
+      label: {
+        text: 'Light breeze',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // Gentle breeze
+      from: 3.3,
+      to: 5.5,
+      color: 'rgba(68, 170, 213, 0.1)',
+      label: {
+        text: 'Gentle breeze',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // Moderate breeze
+      from: 5.5,
+      to: 8,
+      color: 'rgba(0, 0, 0, 0)',
+      label: {
+        text: 'Moderate breeze',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // Fresh breeze
+      from: 8,
+      to: 11,
+      color: 'rgba(68, 170, 213, 0.1)',
+      label: {
+        text: 'Fresh breeze',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // Strong breeze
+      from: 11,
+      to: 14,
+      color: 'rgba(0, 0, 0, 0)',
+      label: {
+        text: 'Strong breeze',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // High wind
+      from: 14,
+      to: 15,
+      color: 'rgba(68, 170, 213, 0.1)',
+      label: {
+        text: 'High wind',
+        style: {
+          color: '#606060'
+        }
+      }
+    }]
+  },
+  tooltip: {
+    valueSuffix: ' m/s'
+  },
+  plotOptions: {
+    spline: {
+      lineWidth: 4,
+      states: {
+        hover: {
+          lineWidth: 5
+        }
+      },
+      marker: {
+        enabled: false
+      },
+      pointInterval: 3600000, // one hour
+      pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
+    }
+  },
+  series: [{
+    name: 'Hestavollane',
+    data: [
+      3.7, 3.3, 3.9, 5.1, 3.5, 3.8, 4.0, 5.0, 6.1, 3.7, 3.3, 6.4,
+      6.9, 6.0, 6.8, 4.4, 4.0, 3.8, 5.0, 4.9, 9.2, 9.6, 9.5, 6.3,
+      9.5, 10.8, 14.0, 11.5, 10.0, 10.2, 10.3, 9.4, 8.9, 10.6, 10.5, 11.1,
+      10.4, 10.7, 11.3, 10.2, 9.6, 10.2, 11.1, 10.8, 13.0, 12.5, 12.5, 11.3,
+      10.1
+    ]
+
+  }, {
+    name: 'Vik',
+    data: [
+      0.2, 0.1, 0.1, 0.1, 0.3, 0.2, 0.3, 0.1, 0.7, 0.3, 0.2, 0.2,
+      0.3, 0.1, 0.3, 0.4, 0.3, 0.2, 0.3, 0.2, 0.4, 0.0, 0.9, 0.3,
+      0.7, 1.1, 1.8, 1.2, 1.4, 1.2, 0.9, 0.8, 0.9, 0.2, 0.4, 1.2,
+      0.3, 2.3, 1.0, 0.7, 1.0, 0.8, 2.0, 1.2, 1.4, 3.7, 2.1, 2.0,
+      1.5
+    ]
+  }],
+  navigation: {
+    menuItemStyle: {
+      fontSize: '10px'
+    }
+  }
+});
 		Highcharts.chart('hr', {
-				
+
 				title: {
 						text: 'Heart Rate Report'
 				},
@@ -504,11 +619,21 @@
 				// 				overflow: 'justify'
 				// 		}
 				// },
+				xAxis: {
+			        type: 'time',
+			        // dateTimeLabelFormats: { // don't display the dummy year
+			        //     month: '%e. %b',
+			        //     year: '%b'
+			        // },
+			        title: {
+			            text: 'Date'
+			        }
+			    },
 				yAxis: {
 						title: {
 								text: 'Heart Rate (BPM)'
 						},
-						
+
 				},
 				tooltip: {
 
@@ -517,25 +642,12 @@
 
 				},
 				plotOptions: {
-						// spline: {
-						// 		lineWidth: 1,
-						// 		states: {
-						// 				hover: {
-						// 						lineWidth: 1
-						// 				}
-						// 		},
-						// 		marker: {
-						// 				enabled: false
-						// 		},
-						// 		// pointInterval: 60000, // one hour 60000 if 1 second
-						// 		pointStart: 2018 // start day and time
 
-						// }
 						series: {
 							label:{
 								connectorAllowed: false
 							},
-							pointStart: 2010
+
 						}
 				},
 				series: [{
@@ -543,11 +655,18 @@
 					color: Highcharts.getOptions().colors[5],
 					fillOpacity: 0.5,
 						name: "{{firstName}}",
-						data: [0,0,0,10,10,10,20,20,20,40,30]
+						data: [["00:00:10", 70],
+						["00:00:10", 70],
+						["00:00:20", 70],
+						["00:00:30", 70],
+						["00:00:40", 70],
+						["00:00:50", 70],
+						["00:00:60", 70],]
 
 				}, ],
-				
+
 		});
+
 
 		Highcharts.chart('temp', {
 				chart: {
