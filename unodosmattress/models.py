@@ -96,7 +96,9 @@ class Patient(models.Model):
 	bedNumber = models.ForeignKey(Beds, on_delete=models.CASCADE)
 	status = models.CharField(max_length=45)
 	restrictions = models.CharField(max_length=20, default="false")
-	count = models.IntegerField(default=0)
+	countHR = models.IntegerField(default=0)
+	countT = models.IntegerField(default=0)
+
 	@property
 	def get_position(self):
 		return Position.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').position
@@ -136,21 +138,54 @@ class Patient(models.Model):
 
 
 		return toCompareTEMP
-	
+
 	@property
 	def get_patient_condition(self):
 		# normal, warning, critical
 		condition = "normal"
 		
-		if self.toCompareHR < 0 or self.toCompareTEMP < 0:
+		if self.toCompareTEMP < 0:
 			condition = "critical"
-		elif self.toCompareHR <= 10 and self.toCompareHR >= 0 or self.toCompareTEMP <= 0.3 and self.toCompareTEMP >= 0:
+		elif self.toCompareTEMP <= 0.3 and self.toCompareTEMP >= 0 or self.toCompareHR <= 10 and self.toCompareHR >= 0:
 			condition = "warning"
 		else:
 			condition = "normal"
 		if self.status == "STARTING":
 			condition = "starting"
 		return condition
+	
+	@property
+	def get_patient_conditionHR(self):
+		# normal, warning, critical
+		condition = "normal"
+		
+		if self.toCompareHR < 0:
+			condition = "critical"
+		elif self.toCompareHR <= 10 and self.toCompareHR >= 0:
+			condition = "warning"
+		else:
+			condition = "normal"
+		if self.status == "STARTING":
+			condition = "starting"
+		return condition
+
+	@property
+	def get_patient_conditionT(self):
+		# normal, warning, critical
+		condition = "normal"
+		
+		if self.toCompareTEMP < 0:
+			condition = "critical"
+		elif self.toCompareTEMP <= 0.3 and self.toCompareTEMP >= 0:
+			condition = "warning"
+		else:
+			condition = "normal"
+		if self.status == "STARTING":
+			condition = "starting"
+		return condition
+	
+
+
 	
 
 class Position(models.Model):

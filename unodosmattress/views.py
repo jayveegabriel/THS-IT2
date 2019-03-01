@@ -19,12 +19,28 @@ import threading
 import serial
 import json
 import time
+import sim800
 
 position = ''
 isClicked = False
 buttonClicked = []
 notificationList = []
 newNotificationList = []
+
+SMS=sim800.SIM800('COM9', 9600)
+while (SMS.gsmReset()!=1):
+   time.sleep(0.5)
+print ('SIM800 reset')
+#time.sleep(0.5)
+
+while (SMS.smsInit() != 1):
+    time.sleep(0.5)
+print ('SIM800 SMS initialized')
+time.sleep(2)
+
+SMS.smsDelete_All()
+print("All message deleted!")
+time.sleep(0.5)
 
 
 
@@ -1133,15 +1149,49 @@ def dashboard(request):
 	return render(request, 'blocked.html')
 
 def ajaxGetUpdatedDashboard(request):
+
+	
 	idRoom = request.GET.get("idRoom")
 	rooms = Room.objects.get(pk=idRoom)
 	beds = rooms.get_occupied_beds_dashboard
 	patientsArray = []
 	for x in range(0, len(beds)):
 		patient = beds[x].get_current_patient.idPatient
+		tempCount = patient.countT
+		HRCount = patient.countHR
+		print(tempCount, HRCount)
+		print (patient.get_patient_conditionHR)
+		if patient.get_patient_conditionT == "warning":
+			tempCount += 1
+			patient.countT = tempCount
+			print ("TempCount: ", tempCount)
+			patient.save()
+
+		else:
+			tempCount = 0 
+			patient.countT = tempCount
+			patient.save()
+
+		if patient.get_patient_conditionHR == "warning":
+			HRCount += 1
+			patient.countHR = HRCount
+			print ("HRCount", HRCount)
+			patient.save()
+
+		else:
+			HRCount = 0 
+			patient.countHR = HRCount
+			patient.save()
+
+		if patient.countT >= 15 and patient.countT % 15 == 0 or patient.countHR >= 15 and patient.countHR:
+			SMS.smsSend("+63" + patient.contactNum,'Please check Bed #' + patient.bedNumber.bedNumber)
+	        #print("message sent")
+
+
 		patientsArray.append({"idPatient":patient.idPatient, "firstName":patient.firstName,"lastName":patient.lastName,"bedNumber":patient.bedNumber.bedNumber
 			,"heartRate":patient.get_heartrate, "temperature":patient.get_temperature, "position":patient.get_position,
 			"mint":patient.minTemp, "maxt":patient.maxTemp, "minhr":patient.minHeartRate,"maxhr":patient.maxHeartRate,"condition":patient.get_patient_condition,
 			"toCompareHR":patient.toCompareHR,"toCompareTEMP":patient.toCompareTEMP})
 	return JsonResponse({"patients":patientsArray}, safe=False)
+
 
