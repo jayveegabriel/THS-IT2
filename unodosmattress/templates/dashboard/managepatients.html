@@ -217,19 +217,41 @@ overflow-y: auto;
                         												<fieldset>
 
 
-                        														<div class="control-group">
-                        															<label class="control-label" for="bednumber">Bed #</label>
-                        															<div class="controls">
-                        																<div id="listOfBeds">
-                        																	<select name="bednumber" id="bednumber" class ="span1">
-                        																		{% for beds in beds_list %}
-                        																			<option value="{{ beds.idBeds }}">{{ beds.bedNumber }}</option>
-                        																		{% endfor %}
-                        																	</select>
-                        																</div>
-                        																<!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
-                        															</div> <!-- /controls -->
-                        														</div> <!-- /control-group -->
+                                                    <div class="control-group">
+                                                      <label class="control-label" for="roomnumber">Room #</label>
+                                                      <div class="controls">
+
+                                                        <div id="listOfRooms">
+                                                          <select name="roomnumber" id="roomnumber" class ="span1">
+                                                            {% for room in rooms %}
+                                                              <option value="{{ room.idRoom }}">{{ room.roomNumber }}</option>
+                                                            {% endfor %}
+                                                          </select>
+                                                         
+
+                                                        </div>
+                                                        <!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
+                                                      </div> <!-- /controls -->
+                                                    </div> <!-- /control-group -->
+
+                                                    <div class="control-group">
+                                                      <label class="control-label" for="bednumber">Bed #</label>
+                                                      <div class="controls">
+                                                         <div id="listOfBeds">
+                                                          <select name="bednumber" id="bednumber" class ="span1">
+                                                            {% for beds in beds_list %}
+                                                              <option value="{{ beds.idBeds }}">{{ beds.bedNumber }}</option>
+                                                            {% endfor %}
+                                                          </select>
+                                                         
+
+                                                        </div>
+                                                        <!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
+                                                      </div> <!-- /controls -->
+                                                    </div> <!-- /control-group -->
+
+
+                                               
                                                   <div class="control-group">
                                                     <label class="control-label" for="firstname">First Name</label>
                                                     <div class="controls">
@@ -354,7 +376,7 @@ overflow-y: auto;
                                                   </div> <!-- /control-group -->
 
                         													<div class="control-group">	<label class="control-label">
-                                                    <input id ="chkCodeudor" type="checkbox" onclick="alert(this.checked)" >
+                                                    <input name ="restrictions" type="checkbox">
 </label>
 																									<div class="controls">
 																										<div class="input-prepend input-append">
@@ -451,7 +473,7 @@ overflow-y: auto;
                                           <legend class="" style ="font-size:15px;">Tap your ID to proceed!</legend>
                                         </div>
                                         <div class = "form-group">
-                                          <img id="imageId" src="{% static 'img/tap.png'%}"/ >
+                                          <img id="imageTag" src="{% static 'img/tap.png'%}"/ >
                                         </div>
                                       </fieldset>
                                   </div>
@@ -636,6 +658,7 @@ function getCurrentSize(){
             tempID = data[0].RFIDnumber;
             document.getElementById("imageTag").src = "{% static 'img/icon.png'%}";
             isTapped = true;
+            $("#add-patient").submit();
           }
         }
       });
@@ -812,7 +835,7 @@ $(document).ready(function() {
 							var aw = "";
 							aw += '<tr id="cancelRow' + data[0].idDoctor+ '">'+
 
-								'<td style="width:80%">'+ data[0].firstName + ' ' + data[0].lastName+ '<input type="hidden" name="doctors[]" value="'+data[0].idDoctor+'"></td>'+
+								'<td style="width:80%">'+ data[0].firstName + ' ' + data[0].lastName+ '<input type="text" name="doctors[]" value="'+data[0].idDoctor+'"></td>'+
 								'<td style="width:20%"><button type="button" class ="btn btn-danger" id="cancelButton'+ data[0].idDoctor+'">-</button></td>'+
 
 							'</tr>';
@@ -1039,4 +1062,47 @@ function confirmUsername(){
     }
   });
 }
+
+function updateBedOptions(){
+  var roomNumber = $("#roomnumber").val();
+  $.ajax({
+    url: '/ajax/ajaxUpdateBedOptions/',
+    data: {
+      "roomNumber":roomNumber,
+    },
+    dataType: 'json',
+    success: function (data){
+      console.log(data);
+      if(data.beds.length == 0){
+
+        $("#listOfBeds").html(noAvailableOptions());
+      }
+      else{
+        
+        $("#listOfBeds").html(dropdownMaker(data)); 
+      }
+    }
+  });
+
+
+}
+function noAvailableOptions(){
+  var wew = "<p>No available beds.</p>";
+  return wew;
+}
+function dropdownMaker(beds_list){
+    var wew = '<select name="bednumber" id="bednumber" class ="span1">';
+    beds_list.beds.forEach(function(a){
+        wew += '<option value="' + a.idBeds +'">' +a.bedNumber +'</option>';
+    });                                                         
+    wew += '</select>';
+
+    return wew;
+}
+$(document).ready(function(){
+  updateBedOptions();
+  $("#roomnumber").change(function(){
+    updateBedOptions(this.value);
+  });
+});
 </script>

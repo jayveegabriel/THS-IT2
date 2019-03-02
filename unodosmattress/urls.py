@@ -89,7 +89,7 @@ urlpatterns = [
     url(r'^doctor/patients/$', views.patients, name="patients"),
 
     url(r'^logout/$', views.logout, name="logout"),
-    url(r'^ajax/ajaxGetEveryMinHeartRate/$', views.ajaxGetEveryMinHeartRate, name="ajaxGetEveryMinHeartRate"),
+    # url(r'^ajax/ajaxGetEveryMinHeartRate/$', views.ajaxGetEveryMinHeartRate, name="ajaxGetEveryMinHeartRate"),
 
     url(r'^doctor/view/(?P<pk>[0-9]+)/$', views.view, name="view"),
 
@@ -100,5 +100,8 @@ urlpatterns = [
     url(r'^ajax/ajaxSelectRoom/',views.ajaxSelectRoom, name="ajaxSelectRoom"),
     url(r'^ajax/ajaxConfirmationUsername/',views.ajaxConfirmationUsername, name="ajaxConfirmationUsername"),
     url(r'^ajax/ajaxGetUpdatedDashboard/',views.ajaxGetUpdatedDashboard, name="ajaxGetUpdatedDashboard"),
+    url(r'^ajax/ajaxLoadData/',views.ajaxLoadData, name="ajaxLoadData"),
+    url(r'^ajax/ajaxUpdateBedOptions/',views.ajaxUpdateBedOptions, name="ajaxUpdateBedOptions"),
+
     
 ]

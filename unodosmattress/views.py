@@ -48,7 +48,7 @@ def readRFID():
 
 				client = coreapi.Client()
 				# schema = client.get("http://192.168.100.222:8000/docs")
-				schema = client.get("http://192.168.100.222:8000/docs")
+				schema = client.get("http://localhost:8000/docs")
 				action = ["rfid","create"]
 				params = {
 				 		"RFIDnumber": value,
@@ -61,7 +61,7 @@ def readRFID():
 
 
 t = threading.Thread(target=readRFID)
-# t.start()
+t.start()
 
 
 def ajaxGetCurrentRFIDs(request):
@@ -371,19 +371,22 @@ def managepatients(request):
 			maxHeartRate = request.POST.get("maxhr")
 			minTemp = request.POST.get("mint")
 			maxTemp = request.POST.get("maxt")
-			doctors = request.POST.getlist("doctors[]")
-
+			doctors = request.POST.getlist("doctors")
+			restrictions = request.POST.get('restrictions', '') == 'on'
+			print(doctors)
 
 			bday = parse_date(birthDate)
 			# age = (datetime.now().date() - bday).days / 365.25
 			print(bday)
-			doctors = request.GET.getlist('doctors[]')
 
-			patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED")
+
+			patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED",restrictions=restrictions)
 			patient_var.save()
 
 			patient_bed = Patient_Table(idBeds_id=bedNumber, idPatient_id=patient_var.pk)
 			patient_bed.save()
+
+
 			try:
 				client = coreapi.Client()
 				schema = client.get("http://192.168.100.214:8000/docs")
@@ -394,11 +397,13 @@ def managepatients(request):
 				result = client.action(schema, action, params=params)
 			except:
 				print("WACK NO CONNECTION")
-
+			print("Doctors")
+			print(len(doctors))
 			for x in range(0, len(doctors)):
 				print(doctors[x])
-				patient_doctor = Patient_Doctors( Doctor_id = int(doctors[x]), Patient_id = patient_var.pk)
-				patient_doctor.save()
+				d = Doctor.objects.get(pk= int(doctors[x]))
+				patient_doctor = Patient_Doctors( idDoctor =d, idPatient = patient_var)
+				patient_doctor.save()	
 			body = "Your patient, " + str(patient_var.firstName) + " " + str(patient_var.lastName) + ", is now in the recovery room."
 			now = datetime.datetime.now()
 			date = now.date()
@@ -426,8 +431,9 @@ def managepatients(request):
 
 			beds_list = Beds.objects.filter(bedStatus = "Available")
 			doctors_list = Doctor.objects.all()
+			rooms = Room.objects.all()
 
-			context = {'patients_list': patients_list,'beds_list': beds_list, 'doctors_list': doctors_list,"notifications":what, "notificationSize":len(notificationList), "newNotificationList":len(newNotificationList)}
+			context = {'patients_list': patients_list,'beds_list': beds_list, 'doctors_list': doctors_list,"notifications":what, "notificationSize":len(notificationList), "newNotificationList":len(newNotificationList), "rooms":rooms}
 
 
 
@@ -458,7 +464,7 @@ def viewpatients(request, idPatient):
 		p1 = Patient.objects.get(pk=idPatient)
 		# doctors = Patient_Doctors.objects.filter(Patient_id = idPatient).select_related('Patient').select_related('Doctor')
 		cursor = connection.cursor()
-		cursor.execute("SELECT d.firstName, d.lastName, d.middleName FROM unodosmattress_Patient_Doctors pd JOIN unodosmattress_doctor d ON d.idDoctor = pd.Doctor_id WHERE pd.Patient_id = %s",[idPatient])
+		cursor.execute("SELECT d.firstName, d.lastName, d.middleName FROM unodosmattress_Patient_Doctors pd JOIN unodosmattress_doctor d ON d.idDoctor = pd.idDoctor_id WHERE pd.idPatient_id = %s",[idPatient])
 		doctors = cursor.fetchall()
 		doctors_list = []
 		for x in range(0, len(doctors)):
@@ -689,9 +695,11 @@ def managebeds(request):
 	rooms = Room.objects.all()
 	beds_list = Beds.objects.filter(bedStatus="Pending")
 	
+	if len(rooms) > 0:
 
-	context = {'beds_list': beds_list,'rooms':rooms,'default_room':rooms[0]}
-
+		context = {'beds_list': beds_list,'rooms':rooms,'default_room':rooms[0]}
+	else:
+		context = {'beds_list': beds_list,'rooms':rooms}
 	return render(request, 'admin/managebeds.html',context)
 
 def reports(request):
@@ -986,7 +994,7 @@ def ajaxSaveNewPassword(request):
 def patients(request):
 	idDoctor = request.session.get('id','none')
 	cursor = connection.cursor()
-	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
+	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.idPatient_id = p.idPatient WHERE pd.idDoctor_id = %s",[idDoctor])
 	wew = cursor.fetchall()
 	patients = []
 	for x in range(0,len(wew)):
@@ -997,7 +1005,7 @@ def patients(request):
 def mypatients(request):
 	idDoctor = request.session.get('id','none')
 	cursor = connection.cursor()
-	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
+	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.idPatient_id = p.idPatient WHERE pd.idDoctor_id = %s",[idDoctor])
 	wew = cursor.fetchall()
 	patients = []
 	for x in range(0,len(wew)):
@@ -1008,7 +1016,7 @@ def mypatients(request):
 def view(request, pk):
 	patient = Patient.objects.get(pk = pk)
 	cursor = connection.cursor()
-	cursor.execute("SELECT d.firstName, d.lastName, d.middleName FROM unodosmattress_Patient_Doctors pd JOIN unodosmattress_doctor d ON d.idDoctor = pd.Doctor_id WHERE pd.Patient_id = %s",[pk])
+	cursor.execute("SELECT d.firstName, d.lastName, d.middleName FROM unodosmattress_Patient_Doctors pd JOIN unodosmattress_doctor d ON d.idDoctor = pd.idDoctor_id WHERE pd.idPatient_id = %s",[pk])
 	doctors = cursor.fetchall()
 	doctors_list = []
 	for x in range(0, len(doctors)):
@@ -1016,61 +1024,61 @@ def view(request, pk):
 	context = {"patient":patient, "doctors_list": doctors_list}
 	return render(request, 'doctor/view.html', context)
 
-def reports(request,pk):
-	p1 = Patient.objects.get(pk=pk)
+# def reports(request,pk):
+# 	p1 = Patient.objects.get(pk=pk)
 
-	h = HeartRateEveryMinute.objects.filter(idPatient_id=pk)
+# 	h = HeartRateEveryMinute.objects.filter(idPatient_id=pk)
 
-	t = TemperatureEveryMinute.objects.filter(idPatient_id =pk)
+# 	t = TemperatureEveryMinute.objects.filter(idPatient_id =pk)
 
-	heartRateList = []
-	for x in range(0, len(h)):
-		heartRateList.append({"idHeartRate":h[x].idHeartRate, "heartRate":h[x].heartRate,"time":h[x].time, "date":h[x].date},)
-	temperatureList = []
-	for q in range(0, len(t)):
-		temperatureList.append({"idTemperature":t[q].idTemperature, "temperature":t[q].temperature, "time":t[q].time,"date":t[q].date})
+# 	heartRateList = []
+# 	for x in range(0, len(h)):
+# 		heartRateList.append({"idHeartRate":h[x].idHeartRate, "heartRate":h[x].heartRate,"time":h[x].time, "date":h[x].date},)
+# 	temperatureList = []
+# 	for q in range(0, len(t)):
+# 		temperatureList.append({"idTemperature":t[q].idTemperature, "temperature":t[q].temperature, "time":t[q].time,"date":t[q].date})
 
-	cursor = connection.cursor()
-	cursor.execute("SELECT * FROM (select HOUR(TIME) AS 'hour', POSITION, COUNT(POSITION) as 'count' FROM unodosmattress_position where idPatient_id = %s group by HOUR(TIME), POSITION ORDER BY hour(time), count desc) X GROUP BY hour", [pk])
-	fetch = cursor.fetchall()
-	positionList = []
+# 	cursor = connection.cursor()
+# 	cursor.execute("SELECT * FROM (select HOUR(TIME) AS 'hour', POSITION, COUNT(POSITION) as 'count' FROM unodosmattress_position where idPatient_id = %s group by HOUR(TIME), POSITION ORDER BY hour(time), count desc) X GROUP BY hour", [pk])
+# 	fetch = cursor.fetchall()
+# 	positionList = []
 
-	for w in range(0, len(fetch)):
-		positionList.append({"hour":fetch[w][0], "position":fetch[w][1].upper(), "count":fetch[w][2]})
-	context = {"patient":p1, "heartRateList":heartRateList,"temperatureList":temperatureList, "positionList":positionList, "firstName":p1.firstName, "lastName":p1.lastName, "minHeartRate":p1.minHeartRate, "maxHeartRate":p1.maxHeartRate}
+# 	for w in range(0, len(fetch)):
+# 		positionList.append({"hour":fetch[w][0], "position":fetch[w][1].upper(), "count":fetch[w][2]})
+# 	context = {"patient":p1, "heartRateList":heartRateList,"temperatureList":temperatureList, "positionList":positionList, "firstName":p1.firstName, "lastName":p1.lastName, "minHeartRate":p1.minHeartRate, "maxHeartRate":p1.maxHeartRate}
 
-	return render(request, 'doctor/reports.html',context)
+# 	return render(request, 'doctor/reports.html',context)
 
-def ajaxGetEveryMinHeartRate(request):
+# def ajaxGetEveryMinHeartRate(request):
 
-	idPatient = request.GET.get('idPatient')
-	h = HeartRateEveryMinute.objects.filter(idPatient_id=idPatient)
+# 	idPatient = request.GET.get('idPatient')
+# 	h = HeartRateEveryMinute.objects.filter(idPatient_id=idPatient)
 
-	heartRateList = []
-	for x in range(0, len(h)):
-		heartRateList.append({"idHeartRate":h[x].idHeartRate, "heartRate":h[x].heartRate,"time":h[x].time, "date":h[x].date})
+# 	heartRateList = []
+# 	for x in range(0, len(h)):
+# 		heartRateList.append({"idHeartRate":h[x].idHeartRate, "heartRate":h[x].heartRate,"time":h[x].time, "date":h[x].date})
 
-	t = TemperatureEveryMinute.objects.filter(idPatient_id = idPatient)
-	temperatureList = []
-	for q in range(0, len(t)):
-		temperatureList.append({"idTemperature":t[q].idTemperature, "temperature":t[q].temperature, "time":t[q].time,"date":t[q].date})
+# 	t = TemperatureEveryMinute.objects.filter(idPatient_id = idPatient)
+# 	temperatureList = []
+# 	for q in range(0, len(t)):
+# 		temperatureList.append({"idTemperature":t[q].idTemperature, "temperature":t[q].temperature, "time":t[q].time,"date":t[q].date})
 
-	data = {"heartRateList":heartRateList, "temperatureList":temperatureList}
+# 	data = {"heartRateList":heartRateList, "temperatureList":temperatureList}
 
-	return JsonResponse(data, safe=False)
+# 	return JsonResponse(data, safe=False)
 
 
 def doctorhome(request):
 	idDoctor = request.session.get('id','none')
-	size = Patient_Doctors.objects.filter(Doctor_id=idDoctor)
+	size = Patient_Doctors.objects.filter(idDoctor_id=idDoctor)
 	cursor = connection.cursor()
-	cursor.execute("SELECT * FROM unodosmattress_Patient_Doctors PD JOIN unodosmattress_patient P ON P.idPatient = PD.Patient_id WHERE PD.DOCTOR_ID = %s AND P.status = 'FINISHED'", [idDoctor])
+	cursor.execute("SELECT * FROM unodosmattress_Patient_Doctors PD JOIN unodosmattress_patient P ON P.idPatient = PD.idPatient_id WHERE PD.idDOCTOR_ID = %s AND P.status = 'FINISHED'", [idDoctor])
 	stableSize = cursor.fetchall()
-	cursor.execute("SELECT * FROM unodosmattress_Patient_Doctors PD JOIN unodosmattress_patient P ON P.idPatient = PD.Patient_id WHERE PD.DOCTOR_ID = %s AND P.status = 'ON BED'", [idDoctor])
+	cursor.execute("SELECT * FROM unodosmattress_Patient_Doctors PD JOIN unodosmattress_patient P ON P.idPatient = PD.idPatient_id WHERE PD.idDOCTOR_ID = %s AND P.status = 'ON BED'", [idDoctor])
 	onBedSize = cursor.fetchall()
 	doctor = Doctor.objects.get(pk=idDoctor)
 
-	cursor.execute("SELECT n.idNews, n.body, n.date, n.time FROM unodosmattress_news n JOIN unodosmattress_patient p on p.idPatient = n.idPatient_id JOIN unodosmattress_patient_doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s", [idDoctor])
+	cursor.execute("SELECT n.idNews, n.body, n.date, n.time FROM unodosmattress_news n JOIN unodosmattress_patient p on p.idPatient = n.idPatient_id JOIN unodosmattress_patient_doctors pd ON pd.idpatient_id = p.idPatient WHERE pd.idDoctor_id = %s", [idDoctor])
 	wew = cursor.fetchall()
 	list = []
 	for x in range(0, len(wew)):
@@ -1128,7 +1136,6 @@ def dashboard(request):
 		rooms = Room.objects.all()
 
 		context = {"rooms":rooms,"default_room":rooms[0]}
-		print(rooms[0].get_occupied_beds[0])
 		return render(request, 'dashboard/dashboard.html',context)
 	return render(request, 'blocked.html')
 
@@ -1145,3 +1152,57 @@ def ajaxGetUpdatedDashboard(request):
 			"toCompareHR":patient.toCompareHR,"toCompareTEMP":patient.toCompareTEMP})
 	return JsonResponse({"patients":patientsArray}, safe=False)
 
+
+def reports(request,pk):
+	p1 = Patient.objects.get(pk=pk)
+
+	context = {
+		"patient":p1
+	}
+	return render(request, 'doctor/reports.html',context)
+
+def ajaxLoadData(request):
+
+	idPatient = request.GET.get("idPatient")
+	p = Patient.objects.get(pk=idPatient)
+	position = p.get_all_position
+	heartrate = p.get_all_heartrate
+	temperature = p.get_all_temperature
+	positionList = []
+	heartrateList = []
+	temperatureList = []
+
+	for x in range(0, len(position)):
+		tp = position[x]
+		positionList.append({"idPosition":tp.idPosition, "position":tp.position,"time":tp.time,"date":tp.date})
+
+	for x in range(0, len(heartrate)):
+		tp = heartrate[x]
+		heartrateList.append({"idHeartRate":tp.idHeartRate, "heartRate":tp.heartRate,"time":tp.time,"date":tp.date})
+
+	for x in range(0, len(temperature)):
+		tp = temperature[x]
+		temperatureList.append({"idTemperature":tp.idTemperature, "temperature":tp.temperature,"time":tp.time,"date":tp.date})
+
+
+
+	context = {
+		"positionList": positionList,
+		"heartrateList": heartrateList,
+		"temperatureList": temperatureList,
+	}
+	return JsonResponse(context, safe=False)
+
+def ajaxUpdateBedOptions(request):
+	roomNumber = request.GET.get("roomNumber")
+	print(roomNumber)
+	rooms = Room.objects.get(pk=roomNumber)
+	beds = rooms.get_available_beds
+	beds_list = []
+	for x in range(0,len(beds)):
+		b = beds[x]
+		beds_list.append({"idBeds":b['idBeds'], "bedNumber":b['bedNumber']})
+	context = {
+		"beds":beds_list
+	}
+	return JsonResponse(context, safe=False)
