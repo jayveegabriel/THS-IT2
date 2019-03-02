@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.db import connection
 from unodosmattress.models import *
 import coreapi
+from unodosmattress import sim800
 
 class TemperatureSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -25,7 +26,6 @@ class TemperatureSerializer(serializers.HyperlinkedModelSerializer):
 
 		if str(tempTime) == "23:59:59":
 
-
 			todo = Temperature(
 	        	temperature= validated_data.get('temperature', ''),
 	        	date=date,
@@ -33,7 +33,7 @@ class TemperatureSerializer(serializers.HyperlinkedModelSerializer):
 				idPatient_id = 10,
 				)
 			todo.save()
-			return todo
+
 		else:
 
 			client = coreapi.Client()
@@ -49,6 +49,8 @@ class TemperatureSerializer(serializers.HyperlinkedModelSerializer):
 				idPatient_id = patient,
 				)
 			todo.save()
+		
+			#return todo
 		return todo
 
 class PositionSerializer(serializers.HyperlinkedModelSerializer):
@@ -85,6 +87,7 @@ class PositionSerializer(serializers.HyperlinkedModelSerializer):
 				idPatient_id = 10,
 				)
 			todo.save()
+
 			# return todo
 		else:
 			client = coreapi.Client()
@@ -99,6 +102,7 @@ class PositionSerializer(serializers.HyperlinkedModelSerializer):
 				idPatient_id = patient,
 				)
 			todo.save()
+		
 		return todo
 
 class HeartRateSerializer(serializers.HyperlinkedModelSerializer):
@@ -130,6 +134,8 @@ class HeartRateSerializer(serializers.HyperlinkedModelSerializer):
 				idPatient_id = 10,
 			)
 			hr.save()
+
+		
 			# return hr
 		else:
 			client = coreapi.Client()
