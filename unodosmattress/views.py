@@ -27,7 +27,8 @@ buttonClicked = []
 notificationList = []
 newNotificationList = []
 
-'''SMS=sim800.SIM800('COM9', 9600)
+
+SMS=sim800.SIM800('COM9', 9600)
 while (SMS.gsmReset()!=1):
    time.sleep(0.5)
 print ('SIM800 reset')
@@ -40,7 +41,10 @@ time.sleep(2)
 
 SMS.smsDelete_All()
 print("All message deleted!")
-time.sleep(0.5)'''
+time.sleep(0.5)
+
+
+SMS.smsSend("+639176492934", "Patient ")
 
 
 
@@ -77,7 +81,7 @@ def readRFID():
 
 
 t = threading.Thread(target=readRFID)
-t.start()
+#t.start()
 
 
 def ajaxGetCurrentRFIDs(request):
@@ -387,26 +391,18 @@ def managepatients(request):
 			maxHeartRate = request.POST.get("maxhr")
 			minTemp = request.POST.get("mint")
 			maxTemp = request.POST.get("maxt")
-<<<<<<< HEAD
 			procedure = request.POST.get("procedure")
-			doctors = request.POST.getlist("doctors[]")
 
-=======
 			doctors = request.POST.getlist("doctors")
 			restrictions = request.POST.get('restrictions', '') == 'on'
 			print(doctors)
->>>>>>> 8aba96e9b2788090c8941586d186a20470881565
 
 			bday = parse_date(birthDate)
 			# age = (datetime.now().date() - bday).days / 365.25
 			print(bday)
 
-<<<<<<< HEAD
-			patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED", procedure = procedure)
-=======
+			patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED", procedure = procedure,restrictions=restrictions)
 
-			patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED",restrictions=restrictions)
->>>>>>> 8aba96e9b2788090c8941586d186a20470881565
 			patient_var.save()
 
 			patient_bed = Patient_Table(idBeds_id=bedNumber, idPatient_id=patient_var.pk)
@@ -526,12 +522,18 @@ def ajaxUpdateStatusPatient(request):
 	maxTemp = request.GET.get('maxTemp')
 	minHeartRate = request.GET.get('minHeartRate')
 	maxHeartRate = request.GET.get('maxHeartRate')
-	status = request.GET.get('status')
+	satus = request.GET.get('status')
 	p1 = Patient.objects.get(pk=id)
 	p1.minTemp = minTemp
 	p1.maxTemp = maxTemp
 	p1.minHeartRate = minHeartRate
 	p1.maxHeartRate = maxHeartRate
+
+	cursor1 = connection.cursor()
+	cursor1.execute("SELECT d.firstName, d.lastName, d.middleName, d.contactNum FROM unodosmattress_Patient_Doctors pd JOIN unodosmattress_doctor d ON d.idDoctor = pd.idDoctor_id WHERE pd.idPatient_id = %s",[p1.pk])
+	doctors = cursor1.fetchall()
+
+	
 	if status == "ON BED":
 		cursor = connection.cursor()
 		cursor.execute(''' SET GLOBAL EVENT_SCHEDULER = ON ''')
@@ -544,6 +546,12 @@ def ajaxUpdateStatusPatient(request):
 		time = now.time()
 		news = News(body=body, date=date, time=time,idPatient_id=p1.pk)
 		news.save()
+
+		for x in range(0,len(doctors)):
+			print (doctors[x][3])
+			SMS.smsSend("+63" + doctors[x][3], "Patient " + p1.lastName + " is now on bed.")
+
+
 	elif status == "TRANSFERRED TO WARD" or status == "TRANSFERRED TO ROOM" or "TRANSFERRED TO OPERATING RM" :
 		p1.status = status
 		body = "Your patient, " + str(p1.firstName) + " " + str(p1.lastName) + ", has been " + str.lower(status)
@@ -552,6 +560,9 @@ def ajaxUpdateStatusPatient(request):
 		time = now.time()
 		news = News(body=body, date=date, time=time,idPatient_id=p1.pk)
 		news.save()
+
+		for x in range(0,len(doctors)):
+			SMS.smsSend("+63" + doctors[x][3], "Patient " + p1.lastName + " is now " + str.lower(status))
 	p1.save()		
 
 	return HttpResponse()
@@ -1020,11 +1031,9 @@ def ajaxSaveNewPassword(request):
 def patients(request):
 	idDoctor = request.session.get('id','none')
 	cursor = connection.cursor()
-<<<<<<< HEAD
+
 	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
-=======
-	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.idPatient_id = p.idPatient WHERE pd.idDoctor_id = %s",[idDoctor])
->>>>>>> 8aba96e9b2788090c8941586d186a20470881565
+
 	wew = cursor.fetchall()
 	patients = []
 	for x in range(0,len(wew)):
@@ -1035,11 +1044,9 @@ def patients(request):
 def mypatients(request):
 	idDoctor = request.session.get('id','none')
 	cursor = connection.cursor()
-<<<<<<< HEAD
+
 	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
-=======
-	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.idPatient_id = p.idPatient WHERE pd.idDoctor_id = %s",[idDoctor])
->>>>>>> 8aba96e9b2788090c8941586d186a20470881565
+
 	wew = cursor.fetchall()
 	patients = []
 	for x in range(0,len(wew)):
@@ -1175,12 +1182,13 @@ def dashboard(request):
 
 def ajaxGetUpdatedDashboard(request):
 
-	
 	idRoom = request.GET.get("idRoom")
 	rooms = Room.objects.get(pk=idRoom)
 	beds = rooms.get_occupied_beds_dashboard
 	patientsArray = []
+
 	for x in range(0, len(beds)):
+		
 		patient = beds[x].get_current_patient.idPatient
 		tempCount = patient.countT
 		HRCount = patient.countHR
@@ -1208,10 +1216,15 @@ def ajaxGetUpdatedDashboard(request):
 			patient.countHR = HRCount
 			patient.save()
 
-		'''if patient.countT >= 15 and patient.countT % 15 == 0 or patient.countHR >= 15 and patient.countHR:
-			SMS.smsSend("+63" + patient.contactNum,'Please check Bed #' + patient.bedNumber.bedNumber)
-	        #print("message sent")'''
-
+		if  patient.countT >= 600 and patient.countT % 600 == 0 or patient.countHR >= 600 and patient.countHR  % 600 == 0:	
+			cursor1 = connection.cursor()
+			cursor1.execute("SELECT d.firstName, d.lastName, d.middleName, d.contactNum FROM unodosmattress_Patient_Doctors pd JOIN unodosmattress_doctor d ON d.idDoctor = pd.idDoctor_id WHERE pd.idPatient_id = %s",[patient.pk])
+			doctors = cursor1.fetchall()
+			
+			for x in range(0,len(doctors)):
+				print (doctors[x][3])
+				SMS.smsSend("+63" + doctors[x][3], "WARNING: Please check Bed #" + str(patient.bedNumber.bedNumber))
+		
 
 		patientsArray.append({"idPatient":patient.idPatient, "firstName":patient.firstName,"lastName":patient.lastName,"bedNumber":patient.bedNumber.bedNumber
 			,"heartRate":patient.get_heartrate, "temperature":patient.get_temperature, "position":patient.get_position,
