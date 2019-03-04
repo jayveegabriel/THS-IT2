@@ -113,6 +113,22 @@ class Patient(models.Model):
 		return Temperature.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').temperature
 	
 	@property
+	def get_all_position(self):
+		return Position.objects.filter(idPatient_id = self.idPatient).select_related("idPatient").order_by('date','time')
+
+
+	@property
+	def get_all_heartrate(self):
+		return HeartRate.objects.filter(idPatient_id = self.idPatient).select_related("idPatient").order_by('date','time')
+
+
+	@property
+	def get_all_temperature(self):
+		return Temperature.objects.filter(idPatient_id = self.idPatient).select_related("idPatient").order_by('date','time')
+
+
+	
+	@property
 	def toCompareHR(self):
 
 
@@ -246,8 +262,9 @@ class Doctor(models.Model):
 class Patient_Doctors(models.Model):
 	#patientNumber = models.IntegerField(default=0)
 	#doctorsID = models.IntegerField(default=0)
-	Patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-	Doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+	idPatientDoctor = models.AutoField(primary_key=True, default=None)
+	idPatient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+	idDoctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
 
 class Patient_Table(models.Model):
 	idPatientTable = models.AutoField(primary_key=True)
