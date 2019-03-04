@@ -179,6 +179,7 @@ overflow-y: auto;
 														 <thead>
 						                   <tr>
 						                     <th style ="text-align:center;">Bed number</th>
+                                <th style ="text-align:center;">PROCEDURE</th>
 						                     <th style ="text-align:center;">LAST NAME</th>
 						                     <th style ="text-align:center;">FIRST NAME</th>
 																 <th style ="text-align:center;">MIDDLE NAME</th>
@@ -190,6 +191,7 @@ overflow-y: auto;
 															  {% for patient in patients_list %}
 																	 <tr>
 																		<td style ="text-align:center;">{{ patient.bedNumber.bedNumber }}</td>
+                                    <td style ="text-align:center;">{{ patient.procedure }}</td>
 																		<td style ="text-align:center;">{{ patient.lastName }}</td>
 																		<td style ="text-align:center;">{{ patient.firstName }}</td>
 																		<td style ="text-align:center;">{{ patient.middleName }}</td>
@@ -230,6 +232,15 @@ overflow-y: auto;
                         																<!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
                         															</div> <!-- /controls -->
                         														</div> <!-- /control-group -->
+
+                                                      <div class="control-group">
+                                                      <label class="control-label" for="procedure">Procedure</label>
+                                                      <div class="controls">
+                                                        <input required type="text" placeholder="e.g. General Anesthesia"  class="span2" onkeyup="check(this.value,'logoProcedure')"  name = "procedure" id="procedure" value="">
+                                                        <img id="logoProcedure" class="logo" src="{% static 'img/white.png'%}"/>
+                                                      </div> <!-- /controls -->
+
+                                                    </div> <!-- /control-group -->
                                                   <div class="control-group">
                                                     <label class="control-label" for="firstname">First Name</label>
                                                     <div class="controls">
@@ -256,8 +267,7 @@ overflow-y: auto;
                           															<img id="logoLastName" class="logo" src="{% static 'img/white.png'%}"/>
                           														</div> <!-- /controls -->
                           													</div> <!-- /control-group -->
-                        												
-                        													
+                  													
 
                                                   <div class="control-group">
                                                     <label class="control-label" for="birthday">Birthday</label>
@@ -526,7 +536,7 @@ $(document).ready(function(){
         var firstname = $("#firstname").val();
         var lastname = $("#lastname").val();
         var middlename = $("#middlename").val();
-        // var religion = $("#religion").val();
+        var procedure = $("#procedure").val();
         var birthday = $("#birthday").val();
         var contactperson = $("#contactperson").val();
         var contactnum = $("#contactnum").val();
@@ -550,6 +560,10 @@ $(document).ready(function(){
         else if(lastname == ""){
           isOkay = false;
           alert("Please enter the last name");
+        }
+        else if(procedure == ""){
+          isOkay = false;
+          alert("Please enter the patient procedure");
         }
         else if(birthday == ""){
           isOkay = false;

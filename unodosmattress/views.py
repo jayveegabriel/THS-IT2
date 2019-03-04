@@ -27,7 +27,7 @@ buttonClicked = []
 notificationList = []
 newNotificationList = []
 
-SMS=sim800.SIM800('COM9', 9600)
+'''SMS=sim800.SIM800('COM9', 9600)
 while (SMS.gsmReset()!=1):
    time.sleep(0.5)
 print ('SIM800 reset')
@@ -40,7 +40,7 @@ time.sleep(2)
 
 SMS.smsDelete_All()
 print("All message deleted!")
-time.sleep(0.5)
+time.sleep(0.5)'''
 
 
 
@@ -387,6 +387,7 @@ def managepatients(request):
 			maxHeartRate = request.POST.get("maxhr")
 			minTemp = request.POST.get("mint")
 			maxTemp = request.POST.get("maxt")
+			procedure = request.POST.get("procedure")
 			doctors = request.POST.getlist("doctors[]")
 
 
@@ -395,7 +396,7 @@ def managepatients(request):
 			print(bday)
 			doctors = request.GET.getlist('doctors[]')
 
-			patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED")
+			patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED", procedure = procedure)
 			patient_var.save()
 
 			patient_bed = Patient_Table(idBeds_id=bedNumber, idPatient_id=patient_var.pk)
@@ -528,15 +529,15 @@ def ajaxUpdateStatusPatient(request):
 		time = now.time()
 		news = News(body=body, date=date, time=time,idPatient_id=p1.pk)
 		news.save()
-	elif status == "FINISHED":
-		p1.status = "FINISHED"
-		body = "Your patient, " + str(p1.firstName) + " " + str(p1.lastName) + ", has been transferred to the ward."
+	elif status == "TRANSFERRED TO WARD" or status == "TRANSFERRED TO ROOM" or "TRANSFERRED TO OPERATING RM" :
+		p1.status = status
+		body = "Your patient, " + str(p1.firstName) + " " + str(p1.lastName) + ", has been " + str.lower(status)
 		now = datetime.datetime.now()
 		date = now.date()
 		time = now.time()
 		news = News(body=body, date=date, time=time,idPatient_id=p1.pk)
 		news.save()
-	p1.save()
+	p1.save()		
 
 	return HttpResponse()
 
@@ -1002,22 +1003,22 @@ def ajaxSaveNewPassword(request):
 def patients(request):
 	idDoctor = request.session.get('id','none')
 	cursor = connection.cursor()
-	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
+	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
 	wew = cursor.fetchall()
 	patients = []
 	for x in range(0,len(wew)):
-		patients.append({"idPatient":wew[x][0], "lastName":wew[x][1], "firstName":wew[x][2], "middleName":wew[x][3], "status":wew[x][4]})
+		patients.append({"idPatient":wew[x][0], "lastName":wew[x][1], "firstName":wew[x][2], "middleName":wew[x][3], "status":wew[x][4], "procedure":wew[x][5]})
 	context = {"patients_list":patients}
 	return render(request, 'doctor/patients.html',context)
 
 def mypatients(request):
 	idDoctor = request.session.get('id','none')
 	cursor = connection.cursor()
-	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
+	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
 	wew = cursor.fetchall()
 	patients = []
 	for x in range(0,len(wew)):
-		patients.append({"idPatient":wew[x][0], "lastName":wew[x][1], "firstName":wew[x][2], "middleName":wew[x][3], "status":wew[x][4]})
+		patients.append({"idPatient":wew[x][0], "lastName":wew[x][1], "firstName":wew[x][2], "middleName":wew[x][3], "status":wew[x][4], "procedure":wew[x][5]})
 	context = {"patients_list":patients}
 	return render(request, 'doctor/mypatients.html', context)
 
@@ -1183,9 +1184,9 @@ def ajaxGetUpdatedDashboard(request):
 			patient.countHR = HRCount
 			patient.save()
 
-		if patient.countT >= 15 and patient.countT % 15 == 0 or patient.countHR >= 15 and patient.countHR:
+		'''if patient.countT >= 15 and patient.countT % 15 == 0 or patient.countHR >= 15 and patient.countHR:
 			SMS.smsSend("+63" + patient.contactNum,'Please check Bed #' + patient.bedNumber.bedNumber)
-	        #print("message sent")
+	        #print("message sent")'''
 
 
 		patientsArray.append({"idPatient":patient.idPatient, "firstName":patient.firstName,"lastName":patient.lastName,"bedNumber":patient.bedNumber.bedNumber
@@ -1193,5 +1194,3 @@ def ajaxGetUpdatedDashboard(request):
 			"mint":patient.minTemp, "maxt":patient.maxTemp, "minhr":patient.minHeartRate,"maxhr":patient.maxHeartRate,"condition":patient.get_patient_condition,
 			"toCompareHR":patient.toCompareHR,"toCompareTEMP":patient.toCompareTEMP})
 	return JsonResponse({"patients":patientsArray}, safe=False)
-
-

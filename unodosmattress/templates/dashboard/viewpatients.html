@@ -170,7 +170,16 @@
 								{% if patient.status == "ON BED" %}
 
 									<option selected>ON BED</option>
-									<option>FINISHED</option>
+									<option>TRANSFERRED TO WARD</option>
+									<option>TRANSFERRED TO ROOM </option>
+									<option>TRANSFERRED TO OPERATING RM </option>
+
+								{% endif %}
+								{% if patient.status == "TRANSFERRED TO OPERATING RM" %}
+
+									<option>ON BED</option>
+									<option selected="">TRANSFERRED TO OPERATING RM </option>
+
 								{% endif %}
 
 								{% if patient.status == "STARTING" %}
@@ -178,9 +187,13 @@
 									<option selected>STARTING</option>
 								{% endif %}
 
-								{% if patient.status == "FINISHED" %}
+								{% if patient.status == "TRANSFERRED TO WARD" %}
 
-									<option selected disabled>FINISHED</option>
+									<option selected disabled>TRANSFERRED TO WARD</option>
+								{% endif %}
+								{% if patient.status == "TRANSFERRED TO ROOM" %}
+
+									<option selected disabled>TRANSFERRED TO ROOM</option>
 								{% endif %}
 							</select>
 
@@ -196,6 +209,11 @@
 								</thead>
 								<tbody>
 									<tr>
+										<td>PROCEDURE</td>
+										<td>{{patient.procedure}}</td>
+
+									</tr>
+									<tr>
 										<td>LAST NAME</td>
 										<td>{{patient.lastName}}</td>
 
@@ -210,7 +228,7 @@
 										<td>{{patient.middleName}}</td>
 
 									</tr>
-									
+							
 									<tr>
 
 										<td>BIRTHDAY</td>
@@ -254,7 +272,7 @@
 										<td></td>
 
 									</tr>
-									{% if patient.status == "FINISHED" %}
+									{% if patient.status == "TRANSFERRED TO WARD" or patient.status == "TRANSFERRED TO ROOM"  %}
 									<tr>
 										<td>MINIMUM</td>
 										<td>  <input disabled type="range" min="1" max="120" value="{{ patient.minHeartRate }}" class="slider" id="minheartrateslide"></td>
@@ -272,7 +290,7 @@
 									</tr>
 									{% endif %}
 
-									{% if patient.status != "FINISHED" %}
+									{% if patient.status != "TRANSFERRED TO WARD" or patient.status == "TRANSFERRED TO ROOM" %}
 									<tr>
 										<td>MINIMUM</td>
 										<td>  <input type="range" min="1" max="120" value="{{ patient.minHeartRate }}" class="slider" id="minheartrateslide"></td>
@@ -294,7 +312,7 @@
 							</table>
 
 							 <a class="btn" href="{% url 'unodosmattress:managepatients' %}"><i class="icon-arrow-left"></i> BACK</a>
-						 		{% if patient.status != "FINISHED" %}
+						 		{% if patient.status != "TRANSFERRED TO WARD" or patient.status == "TRANSFERRED TO ROOM" %}
 
 							 		<a class="btn btn-primary" id="saveButton"> SAVE</a>
 								{% endif %}
