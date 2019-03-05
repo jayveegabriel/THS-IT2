@@ -29,25 +29,36 @@ newNotificationList = []
 
 
 
-# SMS=sim800.SIM800('COM9', 9600)
-# while (SMS.gsmReset()!=1):
-#    time.sleep(0.5)
-# print ('SIM800 reset')
+##SMS=sim800.SIM800('COM9', 9600)
+#while (SMS.gsmReset()!=1):
+#   time.sleep(0.5)
+#print ('SIM800 reset')
 #time.sleep(0.5)
 
 
-# while (SMS.smsInit() != 1):
-#     time.sleep(0.5)
-# print ('SIM800 SMS initialized')
-# time.sleep(2)
+SMS=sim800.SIM800('COM9', 9600)
+while (SMS.gsmReset()!=1):
+    time.sleep(0.5)
+print ('SIM800 reset')
+time.sleep(0.5)
 
-# SMS.smsDelete_All()
-# print("All message deleted!")
-# time.sleep(0.5)
 
-# 
-# SMS.smsSend("+639176492934", "Patient ")
 
+while (SMS.smsInit() != 1):
+    time.sleep(0.5)
+print ('SIM800 SMS initialized')
+time.sleep(2)
+
+SMS.smsDelete_All()
+print("All message deleted!")
+time.sleep(0.5)
+
+
+
+#SMS.smsSend("+639176492934", "Patient ")
+
+ 
+SMS.smsSend("+639176492934", "Patient ")
 
 
 def readRFID():
@@ -84,7 +95,7 @@ def readRFID():
 
 t = threading.Thread(target=readRFID)
 
-t.start()
+#t.start()
 
 
 def ajaxGetCurrentRFIDs(request):
@@ -552,7 +563,7 @@ def ajaxUpdateStatusPatient(request):
 
 		for x in range(0,len(doctors)):
 			print (doctors[x][3])
-			SMS.smsSend("+63" + doctors[x][3], "Patient " + p1.lastName + " is now on bed.")
+			SMS.smsSend("+63" + doctors[x][3], "Patient " + p1.lastName + " (" + p1.procedure + ")  is now on bed.")
 
 
 	elif status == "TRANSFERRED TO WARD" or status == "TRANSFERRED TO ROOM" or "TRANSFERRED TO OPERATING RM" :
@@ -565,7 +576,7 @@ def ajaxUpdateStatusPatient(request):
 		news.save()
 
 		for x in range(0,len(doctors)):
-			SMS.smsSend("+63" + doctors[x][3], "Patient " + p1.lastName + " is now " + str.lower(status))
+			SMS.smsSend("+63" + doctors[x][3], "Patient " + p1.lastName + "(" + p1.procedure + ") is now "  + str.lower(status))
 	p1.save()		
 
 	return HttpResponse()
@@ -1008,7 +1019,7 @@ def patients(request):
 	idDoctor = request.session.get('id','none')
 	cursor = connection.cursor()
 
-	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
+	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.idPatient_id = p.idPatient WHERE pd.idDoctor_id = %s",[idDoctor])
 
 	wew = cursor.fetchall()
 	patients = []
@@ -1021,7 +1032,7 @@ def mypatients(request):
 	idDoctor = request.session.get('id','none')
 	cursor = connection.cursor()
 
-	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
+	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.idPatient_id = p.idPatient WHERE pd.idDoctor_id = %s",[idDoctor])
 
 	wew = cursor.fetchall()
 	patients = []
@@ -1198,7 +1209,7 @@ def ajaxGetUpdatedDashboard(request):
 			
 			for x in range(0,len(doctors)):
 				print (doctors[x][3])
-				SMS.smsSend("+63" + doctors[x][3], "WARNING: Please check Bed #" + str(patient.bedNumber.bedNumber))
+				SMS.smsSend("+63" + doctors[x][3], "WARNING: Please check Bed #" + str(patient.bedNumber.bedNumber) + " - " + patient.procedure)
 		
 
 		patientsArray.append({"idPatient":patient.idPatient, "firstName":patient.firstName,"lastName":patient.lastName,"bedNumber":patient.bedNumber.bedNumber

@@ -24,6 +24,9 @@
 <link href="{% static 'css/listbox.css'%}" rel="stylesheet">
 <link href="{% static 'css/scrollbar.css'%}" rel="stylesheet">
 <style>
+  .chart {
+    max-height:25px;
+  }
 	.badge1 {
 	 position:relative;
 	}
@@ -316,6 +319,7 @@ input:checked + .slider:before {
 
   <div class="main-inner">
     <div class="container">
+
       <div class ="tabbable">
         <br>
                   <select class ="span2 roomDropdown">
@@ -352,11 +356,8 @@ input:checked + .slider:before {
                  <div class="widget-header" > <i class="icon-user"></i>
                    <h3>Bed #{{ bed.bedNumber }}</h3>
                    <!-- <span class="badge badge-danger"></span> -->
-
                 </div>
                 <!-- /widget-header -->
-
-
                               <div class="widget-content" align = "center" id ="bed">
                                    <p><b>{{bed.get_current_patient.idPatient.lastName}}, {{bed.get_current_patient.idPatient.firstName}}</b></p>
                                   <!--  {% if patient.get_position == "RIGHT SIDE" %}
@@ -424,6 +425,128 @@ input:checked + .slider:before {
         {% endwith %}
             {% endfor %}
 
+            <div class = "span3">
+              <div class="widget " id = "{{patient.idPatient_id }}">
+              <div class="widget-header" > <i class="icon-user"></i>
+                <h3>Bed #{{ bed.bedNumber }}</h3>
+                <!-- <span class="badge badge-danger"></span> -->
+
+             </div>
+             <!-- /widget-header -->
+             <div class="widget-content" align = "center" id ="bed">
+
+                  <p><b>Domingo, Nicole</b></p>
+                  <div id="chart1" style="height:100px;"></div>
+                   <div class ="widget-table action-table">
+                                   <table class=" widget-table table" >
+
+                                     <thead >
+                                       <tr>
+                                         <th  style="text-align:center; font-size:15px;">NONE</th>
+
+                                       </tr>
+                                     </thead>
+                                     <tbody>
+
+                                     </tbody>
+                                   </table>
+                                   <table>
+                                     <thead>
+                                     <tr>
+                                      <!-- <th id = "container"></th>-->
+                                      </tr>
+                                      </thead>
+                                      <tbody>
+
+                                      </tbody>
+                                     </table>
+
+
+
+
+
+
+                                 <table class="widget-table table" >
+
+                                   <thead >
+                                     <tr>
+                                       <th  width="25%"  style="text-align:center; font-size:10px;">60 BPM <br><span style="color:grey;"> MIN</span> </th>
+                                       <th  width="25%" style="text-align:center; font-size:10px;">120 BPM <br><span style="color:grey;"> MAX </span></th>
+                                       <th  width="25%" style="text-align:center;  font-size:10px;">36˚C <br><span style="color:grey;"> MIN </span></th>
+                                       <th  width="25%" style="text-align:center;  font-size:10px;">42˚C <br><span style="color:grey;"> MAX  </span></th>
+                                     </tr>
+                                   </thead>
+
+                                   <tbody>
+                                   </tbody>
+                               </table>
+
+                   </div>
+       </div>
+       </div>
+       </div>
+
+       <div class = "span3">
+         <div class="widget " id = "{{patient.idPatient_id }}">
+         <div class="widget-header" > <i class="icon-user"></i>
+           <h3>Bed #{{ bed.bedNumber }}</h3>
+           <!-- <span class="badge badge-danger"></span> -->
+
+        </div>
+        <!-- /widget-header -->
+        <div class="widget-content" align = "center" id ="bed">
+
+             <p><b>Domingo, Nicole</b></p>
+             <div id="chart2" style="height:100px;"></div>
+              <div class ="widget-table action-table">
+                              <table class=" widget-table table" >
+
+                                <thead >
+                                  <tr>
+                                    <th  style="text-align:center; font-size:15px;">NONE</th>
+
+                                  </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                              </table>
+                              <table>
+                                <thead>
+                                <tr>
+                                 <!-- <th id = "container"></th>-->
+                                 </tr>
+                                 </thead>
+                                 <tbody>
+
+                                 </tbody>
+                                </table>
+
+
+
+
+
+
+                            <table class="widget-table table" >
+
+                              <thead >
+                                <tr>
+                                  <th  width="25%"  style="text-align:center; font-size:10px;">60 BPM <br><span style="color:grey;"> MIN</span> </th>
+                                  <th  width="25%" style="text-align:center; font-size:10px;">120 BPM <br><span style="color:grey;"> MAX </span></th>
+                                  <th  width="25%" style="text-align:center;  font-size:10px;">36˚C <br><span style="color:grey;"> MIN </span></th>
+                                  <th  width="25%" style="text-align:center;  font-size:10px;">42˚C <br><span style="color:grey;"> MAX  </span></th>
+                                </tr>
+                              </thead>
+
+                              <tbody>
+                              </tbody>
+                          </table>
+
+              </div>
+  </div>
+  </div>
+  </div>
+
 
 
 
@@ -490,7 +613,7 @@ input:checked + .slider:before {
               <!-- /row -->
             </div>
 
-<div id="container1" style="height:36px;width:350px;"></div> 
+<div id="container1" style="height:36px;width:350px;"></div>
             </div>
 
 
@@ -508,6 +631,14 @@ input:checked + .slider:before {
 <script src="{% static 'js/bootstrap.js'%}"></script>
 
 <script src="{% static 'js/highcharts.js'%}"></script>
+<script src="{% static 'js/annotations.js'%}"></script>
+<script src="{% static 'js/series-label.js'%}"></script>
+<script src="{% static 'js/exporting.js'%}"></script>
+<script src="{% static 'js/export-data.js'%}"></script>
+
+
+<script src="{% static 'js/highcharts.js'%}"></script>
+
 <script language="javascript" type="text/javascript" src="{% static 'js/full-calendar/fullcalendar.min.js'%}"></script>
 
 <audio id="myAudio">
@@ -516,6 +647,77 @@ input:checked + .slider:before {
 </audio>
 <script src="{% static 'js/base.js'%}"></script>
 <script>
+
+
+Highcharts.chart(  "chart1" , {
+  chart: {
+    type: 'spline',
+    animation: Highcharts.svg, // don't animate in old IE
+    marginRight: 10,
+    events: {
+      load: function () {
+
+        // set up the updating of the chart each second
+        var series = this.series[0];
+        setInterval(function () {
+          var x = (new Date()).getTime(), // current time
+            y = Math.random();
+          series.addPoint([x, y], true, true);
+        }, 1000);
+      }
+    }
+  },
+
+  time: {
+    useUTC: false
+  },
+
+  title: {
+    text: null
+  },
+  xAxis: {
+    type: 'datetime',
+    tickPixelInterval: 150
+  },
+  yAxis: {
+    title: {
+      text: null
+    },
+    plotLines: [{
+      value: 0,
+      width: 1,
+      color: '#808080'
+    }]
+  },
+  tooltip: {
+    headerFormat: '<b>{series.name}</b><br/>',
+    pointFormat: '{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}'
+  },
+  legend: {
+    enabled: false
+  },
+  exporting: {
+    enabled: false
+  },
+  series: [{
+    name: 'BPM',
+    data: (function () {
+      // generate an array of random data
+      var data = [],
+        time = (new Date()).getTime(),
+        i;
+
+      for (i = -19; i <= 0; i += 1) {
+        data.push({
+          x: time + i * 1000,
+          y: Math.random()
+        });
+      }
+      return data;
+    }())
+  }]
+});
+counter = counter + 1;
   function startTime() {
     var today = new Date();
     var h = today.getHours();
@@ -751,12 +953,14 @@ input:checked + .slider:before {
                 }
               });
 
+              // });
+
               patientList.forEach(function(a){
                 if(a.status == "normal" || a.status == "starting"){
                   listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status);
                   tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status);
                 }
-              });   
+              });
 
             }
             $("#tileTable").html(tileTable);
@@ -764,6 +968,101 @@ input:checked + .slider:before {
         }
       });
   }
+
+  // PRACTICE
+
+  Highcharts.Renderer.prototype.symbols.line = function(x, y, width, height) {
+    return ['M',x,y,'L',x+height,y];
+};
+
+Highcharts.setOptions({
+    chart:{
+        defaultSeriesType:'bar',
+        marginTop:5,
+        marginRight:15,
+        marginBottom:10,
+        marginLeft:100,
+        borderWidth:0
+    },
+    credits:{enabled:false},
+    exporting:{enabled:false},
+    title:{text:''},
+    xAxis:{
+        tickLength:0,
+        lineColor:'#999',
+        lineWidth:1,
+        labels:{style:{fontWeight:'bold'}}
+    },
+    yAxis:{
+        min:0,
+        minPadding:0,
+        maxPadding:0,
+        tickColor:'#ccc',
+        tickWidth:1,
+        tickLength:3,
+        gridLineWidth:0,
+        endOnTick:true,
+        title:{text: ''},
+        labels:{
+            y:10,
+            style:{
+                fontSize:'8px'
+            },
+            formatter:function(){
+                if (this.isLast){
+                    return this.value + ' %';
+                }
+                else{
+                    return this.value;
+                }
+            }
+        }
+    },
+    legend:{enabled:false},
+    tooltip:{
+        enabled:true,
+        backgroundColor:'rgba(255, 255, 255, .85)',
+        borderWidth:0,
+        shadow:true,
+        style:{fontSize:'10px',padding:2},
+        formatter:function() {
+           return this.series.name + ": <strong>" + Highcharts.numberFormat(this.y,2) + "</strong>";
+        }
+    },
+    plotOptions:{
+        bar:{
+            color:'#000',
+            shadow:false,
+            borderWidth:0,
+        },
+        scatter:{
+            marker:{
+                symbol:'line',
+                lineWidth:2,
+                radius:9,
+                lineColor:'#000'
+            }
+        }
+    }
+});
+
+//-------------------------------------------------------
+var chart1 = new Highcharts.Chart({
+    chart:{renderTo:'container1'},
+    xAxis:{categories:['Title 1']},
+    yAxis:{
+        max:100,
+        labels:{y:10,style:{fontSize:'8px'}},
+        plotBands:[{from:0,to:70,color: 'rgba(103,103,103,.35)'},
+                   {from:70,to:85,color: 'rgba(153,153,153,.35)'},
+                   {from:85,to:100,color: 'rgba(204,204,204,.35)'}]
+    },
+    series:[{name:'Measure',pointWidth:10,data:[80]},
+            {name:'Target',type: 'scatter',data:[90],}]
+});
+
+
+
 
 </script>
 

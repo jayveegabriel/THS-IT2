@@ -366,18 +366,21 @@ overflow-y: auto;
                       <div class ="container" hidden="" id ="noPendingBedsDiv">
                         <h3>NO PENDING BEDS</h3>
                         <h4>Please press the button to add a bed!</h4>
-                        
+
                         </div>
 
 
                      <!--  {% if pendingBedsSize == 0%}
                       <div class ="container" id ="label">
+
+
                         <h3>NO PENDING BEDS</h3>
                         <h4>Please press the button to add a bed!</h4>
                         <hr>
                         </div>
                       {% endif %} -->
                       {% if pendingBedsSize > 0 %}
+
 										   <div class ="row" id="bedRow">
                         <hr>
                             {% for bed in beds_list %}
@@ -431,12 +434,12 @@ overflow-y: auto;
                                                              <label class="control-label" for="bednumber">Bed #</label>
                                                              <div class="controls">
                                                                <input type="number" class="span1" value="{{bed.bedNumber}}" name = "bednumber" id="bed{{ bed.pk }}" value="">
-                                                             </div> 
+                                                             </div>
 
 
 
 
-                                                        </div> 
+                                                        </div>
                                                         </fieldset>
 
 
@@ -463,7 +466,7 @@ overflow-y: auto;
                            </div>
                          </div>
                        </div> -->
-                       
+
                       {% endfor %}
 
                       </div>
@@ -589,7 +592,7 @@ $(document).ready(function() {
           }
           else{
             $("#noPendingBedsDiv").hide();
-            
+
           }
           //data = array of beds na pending
 
@@ -660,7 +663,7 @@ $(document).ready(function() {
             wew += '</div></div></fieldset></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
             wew += '<button type="button" onclick="addBed('+idBeds+')"  data-dismiss="modal" class="btn btn-primary" >Save</button></div></form>';
             wew += '</div></th></tr></tfoot></table></div></div></div>';
-                       
+
           }
 
              $("#bedRow").append(wew);
@@ -742,7 +745,7 @@ function updateBeds(){
             wew += '</div></div></fieldset></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
             wew += '<button type="button" class="btn btn-primary" onclick="addBed('+idBeds+');">Save</button></div></form>';
             wew += '</div></th></tr></tfoot></table></div></div></div>';
-                    
+
       }
 
          // $("#bedRow").html(wew);
@@ -846,7 +849,7 @@ $(".roomDropdown").change(function(){
 
 $("#cancelBtn").click(function(){
   var temp = $("#viewbedsDropdown").val();
-  refresh(temp); 
+  refresh(temp);
 });
 
 function refresh(temp){
