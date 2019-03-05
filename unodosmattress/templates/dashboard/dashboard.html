@@ -1,5 +1,6 @@
 
 <!-- {% block content %} -->
+
 {% load static %}
 
 <!DOCTYPE html>
@@ -148,18 +149,96 @@
 		right: 5%;
 
 	}
+  .logoutbtn {
+    border: none;
+      background-color: inherit;
+      font-size: 12px;
+      padding-bottom: 3px;
+      cursor: pointer;
+      display: inline-block;
+  }
+  .success {color: green;}
+  .info {color: dodgerblue;}
+  .warning {color: orange;}
+  .danger {color: red;}
+  .default {color: white;}
+  .badge1 {
+   position:relative;
+  }
+  .form{display:flex; flex-direction:column; float:right;}
 
+.checkbox-container{display:flex;}
+.checkbox-container input[type="checkbox"]{display:inline-block;}
+.checkbox-container label{display:inline;}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 25px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 25px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
 
-<body>
+<body onload = "startTime()">
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></span><span class="icon-bar"></span></span> </a><a class="brand" href="{% url 'unodosmattress:dashboard' %}"></a>
       <div class="nav-collapse">
         <ul class="nav pull-right">
-
-          <a class =""href="{% url 'unodosmattress:logout' %}"><i class="icon-signout"></i> Logout</a>
+          <button onclick="location.href='{% url 'unodosmattress:login' %}';" type ="submit"  class="logoutbtn default  dropdown-toggle"><i class="icon-signout"></i> Logout</button>
 
         </ul>
         <!--<form class="navbar-search pull-right">
@@ -203,10 +282,11 @@
   </div>
   <!-- /subnavbar-inner -->
 </div>
-<div class = "containerwew" id="containerDiv">
 
-	</div>
 <div class="main">
+
+    <h1 id="time" align ="center"></h1>
+
   <div id="mySidenav" class="sidenav">
 
 
@@ -228,32 +308,32 @@
               <td style="width:80%; font-size:10px;">13:19:00 PM</td>
 
             </tr> -->
-
           </tbody>
         </table>
-
-
       </div>
     </a>
-
-
     </div>
-
 
   <div class="main-inner">
     <div class="container">
       <div class ="tabbable">
-
+        <br>
                   <select class ="span2 roomDropdown">
                     <option disabled>Select Room No.</option>
                     {% for r in rooms %}
                       <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
                     {% endfor %}
 
-                  <select>
+                  </select>
+                  <div class ="form">
+                  <div class="checkbox-container">
+                     <label class ="switch"><input type="checkbox" id="checkboxAutoAdjust" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"> Prioritization Feature</label>
+                    </div>
+                  </div>
 
-                    <input type="checkbox" id="checkboxAutoAdjust" />
-                    Prioritization feature
+
+
+
         <ul class ="nav nav-tabs">
           <li class="active" style="width:50%;text-align:center">
                  <a href="#tileview" data-toggle="tab"><i class="icon-th-large"> </i><b> Tile View</b></a>
@@ -278,8 +358,8 @@
 
 
                               <div class="widget-content" align = "center" id ="bed">
-                                    <p><b>{{bed.get_current_patient.idPatient.lastName}}, {{bed.get_current_patient.idPatient.firstName}}</b></p>
-                                    {% if patient.get_position == "RIGHT SIDE" %}
+                                   <p><b>{{bed.get_current_patient.idPatient.lastName}}, {{bed.get_current_patient.idPatient.firstName}}</b></p>
+                                  <!--  {% if patient.get_position == "RIGHT SIDE" %}
                                         <img src="{% static 'img/rightsidepos.png'%}"/ >
                                     {% endif %}
                                     {% if patient.get_position == "RIGHT FETAL" %}
@@ -296,7 +376,7 @@
                                     {% endif %}
                                     {% if patient.get_position == "NONE" %}
                                         <img src="{% static 'img/none.png'%}"/ >
-                                    {% endif %}
+                                    {% endif %}-->
                                     <div class ="widget-table action-table">
                                                     <table class=" widget-table table" >
 
@@ -339,7 +419,7 @@
                                     </div>
                         </div>
         </div>
-            
+
         </div>
         {% endwith %}
             {% endfor %}
@@ -403,7 +483,7 @@
               <!-- /row -->
             </div>
 
-
+<div id="container1" style="height:36px;width:350px;"></div> 
             </div>
 
 
@@ -419,6 +499,8 @@
 <script src="{% static 'js/excanvas.min.js'%}"></script>
 <script src="{% static 'js/chart.min.js'%}" type="text/javascript"></script>
 <script src="{% static 'js/bootstrap.js'%}"></script>
+
+<script src="{% static 'js/highcharts.js'%}"></script>
 <script language="javascript" type="text/javascript" src="{% static 'js/full-calendar/fullcalendar.min.js'%}"></script>
 
 <audio id="myAudio">
@@ -427,6 +509,30 @@
 </audio>
 <script src="{% static 'js/base.js'%}"></script>
 <script>
+  function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    var ampm = today.getHours();
+    m = checkTime(m);
+    ampm = check(ampm);
+    s = checkTime(s);
+    document.getElementById('time').innerHTML =
+    h + ":" + m + ":" + s + " " + ampm;
+
+
+    var t = setTimeout(startTime, 500);
+  }
+  function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+  }
+  function check(i) {
+    if (i < 12) {i = "AM"}
+    else if (i >= 12) {i = "PM"};
+    return i;
+  }
   var rightSidePos = new Image();
   var rightFetalPos = new Image();
   var leftSidePos = new Image();
@@ -444,7 +550,7 @@
   }
 
   $(document).ready(function(){
-    preload();
+    //preload();
     $(".roomDropdown").change(function(){
       var idRoom = this.value;
       updateDashboard(idRoom);
@@ -460,14 +566,14 @@
   });
 
   function listMaker(bedNumber,lastName,firstName,heartRate,temperature, position,condition){
-      
-       if(condition == "critical"){ 
+
+       if(condition == "critical"){
         wew = '<tr style="box-shadow:0px 0px 4px 2px red">';
        }
        else if(condition == "warning"){
         wew = '<tr style="box-shadow:0px 0px 4px 2px orange">';
        }
-       else if(condition == "starting"){    
+       else if(condition == "starting"){
         wew = '<tr style="box-shadow:0px 0px 4px 2px grey">';
        }
        else{
@@ -481,7 +587,7 @@
              '<td style="text-align:center;">'+ position +'</td>'+
              '<td style="text-align:center;">Normal</td></tr>';
       return wew;
- } 
+ }
   function tileMaker(idPatient, bedNumber,firstName,lastName,position,heartRate,temperature,minHeartRate,maxHeartRate, minTemp,maxTemp,condition){
       waw = '<div class = "span3">';
 
@@ -497,7 +603,7 @@
       }
       else{
 
-        waw += '<div class="widget" id = "'+ idPatient+'">';        
+        waw += '<div class="widget" id = "'+ idPatient+'">';
       }
       waw += '<div class="widget-header"><i class="icon-user"></i><h3>Bed #'+bedNumber+'</h3>';
       waw += '</div><div class="widget-content" align = "center" id ="bed"><p>';
@@ -556,8 +662,8 @@
     this.positionPatient = positionPatient;
   }
   function updateDashboard(idRoom){
-    
-    
+
+
     $.ajax({
         url: '/ajax/ajaxGetUpdatedDashboard/',
         data: {
@@ -636,6 +742,7 @@
                   listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status);
                   tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status);
                 }
+
               });   
               patientList.forEach(function(a){
                 if(a.status == "normal" || a.status == "starting"){
@@ -643,12 +750,108 @@
                   tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status);
                 }
               });   
+
             }
             $("#tileTable").html(tileTable);
             $("#listTable").html(listTable);
         }
       });
   }
+
+  // PRACTICE
+
+  Highcharts.Renderer.prototype.symbols.line = function(x, y, width, height) {
+    return ['M',x,y,'L',x+height,y];
+};
+
+Highcharts.setOptions({
+    chart:{
+        defaultSeriesType:'bar',
+        marginTop:5,
+        marginRight:15,
+        marginBottom:10,
+        marginLeft:100,        
+        borderWidth:0
+    },
+    credits:{enabled:false},
+    exporting:{enabled:false},
+    title:{text:''},
+    xAxis:{
+        tickLength:0,
+        lineColor:'#999',
+        lineWidth:1,
+        labels:{style:{fontWeight:'bold'}}        
+    },
+    yAxis:{
+        min:0,
+        minPadding:0,
+        maxPadding:0,
+        tickColor:'#ccc',
+        tickWidth:1,
+        tickLength:3,
+        gridLineWidth:0,
+        endOnTick:true,
+        title:{text: ''},
+        labels:{
+            y:10,
+            style:{
+                fontSize:'8px'
+            },
+            formatter:function(){
+                if (this.isLast){
+                    return this.value + ' %';
+                }
+                else{
+                    return this.value;
+                }
+            }
+        }
+    },
+    legend:{enabled:false},
+    tooltip:{
+        enabled:true,
+        backgroundColor:'rgba(255, 255, 255, .85)',
+        borderWidth:0,
+        shadow:true,
+        style:{fontSize:'10px',padding:2},
+        formatter:function() {
+           return this.series.name + ": <strong>" + Highcharts.numberFormat(this.y,2) + "</strong>";
+        }
+    },
+    plotOptions:{
+        bar:{
+            color:'#000',
+            shadow:false,
+            borderWidth:0,
+        },
+        scatter:{
+            marker:{
+                symbol:'line',
+                lineWidth:2,
+                radius:9,
+                lineColor:'#000'
+            }
+        }
+    }
+});
+
+//-------------------------------------------------------
+var chart1 = new Highcharts.Chart({
+    chart:{renderTo:'container1'},
+    xAxis:{categories:['Title 1']},
+    yAxis:{
+        max:100,
+        labels:{y:10,style:{fontSize:'8px'}},    
+        plotBands:[{from:0,to:70,color: 'rgba(103,103,103,.35)'},
+                   {from:70,to:85,color: 'rgba(153,153,153,.35)'},
+                   {from:85,to:100,color: 'rgba(204,204,204,.35)'}]
+    },
+    series:[{name:'Measure',pointWidth:10,data:[80]},
+            {name:'Target',type: 'scatter',data:[90],}]
+});
+
+
+
 </script>
 
 <!--

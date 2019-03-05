@@ -30,6 +30,19 @@
 </head>
 <style>
 
+.logoutbtn {
+  border: none;
+    background-color: inherit;
+    font-size: 12px;
+    padding-bottom: 3px;
+    cursor: pointer;
+    display: inline-block;
+}
+.success {color: green;}
+.info {color: dodgerblue;}
+.warning {color: orange;}
+.danger {color: red;}
+.default {color: white;}
 	.badge1 {
 	 position:relative;
 	}
@@ -85,6 +98,7 @@ overflow-y: auto;
   right: 5%;
 
 }
+
 </style>
 <body>
 <div class="navbar navbar-fixed-top">
@@ -94,7 +108,7 @@ overflow-y: auto;
       <div class="nav-collapse">
         <ul class="nav pull-right">
 
-          <a class =""href="{% url 'unodosmattress:login' %}"><i class="icon-signout"></i> Logout</a>
+          <button onclick="location.href='{% url 'unodosmattress:login' %}';" type ="submit"  class="logoutbtn default  dropdown-toggle"><i class="icon-signout"></i> Logout</button>
 
         </ul>
         <!--<form class="navbar-search pull-right">
@@ -218,6 +232,22 @@ overflow-y: auto;
                         												 {% csrf_token %}
                         												<fieldset>
 
+ <div class="control-group">
+                                                      <label class="control-label" for="roomnumber">Room #</label>
+                                                      <div class="controls">
+
+                                                        <div id="listOfRooms">
+                                                          <select name="roomnumber" id="roomnumber" class ="span1">
+                                                            {% for room in rooms %}
+                                                              <option value="{{ room.idRoom }}">{{ room.roomNumber }}</option>
+                                                            {% endfor %}
+                                                          </select>
+                                                         
+
+                                                        </div>
+                                                        <!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
+                                                      </div> <!-- /controls -->
+                                                    </div> <!-- /control-group -->
 
                         														<div class="control-group">
                         															<label class="control-label" for="bednumber">Bed #</label>
@@ -242,38 +272,8 @@ overflow-y: auto;
 
                                                     </div> <!-- /control-group -->
 
-                                                    <div class="control-group">
-                                                      <label class="control-label" for="roomnumber">Room #</label>
-                                                      <div class="controls">
-
-                                                        <div id="listOfRooms">
-                                                          <select name="roomnumber" id="roomnumber" class ="span1">
-                                                            {% for room in rooms %}
-                                                              <option value="{{ room.idRoom }}">{{ room.roomNumber }}</option>
-                                                            {% endfor %}
-                                                          </select>
-                                                         
-
-                                                        </div>
-                                                        <!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
-                                                      </div> <!-- /controls -->
-                                                    </div> <!-- /control-group -->
-
-                                                    <div class="control-group">
-                                                      <label class="control-label" for="bednumber">Bed #</label>
-                                                      <div class="controls">
-                                                         <div id="listOfBeds">
-                                                          <select name="bednumber" id="bednumber" class ="span1">
-                                                            {% for beds in beds_list %}
-                                                              <option value="{{ beds.idBeds }}">{{ beds.bedNumber }}</option>
-                                                            {% endfor %}
-                                                          </select>
-                                                         
-
-                                                        </div>
-                                                        <!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
-                                                      </div> <!-- /controls -->
-                                                    </div> <!-- /control-group -->
+                                                   
+                                               
 
                                                   <div class="control-group">
                                                     <label class="control-label" for="firstname">First Name</label>
@@ -293,7 +293,7 @@ overflow-y: auto;
                                                     </div> <!-- /controls -->
                                                   </div>
 
-                                                  
+
                                                     <div class="control-group">
                           														<label class="control-label" for="lastname">Last Name</label>
                           														<div class="controls">
@@ -301,7 +301,7 @@ overflow-y: auto;
                           															<img id="logoLastName" class="logo" src="{% static 'img/white.png'%}"/>
                           														</div> <!-- /controls -->
                           													</div> <!-- /control-group -->
-                  													
+
 
                                                   <div class="control-group">
                                                     <label class="control-label" for="birthday">Birthday</label>
@@ -358,7 +358,14 @@ overflow-y: auto;
                         																										</div>
                         																											<!-- /controls -->
                         														</div>
+                                                    <div class="control-group">
+                                                      <label class="control-label" for="radiobtns">
+                                                      <input id ="chkCodeudor" type="checkbox" onclick="alert(this.checked)"></label>
+                                                    <div class="controls">
 
+                                                       <p style="padding-top:6px;" >Restrictions on Religion</p>
+                                                      </div>
+                                                    </div>
                         													<div class="control-group">
 
 
@@ -367,7 +374,6 @@ overflow-y: auto;
                                                     <label class="control-label" for="radiobtns">Doctor(s)</label>
                                                                           <div class="controls">
                                                                             <div class="form-group">
-
                                                                               <div id = "listOfDoctor">
                                                                                 <select class="span2" name="doctors" id="doctors">
                                                                                   {% for doctors in doctors_list %}
@@ -377,19 +383,13 @@ overflow-y: auto;
 
                                                                                 <button type="button" class ="btn" id="assignDoctor">+</button>
                                                                               </div>
-                                                                              <br></br>
 
                                                                               <div class="table-wrapper-scroll-y">
-
-                                                                                  <label class="control-label" for="tableDoctors">Assigned Doctor(s)</label>
+                                                                                  <label class="control-label" for="tableDoctors" >Assigned Doctor(s)</label>
                                                                               <table class="table table-bordered" id="tableDoctors">
-
                                                                                 <tbody id="doctorTable">
-
-
                                                                                 </tbody>
                                                                               </table>
-
                                                                             </div>
 
 
@@ -397,15 +397,7 @@ overflow-y: auto;
                                                                             </div>	<!-- /controls -->
                                                   </div> <!-- /control-group -->
 
-                        													<div class="control-group">	<label class="control-label">
-                                                    <input name ="restrictions" type="checkbox">
-</label>
-																									<div class="controls">
-																										<div class="input-prepend input-append">
-																										 <p >Restrictions on Religion</p>
-																										</div>
-																									</div>
-													</div>
+
 
 
 
@@ -482,7 +474,7 @@ overflow-y: auto;
                                       </fieldset>
 
 
-                                 
+
                                   </div>
 
 
@@ -512,7 +504,7 @@ overflow-y: auto;
 
 
                               </div>
-                             
+
                             </div>
                                </form>
 
@@ -558,7 +550,7 @@ overflow-y: auto;
 </audio>
 <script src="{% static 'js/bootstrap.js'%}"></script>
 <script src="{% static 'js/base.js'%}"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/dataTable.min.js'%}"></script>
 <script>
 var tempSize;
 var isTapped;

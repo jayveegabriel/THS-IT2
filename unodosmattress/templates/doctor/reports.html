@@ -132,7 +132,7 @@
 <div class="main" align ="center">
 	<h3 class ="animated slideInUp" align ="center"><b>Reports for {{patient.lastName}}, {{patient.firstName}} {{patient.middleName}}.</b></h3>
 
-	<a class ="animated slideInUp" href="{% url 'unodosmattress:patients' %}"><i class="icon-arrow-left"></i> Back</a>
+	<a class ="animated slideInUp" href="{% url 'unodosmattress:patients' %}"><b> Back</b></a>
 
 	<div class="main-inner">
 		<br>
@@ -167,7 +167,7 @@
       		</div> <!-- /span4 -->
 					<div class="span4">
 						<div class="widget">
-	      		<!-- <div id="target-3" class="widget">
+	      		<div id="target-3" class="widget">
 	      			<div class="widget-content" align ="center">
 			      		<h4>Choose a QD</h4>
 								<br>
@@ -176,7 +176,7 @@
 								 <fieldset>
 									 <div class="form-group">
 										 <select class="form-control" id="selectqd" onchange="changeQ()">
-											<option value ="1">q1min</option>
+											<option value ="1">Normal</option>
 											<option value ="2">q15min</option>
 									 	<select>
 								 	</div>	
@@ -184,7 +184,7 @@
 							
 								</form>
 		      		</div> 
-	      		</div>  -->
+	      		</div> 
       		</div> <!-- /span4 -->
 					</div>
 					<div class="span2">
@@ -196,7 +196,9 @@
 
 
 				<div class ="row">
- 	      	<div class="span9">
+
+ 	      	<div class="span12">
+
  						<div class="widget" id="heartRateWidget">
  					     <div class="widget-content" >
  									<div class ="timeline-wrapper" id="hr" style="min-height: 400px; min-width: 380px">
@@ -205,18 +207,19 @@
  						</div>
 					</div>
 
-				
+
 				</div>
 
 				<div class ="row">
-					<div class ="span9">
+					<div class ="span12">
+
 						<div class="widget" id="temperatureWidget">
 							 <div class="widget-content" >
 								<div id="temp" style="height: 400px; min-width: 380px"></div>
 									</div>
 					  </div>
 					</div>
-					
+
  				</div>
 
 
@@ -234,6 +237,87 @@
 				</div>
 
 
+
+<!--
+
+					<div class="row" id="positionWidget">
+						<div class="span12">
+							<div class="widget">
+
+								<div class="widget-content" align ="right">
+									<div class ="" align ="left">
+ 									<h4> Position Trends </h4>
+ 								 </div>
+									<h4 class ="text-right"> Legend: &nbsp; <img src="{% static 'img/tl none.png'%}"> No Position &nbsp;
+										 <img src="{% static 'img/tl back.png'%}"> Back &nbsp;
+										 <img src="{% static 'img/tl fetal.png'%}"> Left Fetal &nbsp;
+										 <img src="{% static 'img/tl rightfetal.png'%}"> Right Fetal &nbsp;
+										 <img src="{% static 'img/tl side.png'%}"> Left Side &nbsp;
+									 	<img src="{% static 'img/tl rightside.png'%}"> Right Side &nbsp;</h4>
+
+										<div class="body">
+											<div id="timeline" class="body" style="padding-top: 2%;" >
+
+												<div id="scroll" class="timeline-wrapper">
+													<div id= "container" class="timeline-content-day">
+														<div id="itemline" class="timeline-line"></div>
+
+														{% for p in positionList %}
+														<div class='timeline-content-item active' data-timeline="hour-8">
+															<span>{{p.hour}}:00:00</span>
+															<div class='timeline-content-item-reveal'>
+																<a>
+																	{% if p.position == "NONE" %}
+																		<img src="{% static 'img/timeline none.png'%}"/ >
+																	{% endif %}
+																	{% if p.position == "BACK" %}
+																		<img src="{% static 'img/timeline back.png'%}"/ >
+																	{% endif %}
+																	{% if p.position == "RIGHT SIDE" %}
+																		<img src="{% static 'img/timeline rightside.png'%}"/ >
+																	{% endif %}
+																	{% if p.position == "LEFT SIDE" %}
+																		<img src="{% static 'img/timeline side.png'%}"/ >
+																	{% endif %}
+																	{% if p.position == "RIGHT FETAL" %}
+																		<img src="{% static 'img/timeline rightfetal.png'%}"/ >
+																	{% endif %}
+																	{% if p.position == "LEFT FETAL" %}
+																		<img src="{% static 'img/timeline fetal.png'%}"/ >
+																	{% endif %}
+																	<span>{{p.position}}</span>
+																</a>
+															</div>
+														</div>
+														{% endfor %}
+
+														<!-- <div class='timeline-content-item active' data-timeline="hour-9">
+															<span>9 AM</span>
+															<div class='timeline-content-item-reveal'>
+																<a>
+																	<img src="{% static 'img/timeline back.png'%}"/ >
+																	<span>Back</span>
+																</a>
+															</div>
+														</div> -->
+														<!-- <div class="timeline-content-item active" data-timeline="hour-10">
+															<span>10 AM</span>
+															<div class="timeline-content-item-reveal">
+																<a>
+																	<img src="{% static 'img/timeline none.png'%}"/ >
+																	<span>None</span>
+																</a>
+															</div>
+														</div>
+
+													</div>
+
+												</div>
+											</div>
+						</div>
+
+										</div>
+-->
 
 
 
@@ -354,7 +438,8 @@
 	            },});
 
 		}
-		
+
+
 
 		 // {
    //          	x: Date.UTC(2013, 3, 22, 1, 15),
@@ -483,6 +568,11 @@
 	      pointInterval: 3600000, // one hour
 	      pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
 	    }	,
+	    series:{
+
+		  turboThreshold: 50000,
+	    
+	    }
 	  },
 	  series: [{
 	    name: 'Time',
@@ -508,6 +598,155 @@
 	function heartRateChart(heartRateData){	
 
 		console.log(heartRateData);
+
+		// Data retrieved from http://vikjavev.no/ver/index.php?spenn=2d&sluttid=16.06.2015.
+
+Highcharts.chart('container', {
+  chart: {
+    type: 'spline',
+    scrollablePlotArea: {
+      minWidth: 600,
+      scrollPositionX: 1
+    }
+  },
+  title: {
+    text: 'Wind speed during two days'
+  },
+  subtitle: {
+    text: '13th & 14th of February, 2018 at two locations in Vik i Sogn, Norway'
+  },
+  xAxis: {
+    type: 'datetime',
+    labels: {
+      overflow: 'justify'
+    }
+  },
+  yAxis: {
+    title: {
+      text: 'Wind speed (m/s)'
+    },
+    minorGridLineWidth: 0,
+    gridLineWidth: 0,
+    alternateGridColor: null,
+    plotBands: [{ // Light air
+      from: 0.3,
+      to: 1.5,
+      color: 'rgba(68, 170, 213, 0.1)',
+      label: {
+        text: 'Light air',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // Light breeze
+      from: 1.5,
+      to: 3.3,
+      color: 'rgba(0, 0, 0, 0)',
+      label: {
+        text: 'Light breeze',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // Gentle breeze
+      from: 3.3,
+      to: 5.5,
+      color: 'rgba(68, 170, 213, 0.1)',
+      label: {
+        text: 'Gentle breeze',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // Moderate breeze
+      from: 5.5,
+      to: 8,
+      color: 'rgba(0, 0, 0, 0)',
+      label: {
+        text: 'Moderate breeze',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // Fresh breeze
+      from: 8,
+      to: 11,
+      color: 'rgba(68, 170, 213, 0.1)',
+      label: {
+        text: 'Fresh breeze',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // Strong breeze
+      from: 11,
+      to: 14,
+      color: 'rgba(0, 0, 0, 0)',
+      label: {
+        text: 'Strong breeze',
+        style: {
+          color: '#606060'
+        }
+      }
+    }, { // High wind
+      from: 14,
+      to: 15,
+      color: 'rgba(68, 170, 213, 0.1)',
+      label: {
+        text: 'High wind',
+        style: {
+          color: '#606060'
+        }
+      }
+    }]
+  },
+  tooltip: {
+    valueSuffix: ' m/s'
+  },
+  plotOptions: {
+
+    spline: {
+      lineWidth: 1,
+      states: {
+        hover: {
+          lineWidth: 1
+        }
+      },
+      marker: {
+        enabled: false
+      },
+      pointInterval: 3600000, // one hour
+      pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
+    }
+  },
+  series: [{
+    name: 'Hestavollane',
+    data: [
+      3.7, 3.3, 3.9, 5.1, 3.5, 3.8, 4.0, 5.0, 6.1, 3.7, 3.3, 6.4,
+      6.9, 6.0, 6.8, 4.4, 4.0, 3.8, 5.0, 4.9, 9.2, 9.6, 9.5, 6.3,
+      9.5, 10.8, 14.0, 11.5, 10.0, 10.2, 10.3, 9.4, 8.9, 10.6, 10.5, 11.1,
+      10.4, 10.7, 11.3, 10.2, 9.6, 10.2, 11.1, 10.8, 13.0, 12.5, 12.5, 11.3,
+      10.1
+    ]
+
+  }, {
+    name: 'Vik',
+    data: [
+      0.2, 0.1, 0.1, 0.1, 0.3, 0.2, 0.3, 0.1, 0.7, 0.3, 0.2, 0.2,
+      0.3, 0.1, 0.3, 0.4, 0.3, 0.2, 0.3, 0.2, 0.4, 0.0, 0.9, 0.3,
+      0.7, 1.1, 1.8, 1.2, 1.4, 1.2, 0.9, 0.8, 0.9, 0.2, 0.4, 1.2,
+      0.3, 2.3, 1.0, 0.7, 1.0, 0.8, 2.0, 1.2, 1.4, 3.7, 2.1, 2.0,
+      1.5
+    ]
+  }],
+  navigation: {
+    menuItemStyle: {
+      fontSize: '10px'
+    }
+  }
+});
+
+
 		var heartRateList = new Array();
 
 		heartRateData.forEach(function(a){
@@ -521,7 +760,8 @@
 			
 
 		});
-		console.log(heartRateList);
+		
+
 		Highcharts.chart('hr', {
 
 				title: {
@@ -694,109 +934,47 @@
 				}
 		});
 	}
-	// function changeQ(){
-	// 	var selected = $("#selectqd").val();
-	// 	if(selected == 1){
+	function changeQ(){
+		var selected = $("#selectqd").val();
+		if(selected == 1){
 
-	// 		var i = "{{patient.idPatient}}";
-	// 		$.ajax({
-	// 			url: '/ajax/ajaxGetEveryMinHeartRate/',
-	// 			data: {
-	// 				"idPatient":i
-	// 			},
-	// 			dataType: 'json',
-	// 			success: function (data){
-	// 				var heartRateData = new Array();
-	// 				var temperatureData = new Array();
-	// 				var heartRateBody = "";
-	// 				var temperatureBody = "";
-	// 				for(var w = 0; w < data['heartRateList'].length; w++){
+			var i = "{{patient.idPatient}}";
+			$.ajax({
+				url: '/ajax/ajaxGetQOne/',
+				data: {
+					"idPatient":i
+				},
+				dataType: 'json',
+				success: function (data){
 
-	// 						heartRateData.push(data['heartRateList'][w].heartRate);
+					console.log(data);
+					heartRateChart(data.heartRateList);
+					tempChart(data.temperatureList);
 
-	// 						heartRateBody += '<tr>'+
+				}
+			});
+		
+		}
+		else{
+			var i = "{{patient.idPatient}}";
+			$.ajax({
+				url: '/ajax/ajaxGetQFifteen/',
+				data: {
+					"idPatient":i
+				},
+				dataType: 'json',
+				success: function (data){
 
-	// 							'<td>' + data['heartRateList'][w].idHeartRate + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].heartRate + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].date + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].time + '</td>'+
-	// 						'</tr>';
-	// 				}
+					console.log(data);
+					heartRateChart(data.heartRateList);
+					tempChart(data.temperatureList);
 
-	// 				for(var w = 0; w < data['temperatureList'].length; w++){
-
-	// 						temperatureData.push(data['temperatureList'][w].temperature);
-	// 						temperatureBody += '<tr>'+
-
-	// 							'<td>' + data['temperatureList'][w].idTemperature + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].temperature + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].date + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].time + '</td>'+
-	// 						'</tr>';
-
-	// 				}
-	// 				$("#heartRateBody").html(heartRateBody);
-	// 				$("#temperatureBody").html(temperatureBody);
-
-	// 				displayCharts(heartRateData,temperatureData);
-
-	// 			}
-	// 		});
-	// 	}
-	// 	else{
-	// 		var i = "{{patient.idPatient}}";
-	// 		$.ajax({
-	// 			url: '/ajax/ajaxGetEveryMinHeartRate/',
-	// 			data: {
-	// 				"idPatient":i
-	// 			},
-	// 			dataType: 'json',
-	// 			success: function (data){
-	// 				var heartRateData = new Array();
-	// 				var temperatureData = new Array();
-
-	// 				var heartRateBody = "";
-	// 				var temperatureBody = "";
-	// 				var counter = 1;
-	// 				for(var w = 0; w < data['heartRateList'].length; w++){
-	// 					if(w == 0 || w % 15 === 0){
-	// 						heartRateData.push(data['heartRateList'][w].heartRate);
-	// 						heartRateBody += '<tr>'+
-
-	// 							// '<td>' + data['heartRateList'][w].idHeartRate + '</td>'+
-	// 							'<td>' + counter + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].heartRate + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].date + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].time + '</td>'+
-	// 						'</tr>';
-	// 						counter += 1;
-	// 					}
-	// 				}
-	// 				counter = 1;
-	// 				for(var w = 0; w < data['temperatureList'].length; w++){
-	// 					if(w == 0 || w % 15 === 0){
-	// 						temperatureData.push(data['temperatureList'][w].temperature);
-	// 						temperatureBody += '<tr>'+
-
-	// 							// '<td>' + data['temperatureList'][w].idTemperature + '</td>'+
-	// 							'<td>' + counter + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].temperature + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].date + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].time + '</td>'+
-	// 						'</tr>';
-	// 						counter += 1;
-	// 					}
-	// 				}
-	// 				$("#heartRateBody").html(heartRateBody);
-	// 				$("#temperatureBody").html(temperatureBody);
-	// 				displayCharts(heartRateData,temperatureData);
-
-	// 			}
-	// 		});
-	// 	}
-	// 	$('#fex').DataTable();
-	//   $('#fexx').DataTable();
-	// }
+				}
+			});
+		}
+		$('#fex').DataTable();
+	  $('#fexx').DataTable();
+	}
 
 </script>
 <script type="text/javascript">

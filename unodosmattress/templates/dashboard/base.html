@@ -25,6 +25,19 @@
     <![endif]-->
 </head>
 <style>
+.logoutbtn {
+  border: none;
+    background-color: inherit;
+    font-size: 12px;
+    padding-bottom: 3px;
+    cursor: pointer;
+    display: inline-block;
+}
+.success {color: green;}
+.info {color: dodgerblue;}
+.warning {color: orange;}
+.danger {color: red;}
+.default {color: white;}
 .badge1 {
  position:relative;
 }
@@ -51,8 +64,7 @@
       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></span><span class="icon-bar"></span></span> </a><a class="brand" href="{% url 'unodosmattress:dashboard' %}"></a>
       <div class="nav-collapse">
         <ul class="nav pull-right">
-
-          <a class =""href="{% url 'unodosmattress:logout' %}"><i class="icon-signout"></i> Logout</a>
+          <button onclick="location.href='{% url 'unodosmattress:login' %}';" type ="submit"  class="logoutbtn default"><i class="icon-signout"></i> Logout</button>
 
         </ul>
         <!--<form class="navbar-search pull-right">
@@ -128,10 +140,18 @@
   </div>
   <!-- /subnavbar-inner -->
 </div>
-
+<div class ="container" align ="center">
+  <br>
+  <h1 id="welcome"></h1>
+  <h2    id="time"><h2>
+  <br>
+</div>
 <!-- /subnavbar -->
 {% block content %}
 {% endblock content %}
 </body>
+<script>
+
+</script>
 
 </html>

@@ -22,12 +22,14 @@
   }
 
 </style>
+
+
 <div class="main">
   <div class="main-inner" align ="center">
-    <img src="{% static 'img/loginlogo.png'%}" class ="hvr-bounce-in" / >
-    <h1 class ="animated bounceInDown" >Welcome Admin!</h1>
 
+    
     <div class="container">
+
       <hr>
       <div class="row">
 
@@ -71,7 +73,7 @@
 
                     <div class="stat"> <i class="icon-ok-circle"></i> <span class="value">{{availableBeds}}<h3>VACANT</h3></span> </div>
 
-                  
+
                     <div class="stat"> <i class="icon-remove-circle"></i> <span class="value">{{unavailableBeds}}<h3>OUT OF ORDER</h3></span> </div>
                   </div>
                 </div>
@@ -96,6 +98,7 @@
   </div>
   <!-- /main-inner -->
 </div>
+
 <!-- /main -->
 
 <!-- /extra -->
@@ -112,6 +115,7 @@
 
 <script src="js/base.js"></script>
 <script>
+
 
         var lineChartData = {
             labels: ["January", "February", "March", "April", "May", "June", "July"],
