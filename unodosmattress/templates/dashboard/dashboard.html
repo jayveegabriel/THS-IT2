@@ -311,17 +311,11 @@ input:checked + .slider:before {
               <td style="width:80%; font-size:10px;">13:19:00 PM</td>
 
             </tr> -->
-
           </tbody>
         </table>
-
-
       </div>
     </a>
-
-
     </div>
-
 
   <div class="main-inner">
     <div class="container">
@@ -612,7 +606,7 @@ input:checked + .slider:before {
               <!-- /row -->
             </div>
 
-
+<div id="container1" style="height:36px;width:350px;"></div>
             </div>
 
 
@@ -628,11 +622,16 @@ input:checked + .slider:before {
 <script src="{% static 'js/excanvas.min.js'%}"></script>
 <script src="{% static 'js/chart.min.js'%}" type="text/javascript"></script>
 <script src="{% static 'js/bootstrap.js'%}"></script>
+
 <script src="{% static 'js/highcharts.js'%}"></script>
 <script src="{% static 'js/annotations.js'%}"></script>
 <script src="{% static 'js/series-label.js'%}"></script>
 <script src="{% static 'js/exporting.js'%}"></script>
 <script src="{% static 'js/export-data.js'%}"></script>
+
+
+<script src="{% static 'js/highcharts.js'%}"></script>
+
 <script language="javascript" type="text/javascript" src="{% static 'js/full-calendar/fullcalendar.min.js'%}"></script>
 
 <audio id="myAudio">
@@ -960,6 +959,101 @@ counter = counter + 1;
         }
       });
   }
+
+  // PRACTICE
+
+  Highcharts.Renderer.prototype.symbols.line = function(x, y, width, height) {
+    return ['M',x,y,'L',x+height,y];
+};
+
+Highcharts.setOptions({
+    chart:{
+        defaultSeriesType:'bar',
+        marginTop:5,
+        marginRight:15,
+        marginBottom:10,
+        marginLeft:100,
+        borderWidth:0
+    },
+    credits:{enabled:false},
+    exporting:{enabled:false},
+    title:{text:''},
+    xAxis:{
+        tickLength:0,
+        lineColor:'#999',
+        lineWidth:1,
+        labels:{style:{fontWeight:'bold'}}
+    },
+    yAxis:{
+        min:0,
+        minPadding:0,
+        maxPadding:0,
+        tickColor:'#ccc',
+        tickWidth:1,
+        tickLength:3,
+        gridLineWidth:0,
+        endOnTick:true,
+        title:{text: ''},
+        labels:{
+            y:10,
+            style:{
+                fontSize:'8px'
+            },
+            formatter:function(){
+                if (this.isLast){
+                    return this.value + ' %';
+                }
+                else{
+                    return this.value;
+                }
+            }
+        }
+    },
+    legend:{enabled:false},
+    tooltip:{
+        enabled:true,
+        backgroundColor:'rgba(255, 255, 255, .85)',
+        borderWidth:0,
+        shadow:true,
+        style:{fontSize:'10px',padding:2},
+        formatter:function() {
+           return this.series.name + ": <strong>" + Highcharts.numberFormat(this.y,2) + "</strong>";
+        }
+    },
+    plotOptions:{
+        bar:{
+            color:'#000',
+            shadow:false,
+            borderWidth:0,
+        },
+        scatter:{
+            marker:{
+                symbol:'line',
+                lineWidth:2,
+                radius:9,
+                lineColor:'#000'
+            }
+        }
+    }
+});
+
+//-------------------------------------------------------
+var chart1 = new Highcharts.Chart({
+    chart:{renderTo:'container1'},
+    xAxis:{categories:['Title 1']},
+    yAxis:{
+        max:100,
+        labels:{y:10,style:{fontSize:'8px'}},
+        plotBands:[{from:0,to:70,color: 'rgba(103,103,103,.35)'},
+                   {from:70,to:85,color: 'rgba(153,153,153,.35)'},
+                   {from:85,to:100,color: 'rgba(204,204,204,.35)'}]
+    },
+    series:[{name:'Measure',pointWidth:10,data:[80]},
+            {name:'Target',type: 'scatter',data:[90],}]
+});
+
+
+
 </script>
 
 <!--

@@ -232,22 +232,27 @@ overflow-y: auto;
                         												 {% csrf_token %}
                         												<fieldset>
 
-                                                  <div class="control-group">
-                                                    <label class="control-label" for="roomnumber">Room #</label>
-                                                    <div class="controls">
 
-                                                      <div id="listOfRooms">
-                                                        <select name="roomnumber" id="roomnumber" class ="span1">
-                                                          {% for room in rooms %}
-                                                            <option value="{{ room.idRoom }}">{{ room.roomNumber }}</option>
-                                                          {% endfor %}
-                                                        </select>
+ <div class="control-group">
+                                                      <label class="control-label" for="roomnumber">Room #</label>
+                                                      <div class="controls">
+
+                                                        <div id="listOfRooms">
+                                                          <select name="roomnumber" id="roomnumber" class ="span1">
+                                                            {% for room in rooms %}
+                                                              <option value="{{ room.idRoom }}">{{ room.roomNumber }}</option>
+                                                            {% endfor %}
+                                                          </select>
 
 
-                                                      </div>
-                                                      <!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
-                                                    </div> <!-- /controls -->
-                                                  </div> <!-- /control-group -->
+                                                        </div>
+                                                        <!-- <input required type="number" class="span1" name = "bednumber" id="bednumber" value=""> -->
+                                                      </div> <!-- /controls -->
+                                                    </div> <!-- /control-group -->
+
+
+
+
                         														<div class="control-group">
                         															<label class="control-label" for="bednumber">Bed #</label>
                         															<div class="controls">
@@ -271,8 +276,13 @@ overflow-y: auto;
 
                                                     </div> <!-- /control-group -->
 
+<<<<<<< HEAD
 
 
+=======
+
+
+>>>>>>> 95c93b19d7072548a6275d953c675d58f78b87e4
 
                                                   <div class="control-group">
                                                     <label class="control-label" for="firstname">First Name</label>
@@ -396,10 +406,14 @@ overflow-y: auto;
                                                                             </div>	<!-- /controls -->
                                                   </div> <!-- /control-group -->
 
+<<<<<<< HEAD
 
 
 
 													</div>
+=======
+
+>>>>>>> 95c93b19d7072548a6275d953c675d58f78b87e4
 
 
 
@@ -431,7 +445,7 @@ overflow-y: auto;
 
 											</div>
                       <br>
-                      
+
                       <div align = "center">
            <a type ="button" role="button" id="addButtonShowModal" onclick="getCurrentSize()" class="btn btn-primary" data-toggle="modal">Add</a>
 

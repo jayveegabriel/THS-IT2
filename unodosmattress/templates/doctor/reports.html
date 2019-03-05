@@ -167,7 +167,7 @@
       		</div> <!-- /span4 -->
 					<div class="span4">
 						<div class="widget">
-	      		<!-- <div id="target-3" class="widget">
+	      		<div id="target-3" class="widget">
 	      			<div class="widget-content" align ="center">
 			      		<h4>Choose a QD</h4>
 								<br>
@@ -176,7 +176,7 @@
 								 <fieldset>
 									 <div class="form-group">
 										 <select class="form-control" id="selectqd" onchange="changeQ()">
-											<option value ="1">q1min</option>
+											<option value ="1">Normal</option>
 											<option value ="2">q15min</option>
 									 	<select>
 								 	</div>	
@@ -184,7 +184,7 @@
 							
 								</form>
 		      		</div> 
-	      		</div>  -->
+	      		</div> 
       		</div> <!-- /span4 -->
 					</div>
 					<div class="span2">
@@ -438,7 +438,8 @@
 	            },});
 
 		}
-		
+
+
 
 		 // {
    //          	x: Date.UTC(2013, 3, 22, 1, 15),
@@ -567,6 +568,11 @@
 	      pointInterval: 3600000, // one hour
 	      pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
 	    }	,
+	    series:{
+
+		  turboThreshold: 50000,
+	    
+	    }
 	  },
 	  series: [{
 	    name: 'Time',
@@ -740,6 +746,7 @@ Highcharts.chart('container', {
   }
 });
 
+
 		var heartRateList = new Array();
 
 		heartRateData.forEach(function(a){
@@ -753,7 +760,7 @@ Highcharts.chart('container', {
 			
 
 		});
-		console.log(heartRateList);
+		
 
 		Highcharts.chart('hr', {
 
@@ -927,109 +934,47 @@ Highcharts.chart('container', {
 				}
 		});
 	}
-	// function changeQ(){
-	// 	var selected = $("#selectqd").val();
-	// 	if(selected == 1){
+	function changeQ(){
+		var selected = $("#selectqd").val();
+		if(selected == 1){
 
-	// 		var i = "{{patient.idPatient}}";
-	// 		$.ajax({
-	// 			url: '/ajax/ajaxGetEveryMinHeartRate/',
-	// 			data: {
-	// 				"idPatient":i
-	// 			},
-	// 			dataType: 'json',
-	// 			success: function (data){
-	// 				var heartRateData = new Array();
-	// 				var temperatureData = new Array();
-	// 				var heartRateBody = "";
-	// 				var temperatureBody = "";
-	// 				for(var w = 0; w < data['heartRateList'].length; w++){
+			var i = "{{patient.idPatient}}";
+			$.ajax({
+				url: '/ajax/ajaxGetQOne/',
+				data: {
+					"idPatient":i
+				},
+				dataType: 'json',
+				success: function (data){
 
-	// 						heartRateData.push(data['heartRateList'][w].heartRate);
+					console.log(data);
+					heartRateChart(data.heartRateList);
+					tempChart(data.temperatureList);
 
-	// 						heartRateBody += '<tr>'+
+				}
+			});
+		
+		}
+		else{
+			var i = "{{patient.idPatient}}";
+			$.ajax({
+				url: '/ajax/ajaxGetQFifteen/',
+				data: {
+					"idPatient":i
+				},
+				dataType: 'json',
+				success: function (data){
 
-	// 							'<td>' + data['heartRateList'][w].idHeartRate + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].heartRate + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].date + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].time + '</td>'+
-	// 						'</tr>';
-	// 				}
+					console.log(data);
+					heartRateChart(data.heartRateList);
+					tempChart(data.temperatureList);
 
-	// 				for(var w = 0; w < data['temperatureList'].length; w++){
-
-	// 						temperatureData.push(data['temperatureList'][w].temperature);
-	// 						temperatureBody += '<tr>'+
-
-	// 							'<td>' + data['temperatureList'][w].idTemperature + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].temperature + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].date + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].time + '</td>'+
-	// 						'</tr>';
-
-	// 				}
-	// 				$("#heartRateBody").html(heartRateBody);
-	// 				$("#temperatureBody").html(temperatureBody);
-
-	// 				displayCharts(heartRateData,temperatureData);
-
-	// 			}
-	// 		});
-	// 	}
-	// 	else{
-	// 		var i = "{{patient.idPatient}}";
-	// 		$.ajax({
-	// 			url: '/ajax/ajaxGetEveryMinHeartRate/',
-	// 			data: {
-	// 				"idPatient":i
-	// 			},
-	// 			dataType: 'json',
-	// 			success: function (data){
-	// 				var heartRateData = new Array();
-	// 				var temperatureData = new Array();
-
-	// 				var heartRateBody = "";
-	// 				var temperatureBody = "";
-	// 				var counter = 1;
-	// 				for(var w = 0; w < data['heartRateList'].length; w++){
-	// 					if(w == 0 || w % 15 === 0){
-	// 						heartRateData.push(data['heartRateList'][w].heartRate);
-	// 						heartRateBody += '<tr>'+
-
-	// 							// '<td>' + data['heartRateList'][w].idHeartRate + '</td>'+
-	// 							'<td>' + counter + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].heartRate + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].date + '</td>'+
-	// 							'<td>' + data['heartRateList'][w].time + '</td>'+
-	// 						'</tr>';
-	// 						counter += 1;
-	// 					}
-	// 				}
-	// 				counter = 1;
-	// 				for(var w = 0; w < data['temperatureList'].length; w++){
-	// 					if(w == 0 || w % 15 === 0){
-	// 						temperatureData.push(data['temperatureList'][w].temperature);
-	// 						temperatureBody += '<tr>'+
-
-	// 							// '<td>' + data['temperatureList'][w].idTemperature + '</td>'+
-	// 							'<td>' + counter + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].temperature + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].date + '</td>'+
-	// 							'<td>' + data['temperatureList'][w].time + '</td>'+
-	// 						'</tr>';
-	// 						counter += 1;
-	// 					}
-	// 				}
-	// 				$("#heartRateBody").html(heartRateBody);
-	// 				$("#temperatureBody").html(temperatureBody);
-	// 				displayCharts(heartRateData,temperatureData);
-
-	// 			}
-	// 		});
-	// 	}
-	// 	$('#fex').DataTable();
-	//   $('#fexx').DataTable();
-	// }
+				}
+			});
+		}
+		$('#fex').DataTable();
+	  $('#fexx').DataTable();
+	}
 
 </script>
 <script type="text/javascript">

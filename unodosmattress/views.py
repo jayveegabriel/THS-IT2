@@ -28,24 +28,37 @@ notificationList = []
 newNotificationList = []
 
 
+
 ##SMS=sim800.SIM800('COM9', 9600)
 #while (SMS.gsmReset()!=1):
 #   time.sleep(0.5)
 #print ('SIM800 reset')
 #time.sleep(0.5)
 
-#while (SMS.smsInit() != 1):
-#    time.sleep(0.5)
-#print ('SIM800 SMS initialized')
-#time.sleep(2)
 
-#SMS.smsDelete_All()
-#print("All message deleted!")
-#time.sleep(0.5)
+SMS=sim800.SIM800('COM9', 9600)
+while (SMS.gsmReset()!=1):
+    time.sleep(0.5)
+print ('SIM800 reset')
+time.sleep(0.5)
+
+
+
+while (SMS.smsInit() != 1):
+    time.sleep(0.5)
+print ('SIM800 SMS initialized')
+time.sleep(2)
+
+SMS.smsDelete_All()
+print("All message deleted!")
+time.sleep(0.5)
+
 
 
 #SMS.smsSend("+639176492934", "Patient ")
 
+ 
+SMS.smsSend("+639176492934", "Patient ")
 
 
 def readRFID():
@@ -68,7 +81,7 @@ def readRFID():
 
 				client = coreapi.Client()
 				# schema = client.get("http://192.168.100.222:8000/docs")
-				schema = client.get("http://localhost:8000/docs")
+				schema = client.get("http://192.168.100.222:8000/docs")
 				action = ["rfid","create"]
 				params = {
 				 		"RFIDnumber": value,
@@ -81,6 +94,7 @@ def readRFID():
 
 
 t = threading.Thread(target=readRFID)
+
 #t.start()
 
 
@@ -549,7 +563,7 @@ def ajaxUpdateStatusPatient(request):
 
 		for x in range(0,len(doctors)):
 			print (doctors[x][3])
-			SMS.smsSend("+63" + doctors[x][3], "Patient " + p1.lastName + " is now on bed.")
+			SMS.smsSend("+63" + doctors[x][3], "Patient " + p1.lastName + " (" + p1.procedure + ")  is now on bed.")
 
 
 	elif status == "TRANSFERRED TO WARD" or status == "TRANSFERRED TO ROOM" or "TRANSFERRED TO OPERATING RM" :
@@ -562,7 +576,7 @@ def ajaxUpdateStatusPatient(request):
 		news.save()
 
 		for x in range(0,len(doctors)):
-			SMS.smsSend("+63" + doctors[x][3], "Patient " + p1.lastName + " is now " + str.lower(status))
+			SMS.smsSend("+63" + doctors[x][3], "Patient " + p1.lastName + "(" + p1.procedure + ") is now "  + str.lower(status))
 	p1.save()		
 
 	return HttpResponse()
@@ -727,17 +741,6 @@ def manageusers(request):
 	context = {"users_list": users, "rfid_count": count}	
 	return render(request, 'admin/manageusers.html', context)
 
-def managebeds(request):
-
-	rooms = Room.objects.all()
-	beds_list = Beds.objects.filter(bedStatus="Pending")
-	
-	if len(rooms) > 0:
-
-		context = {'beds_list': beds_list,'rooms':rooms,'default_room':rooms[0]}
-	else:
-		context = {'beds_list': beds_list,'rooms':rooms}
-	return render(request, 'admin/managebeds.html',context)
 
 def reports(request):
 	return render(request, 'dashboard/reports.html')
@@ -807,23 +810,7 @@ def logout(request): ##CHANGED
 	context = {"rfid_count": count}
 	return render(request, 'login.html',context)
 
-def ajaxSetBedAvailable(request):
 
-	idBed = request.GET.get('id')
-	bedNumber = request.GET.get('bedNumber')
-	b1 = Beds.objects.get(idBeds = idBed)
-	b1.bedStatus = "Available"
-	b1.bedNumber = bedNumber
-	b1.save()
-	client = coreapi.Client()
-	schema = client.get("http://192.168.100.214:8000/docs")
-	action = ["bed","create"]
-	params = {
-		"bedNumber": bedNumber
-	}
-	result = client.action(schema, action, params=params)
-
-	return HttpResponse()
 
 def updateAccountStatus(request):
 
@@ -1090,23 +1077,23 @@ def view(request, pk):
 
 # 	return render(request, 'doctor/reports.html',context)
 
-# def ajaxGetEveryMinHeartRate(request):
+def ajaxGetEveryMinHeartRate(request):
 
-# 	idPatient = request.GET.get('idPatient')
-# 	h = HeartRateEveryMinute.objects.filter(idPatient_id=idPatient)
+	idPatient = request.GET.get('idPatient')
+	h = HeartRateEveryMinute.objects.filter(idPatient_id=idPatient)
 
-# 	heartRateList = []
-# 	for x in range(0, len(h)):
-# 		heartRateList.append({"idHeartRate":h[x].idHeartRate, "heartRate":h[x].heartRate,"time":h[x].time, "date":h[x].date})
+	heartRateList = []
+	for x in range(0, len(h)):
+		heartRateList.append({"idHeartRate":h[x].idHeartRate, "heartRate":h[x].heartRate,"time":h[x].time, "date":h[x].date})
 
-# 	t = TemperatureEveryMinute.objects.filter(idPatient_id = idPatient)
-# 	temperatureList = []
-# 	for q in range(0, len(t)):
-# 		temperatureList.append({"idTemperature":t[q].idTemperature, "temperature":t[q].temperature, "time":t[q].time,"date":t[q].date})
+	t = TemperatureEveryMinute.objects.filter(idPatient_id = idPatient)
+	temperatureList = []
+	for q in range(0, len(t)):
+		temperatureList.append({"idTemperature":t[q].idTemperature, "temperature":t[q].temperature, "time":t[q].time,"date":t[q].date})
 
-# 	data = {"heartRateList":heartRateList, "temperatureList":temperatureList}
+	data = {"heartRateList":heartRateList, "temperatureList":temperatureList}
 
-# 	return JsonResponse(data, safe=False)
+	return JsonResponse(data, safe=False)
 
 
 def doctorhome(request):
@@ -1192,8 +1179,6 @@ def ajaxGetUpdatedDashboard(request):
 		patient = beds[x].get_current_patient.idPatient
 		tempCount = patient.countT
 		HRCount = patient.countHR
-		print(tempCount, HRCount)
-		print (patient.get_patient_conditionHR)
 		if patient.get_patient_conditionT == "warning":
 			tempCount += 1
 			patient.countT = tempCount
@@ -1216,6 +1201,7 @@ def ajaxGetUpdatedDashboard(request):
 			patient.countHR = HRCount
 			patient.save()
 
+
 		if  patient.countT >= 600 and patient.countT % 600 == 0 or patient.countHR >= 600 and patient.countHR  % 600 == 0:	
 			cursor1 = connection.cursor()
 			cursor1.execute("SELECT d.firstName, d.lastName, d.middleName, d.contactNum FROM unodosmattress_Patient_Doctors pd JOIN unodosmattress_doctor d ON d.idDoctor = pd.idDoctor_id WHERE pd.idPatient_id = %s",[patient.pk])
@@ -1223,7 +1209,7 @@ def ajaxGetUpdatedDashboard(request):
 			
 			for x in range(0,len(doctors)):
 				print (doctors[x][3])
-				SMS.smsSend("+63" + doctors[x][3], "WARNING: Please check Bed #" + str(patient.bedNumber.bedNumber))
+				SMS.smsSend("+63" + doctors[x][3], "WARNING: Please check Bed #" + str(patient.bedNumber.bedNumber) + " - " + patient.procedure)
 		
 
 		patientsArray.append({"idPatient":patient.idPatient, "firstName":patient.firstName,"lastName":patient.lastName,"bedNumber":patient.bedNumber.bedNumber
@@ -1234,45 +1220,6 @@ def ajaxGetUpdatedDashboard(request):
 	return JsonResponse({"patients":patientsArray}, safe=False)
 
 
-def reports(request,pk):
-	p1 = Patient.objects.get(pk=pk)
-
-	context = {
-		"patient":p1
-	}
-	return render(request, 'doctor/reports.html',context)
-
-def ajaxLoadData(request):
-
-	idPatient = request.GET.get("idPatient")
-	p = Patient.objects.get(pk=idPatient)
-	position = p.get_all_position
-	heartrate = p.get_all_heartrate
-	temperature = p.get_all_temperature
-	positionList = []
-	heartrateList = []
-	temperatureList = []
-
-	for x in range(0, len(position)):
-		tp = position[x]
-		positionList.append({"idPosition":tp.idPosition, "position":tp.position,"time":tp.time,"date":tp.date})
-
-	for x in range(0, len(heartrate)):
-		tp = heartrate[x]
-		heartrateList.append({"idHeartRate":tp.idHeartRate, "heartRate":tp.heartRate,"time":tp.time,"date":tp.date})
-
-	for x in range(0, len(temperature)):
-		tp = temperature[x]
-		temperatureList.append({"idTemperature":tp.idTemperature, "temperature":tp.temperature,"time":tp.time,"date":tp.date})
-
-
-
-	context = {
-		"positionList": positionList,
-		"heartrateList": heartrateList,
-		"temperatureList": temperatureList,
-	}
-	return JsonResponse(context, safe=False)
 
 def ajaxUpdateBedOptions(request):
 	roomNumber = request.GET.get("roomNumber")
@@ -1287,3 +1234,107 @@ def ajaxUpdateBedOptions(request):
 		"beds":beds_list
 	}
 	return JsonResponse(context, safe=False)
+
+
+def managebeds(request):
+	print(request.method)
+	if request.method == "POST":
+		print("QE")
+
+		return HttpResponseRedirect(reverse('unodosmattress:managebeds'))	
+
+	else:
+
+		rooms = Room.objects.all()
+
+		
+		if len(rooms) > 0:
+
+			beds_list = rooms[0].get_all_pending_beds
+
+			context = {'beds_list': beds_list,'pendingBedsSize':rooms[0].get_pending_size,'rooms':rooms,'default_room':rooms[0]}
+		else:
+			context = {'beds_list': beds_list,'rooms':rooms}
+		return render(request, 'admin/managebeds.html',context)
+
+
+def ajaxSetBedAvailable(request):
+
+	idBed = request.GET.get('id')
+	roomNumber = request.GET.get('roomNumber')
+	bedNumber = request.GET.get('bedNumber')
+
+	b1 = Beds.objects.get(idBeds = idBed)
+	b1.bedStatus = "Available"
+	b1.bedNumber = bedNumber
+	b1.idRoom_id = roomNumber
+	b1.save()
+	client = coreapi.Client()
+	schema = client.get("http://192.168.100.214:8000/docs")
+	action = ["bed","create"]
+	params = {
+		"bedNumber": bedNumber
+	}
+	result = client.action(schema, action, params=params)
+
+	return HttpResponse()
+
+def reports(request,pk):
+	p1 = Patient.objects.get(pk=pk)
+
+	context = {
+		"patient":p1
+	}
+	return render(request, 'doctor/reports.html',context)
+
+def ajaxGetQFifteen(request):
+
+	idPatient = request.GET.get("idPatient")
+	p = Patient.objects.get(pk=idPatient)
+	context = {"heartRateList":p.getQFifteenHeartRate, "temperatureList":p.getQFifteenTemperature}
+	return JsonResponse(context, safe=False)
+
+
+def ajaxGetQOne(request):
+
+	idPatient = request.GET.get("idPatient")
+	p = Patient.objects.get(pk=idPatient)
+	context = {"heartRateList":p.getQOneHeartRate, "temperatureList":p.getQOneTemperature}
+	return JsonResponse(context, safe=False)
+
+
+
+def ajaxLoadData(request):
+
+	idPatient = request.GET.get("idPatient")
+	p = Patient.objects.get(pk=idPatient)
+	position = p.get_changes_in_position
+
+	# heartrate = p.get_all_heartrate
+	# temperature = p.get_all_temperature
+	# positionList = []
+	# heartrateList = []
+	# temperatureList = []
+
+	# for x in range(0, len(position)):
+	# 	tp = position[x]
+	# 	positionList.append({"idPosition":tp.idPosition, "position":tp.position,"time":tp.time,"date":tp.date})
+
+	# for x in range(0, len(heartrate)):
+	# 	tp = heartrate[x]
+	# 	heartrateList.append({"idHeartRate":tp.idHeartRate, "heartRate":tp.heartRate,"time":tp.time,"date":tp.date})
+
+	# for x in range(0, len(temperature)):
+	# 	tp = temperature[x]
+	# 	temperatureList.append({"idTemperature":tp.idTemperature, "temperature":tp.temperature,"time":tp.time,"date":tp.date})
+
+
+
+	context = {
+		"positionList": position,
+		"heartrateList": p.getQOneHeartRate,
+		"temperatureList": p.getQOneTemperature,
+	}
+
+	return JsonResponse(context, safe=False)
+

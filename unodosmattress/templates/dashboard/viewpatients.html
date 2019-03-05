@@ -324,12 +324,6 @@
 							</table>
 
 
-							 <a class="btn" href="{% url 'unodosmattress:managepatients' %}"><i class="icon-arrow-left"></i> BACK</a>
-						 		{% if patient.status != "TRANSFERRED TO WARD" or patient.status == "TRANSFERRED TO ROOM" %}
-
-							 		<a class="btn btn-primary" id="saveButton"> SAVE</a>
-								{% endif %}
-
 
 
 
@@ -339,11 +333,10 @@
       <br>
       <div class ="container" align ="center">
       <a class="btn" href="{% url 'unodosmattress:managepatients' %}"> Back</a>
-       {% if patient.status != "FINISHED" %}
+       	{% if patient.status != "TRANSFERRED TO WARD" or patient.status == "TRANSFERRED TO ROOM" %}
 
-         <a class="btn btn-primary" id="saveButton"> Save</a>
-       {% endif %}
-
+	 		<a class="btn btn-primary" id="saveButton"> SAVE</a>
+		{% endif %}
       <br></br>
     </div>
 
