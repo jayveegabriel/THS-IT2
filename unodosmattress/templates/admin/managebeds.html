@@ -366,8 +366,9 @@ overflow-y: auto;
                       <div class ="container" id ="label">
                       <h3>NO PENDING BEDS</h3>
                       <h4>Please press the button to add a bed!</h4>
-                      <hr>
+
                       </div>
+                      <hr>
 										   <div class ="row" id="bedRow">
                             {% for bed in beds_list %}
 												<div class = "span3" align ="center" id = "spanBed{{bed.idBeds}}">
@@ -939,7 +940,7 @@ $(".roomDropdown").change(function(){
 
 $("#cancelBtn").click(function(){
   var temp = $("#viewbedsDropdown").val();
-  refresh(temp); 
+  refresh(temp);
 });
 
 function refresh(temp){

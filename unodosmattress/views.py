@@ -28,23 +28,23 @@ notificationList = []
 newNotificationList = []
 
 
-SMS=sim800.SIM800('COM9', 9600)
-while (SMS.gsmReset()!=1):
-   time.sleep(0.5)
-print ('SIM800 reset')
+##SMS=sim800.SIM800('COM9', 9600)
+#while (SMS.gsmReset()!=1):
+#   time.sleep(0.5)
+#print ('SIM800 reset')
 #time.sleep(0.5)
 
-while (SMS.smsInit() != 1):
-    time.sleep(0.5)
-print ('SIM800 SMS initialized')
-time.sleep(2)
+#while (SMS.smsInit() != 1):
+#    time.sleep(0.5)
+#print ('SIM800 SMS initialized')
+#time.sleep(2)
 
-SMS.smsDelete_All()
-print("All message deleted!")
-time.sleep(0.5)
+#SMS.smsDelete_All()
+#print("All message deleted!")
+#time.sleep(0.5)
 
 
-SMS.smsSend("+639176492934", "Patient ")
+#SMS.smsSend("+639176492934", "Patient ")
 
 
 
@@ -522,7 +522,7 @@ def ajaxUpdateStatusPatient(request):
 	maxTemp = request.GET.get('maxTemp')
 	minHeartRate = request.GET.get('minHeartRate')
 	maxHeartRate = request.GET.get('maxHeartRate')
-	satus = request.GET.get('status')
+	status = request.GET.get('status')
 	p1 = Patient.objects.get(pk=id)
 	p1.minTemp = minTemp
 	p1.maxTemp = maxTemp
@@ -1032,7 +1032,7 @@ def patients(request):
 	idDoctor = request.session.get('id','none')
 	cursor = connection.cursor()
 
-	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
+	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.idPatient_id = p.idPatient WHERE pd.idDoctor_id = %s",[idDoctor])
 
 	wew = cursor.fetchall()
 	patients = []
@@ -1045,7 +1045,7 @@ def mypatients(request):
 	idDoctor = request.session.get('id','none')
 	cursor = connection.cursor()
 
-	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.Patient_id = p.idPatient WHERE pd.Doctor_id = %s",[idDoctor])
+	cursor.execute("SELECT p.idPatient, p.lastName, p.firstName, p.middleName, p.status, p.procedure FROM unodosmattress_patient p JOIN unodosmattress_Patient_Doctors pd ON pd.idPatient_id = p.idPatient WHERE pd.idDoctor_id = %s",[idDoctor])
 
 	wew = cursor.fetchall()
 	patients = []
