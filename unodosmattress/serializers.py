@@ -81,7 +81,7 @@ class PositionSerializer(serializers.HyperlinkedModelSerializer):
 
 		if str(tempTime) == "23:59:59":
 			todo = Position(
-	        	position= validated_data.get('position', ''),
+	        	position= (validated_data.get('position', '')).upper(),
 	        	date=date,
 	        	time=time,
 				idPatient_id = 10,
@@ -96,7 +96,7 @@ class PositionSerializer(serializers.HyperlinkedModelSerializer):
 			result = client.action(schema, action)
 			patient = result[0]['idPatient']
 			todo = Position(
-	        	position= validated_data.get('position', ''),
+	        	position = (validated_data.get('position', '')).upper(),
 	        	date=date,
 	        	time=time,
 				idPatient_id = patient,

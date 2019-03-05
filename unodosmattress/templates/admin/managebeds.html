@@ -339,88 +339,27 @@ overflow-y: auto;
                   <div class="tab-pane" id="addbed" >
 										<div class ="container" >
                     <div class ="widget-content">
+                      <div class ="container" hidden="" id ="noPendingBedsDiv">
+                        <h3>NO PENDING BEDS</h3>
+                        <h4>Please press the button to add a bed!</h4>
+                        <hr>
+                        </div>
+
+
+                     <!--  {% if pendingBedsSize == 0%}
                       <div class ="container" id ="label">
-                      <h3>NO PENDING BEDS</h3>
-                      <h4>Please press the button to add a bed!</h4>
-                      <hr>
-                      </div>
+                        <h3>NO PENDING BEDS</h3>
+                        <h4>Please press the button to add a bed!</h4>
+                        <hr>
+                        </div>
+                      {% endif %} -->
+                      {% if pendingBedsSize > 0 %}
 										   <div class ="row" id="bedRow">
                             {% for bed in beds_list %}
-												<div class = "span3" align ="center" id = "spanBed{{bed.idBeds}}">
- 												 <div class="widget widget-table action-table" >
-
- 													 <!-- /widget-header -->
-
-
- 													 <div class="widget-content" align = "center" id="bed">
-
- 														 <img src="{% static 'img/bed.png'%}"/ >
- 														 <table class="table " align ="center">
-                               <thead>
-                                 <tr>
-
-  						                     <th></th>
-                                   </tr>
-                                 </thead>
-                                 <tbody>
-
- 															 <tfoot align ="center" >
- 																 <tr>
- 																	 <th> <a class="btn bt" href="#addModal{{bed.idBeds}}" role="button" data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>
-    <!-- Modal -->
-                                                    <div id="addModal{{bed.idBeds}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                      <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                        <h3 id="myModalLabel">Add Bed</h3>
-                                                      </div>
-                                                      <div class="modal-body">
-                                                        <form id="add-bed" class="form-horizontal" method = "POST" action=".">
-                                 												 {% csrf_token %}
-                                                         <fieldset>
-                                                           <div class="control-group">
-                                                             <label class="control-label" for="bednumber">Bed #</label>
-                                                             <div class="controls">
-                                                               <input type="number" class="span1" value="{{bed.bedNumber}}" name = "bednumber" id="bed{{ bed.pk }}" value="">
-                                                             </div> <!-- /controls -->
-
-
-
-
-                                                        </div> <!-- /control-group -->
-                                                        </fieldset>
-
-
-
-
-
-
-                                                      </div>
-                                                      <div class="modal-footer">
-                                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                                        <button type="button" class="btn btn-primary" onclick="addBed({{ bed.pk }});">Save</button>
-                                                      </div>
-                                                      </form>
-                                                    </div>
-
-
-
-
-
-                                   </th>
- 																 </tr>
- 															 </tfoot>
- 														 </table>
- 													 </div>
- 												 </div>
- 											 </div>
-                       </div>
-
-                      {% endfor %}
-
+											<!-- 
                         <div class = "span2" align ="center" id = "spanBed{{bed.idBeds}}">
                          <div class="widget widget-table action-table" >
 
-                           <!-- /widget-header -->
 
 
                            <div class="widget-content" align = "center" id="bed">
@@ -438,7 +377,7 @@ overflow-y: auto;
                                <tfoot align ="center" >
                                  <tr>
                                     <th  style="text-align:center"> <a href="#addModal{{bed.idBeds}}"  data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>
-    <!-- Modal -->
+
                                                     <div id="addModal{{bed.idBeds}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                       <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -452,8 +391,11 @@ overflow-y: auto;
                                                                <label class="control-label" for="bednumber">Room #</label>
                                                                <div class="controls" >
                                                                  <select class ="span2">
-                                                                   <option>R01</option>
-                                                                   <option>R02</option>
+                                                                  {% for r in rooms %}
+
+                                                                     <option value="{{r.idRoom}}">{{r.roomNumber}}</option>
+
+                                                                  {% endfor %}
                                                                  <select>
                                                                </div>
                                                           </div>
@@ -462,12 +404,12 @@ overflow-y: auto;
                                                              <label class="control-label" for="bednumber">Bed #</label>
                                                              <div class="controls">
                                                                <input type="number" class="span1" value="{{bed.bedNumber}}" name = "bednumber" id="bed{{ bed.pk }}" value="">
-                                                             </div> <!-- /controls -->
+                                                             </div> 
 
 
 
 
-                                                        </div> <!-- /control-group -->
+                                                        </div> 
                                                         </fieldset>
 
 
@@ -493,11 +435,13 @@ overflow-y: auto;
                              </table>
                            </div>
                          </div>
-                       </div>
-                       </div>
+                       </div> -->
+                       
+                      {% endfor %}
 
+                      </div>
 
-
+                      {% endif %}
                       </div>
 
 											</div>
@@ -580,8 +524,9 @@ function getUpdatedArray(oldArray, newArray){
 $(document).ready(function() {
   {% for beds in beds_list %}
 
-    bedsArray.push(new bedObject("{{beds.idBeds}}", "{{beds.bedNumber}}", "{{beds.bedStatus}}"));
+    bedsArray.push(new bedObject('{{beds.idBeds}}', "{{beds.bedNumber}}", "{{beds.bedStatus}}"));
   {% endfor %}
+  console.log(bedsArray);
 
     window.setInterval(function(){
       $.ajax({
@@ -591,12 +536,21 @@ $(document).ready(function() {
     		},
     		dataType: 'json',
     		success: function (data){
+          if(data.length == 0){
+            $("#noPendingBedsDiv").show();
+
+
+          }
+          else{
+            $("#noPendingBedsDiv").hide();
+            
+          }
           //data = array of beds na pending
 
           //yung nasa data, sinave sa tempoArray
           var tempoArray = new Array();
           for(var p = 0; p < data.length; p++){
-            tempoArray.push(new bedObject(data[p].idBeds, data[p].bedNumber, data[p].bedStatus + ""));
+            tempoArray.push(new bedObject(data[p].idBeds + "", data[p].bedNumber, data[p].bedStatus + ""));
           }
 
           var newArray = getUpdatedArray(bedsArray, tempoArray);
@@ -628,77 +582,39 @@ $(document).ready(function() {
 
 
 
-          wew = "";
+          var wew = "";
           for(var q = 0; q < tempArray.length; q++){
-            wew += '<div class = "span3" align ="center" id="spanBed' + tempArray[q].idBeds+ '">'+
-             '<div class="widget widget-table action-table">'+
-               '<div class="widget-header" > <i class="icon-medkit"></i>'+
-                '<h3>Add Bed</h3>'+
+            var idBeds = tempArray[q].idBeds;
+            var bedNumber = tempArray[q].bedNumber;
+            wew += '<div class = "span2" align ="center" id = "spanBed'+ idBeds +'">';
+            wew += '<div class="widget widget-table action-table">';
+            wew += '<div class="widget-content" align = "center" id="bed">';
 
-               '</div>'+
-               '<div class="widget-content" align = "center" id="bed">'+
-                 '<img src="/static/img/bed.png"/ >'+
-                 '<table class="table " align ="center">'+
-                   '<thead>'+
-                     '<tr>'+
-
-                       '<th></th>'+
-                       '</tr>'+
-                     '</thead>'+
-                     '<tbody>'+
-                       '<tr>'+
-
-                         '<td>Status:</td>'+
-                         '</tr>'+
-                   '<tfoot align ="center" >'+
-                     '<tr>'+
-                       '<th> <a class="btn bt" href="#addModal' + tempArray[q].idBeds + '" role="button" data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>'+
-
-                                        '<div id="addModal' + tempArray[q].idBeds + '" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'+
-                                          '<div class="modal-header">'+
-                                            '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'+
-                                            '<h3 id="myModalLabel">Add Bed</h3>'+
-                                          '</div>'+
-                                          '<div class="modal-body">'+
-                                            '<form id="add-bed" class="form-horizontal" method = "POST" action=".">'+
-
-                                             '<fieldset>'+
-                                               '<div class="control-group">'+
-                                                 '<label class="control-label" for="bednumber">Bed #</label>'+
-                                                 '<div class="controls">'+
-                                                   '<input type="number" class="span1" value="' + tempArray[q].bedNumber+ '" name = "bednumber" id="bed'+ tempArray[q].idBeds+'">'+
-                                                 '</div> '+
+            var imageBed = new Image();
+            imageBed.src = "{% static 'img/addBed.png'%}";
+            wew += '<img src="'+imageBed.src+'" />';
+            wew += '<table class="table " align ="center">';
+            wew += '<thead><tr><th></th></tr></thead><tbody><tfoot align ="center"><tr>';
+            wew += '<th style="text-align:center"> <a href="#addModal'+idBeds+'"  data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>';
+            wew += '<div id="addModal'+idBeds+'" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
+            wew += '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
+            wew += '<h3 id="myModalLabel">Add Bed</h3></div><div class="modal-body">';
+            wew += '<form id="add-bed'+idBeds+'" class="form-horizontal" method="POST" action=".">{% csrf_token %}';
+            wew += '<fieldset><div class ="control-group"><label class="control-label" for="bednumber">Room #</label><div class="controls"><select class ="span2" id="roomNumber">';
 
 
+        {% for r in rooms %}
 
+           wew += '<option value="{{r.idRoom}}">{{r.roomNumber}}</option>'
 
-                                          '</div>'+
-                                            '</fieldset>'+
+        {% endfor %}
 
-
-
-
-
-
-                                          '</div>'+
-                                          '<div class="modal-footer">'+
-                                            '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="addBed('+ tempArray[q].idBeds+');" >Save</button>'+
-                                            '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
-                                          '</div>'+
-                                          '</form>'+
-                                        '</div>'+
-
-
-
-
-
-                       '</th>'+
-                     '</tr>'+
-                   '</tfoot>'+
-                 '</table>'+
-               '</div>'+
-             '</div>'+
-           '</div>';
+            wew += '<select></div></div><div class="control-group"><label class="control-label" for="bednumber">Bed #</label><div class="controls">';
+            wew += '<input type="number" class="span1" value="'+bedNumber+'" name = "bedNumber" id="bed'+idBeds+'" value="">';
+            wew += '</div></div></fieldset></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
+            wew += '<button type="button" onclick="addBed('+idBeds+')"  data-dismiss="modal" class="btn btn-primary" >Save</button></div></form>';
+            wew += '</div></th></tr></tfoot></table></div></div></div>';
+                       
           }
 
              $("#bedRow").append(wew);
@@ -709,13 +625,19 @@ $(document).ready(function() {
 });
 
 function addBed(id){
+
   var wew = "#bed"+id+"";
+  var roomNumber = $("#roomNumber").val();
   var bedNumber = $(wew).val();
+  alert(roomNumber);
+
+
   	$.ajax({
   		url: '/ajax/setBedAvailable/',
   		data: {
         "id":id,
         "bedNumber":bedNumber,
+        "roomNumber":roomNumber,
   		},
   		dataType: 'json',
   		success: function (data){
@@ -736,84 +658,46 @@ function updateBeds(){
     dataType: 'json',
     success: function (data){
       for(var i = 0; i < data.length; i++){
-        bedsArray.push(new bedObject(data[i].idBeds, data[i].bedNumber, data[i].bedStatus + ""));
+        bedsArray.push(new bedObject(data[i].idBeds + "", data[i].bedNumber, data[i].bedStatus + ""));
 
       }
-      wew = "";
+      var wew = "";
 
       for(var q = 0; q < bedsArray.length; q++){
-        wew += '<div class = "span3" align ="center">'+
-         '<div class="widget widget-table action-table">'+
-           '<div class="widget-header" > <i class="icon-medkit"></i>'+
-            '<h3>Add Bed</h3>'+
+        var idBeds = tempArray[q].idBeds;
+            var bedNumber = tempArray[q].bedNumber;
+            wew += '<div class = "span2" align ="center" id = "spanBed'+ idBeds +'">';
+            wew += '<div class="widget widget-table action-table">';
+            wew += '<div class="widget-content" align = "center" id="bed">';
 
-           '</div>'+
-           '<div class="widget-content" align = "center" id="bed">'+
-             '<img src="/static/img/bed.png"/ >'+
-             '<table class="table " align ="center">'+
-               '<thead>'+
-                 '<tr>'+
-
-                   '<th></th>'+
-                   '</tr>'+
-                 '</thead>'+
-                 '<tbody>'+
-                   '<tr>'+
-
-                     '<td>Status:</td>'+
-                     '</tr>'+
-               '<tfoot align ="center" >'+
-                 '<tr>'+
-                   '<th> <a class="btn bt" href="#addModal' + bedsArray[q].idBeds + '" role="button" data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>'+
-
-                                    '<div id="addModal' + bedsArray[q].idBeds + '" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'+
-                                      '<div class="modal-header">'+
-                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>'+
-                                        '<h3 id="myModalLabel">Add Bed</h3>'+
-                                      '</div>'+
-                                      '<div class="modal-body">'+
-                                        '<form id="add-bed" class="form-horizontal" method = "POST" action=".">'+
-
-                                         '<fieldset>'+
-                                           '<div class="control-group">'+
-                                             '<label class="control-label" for="bednumber">Bed #</label>'+
-                                             '<div class="controls">'+
-                                               '<input type="number" class="span1" value="' + bedsArray[q].bedNumber+ '" name = "bednumber" id="bed'+ bedsArray[q].idBeds+'">'+
-                                             '</div> '+
+            var imageBed = new Image();
+            imageBed.src = "{% static 'img/addBed.png'%}";
+            wew += '<img src="'+imageBed.src+'" />';
+            wew += '<table class="table " align ="center">';
+            wew += '<thead><tr><th></th></tr></thead><tbody><tfoot align ="center"><tr>';
+            wew += '<th style="text-align:center"> <a href="#addModal'+idBeds+'"  data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>';
+            wew += '<div id="addModal'+idBeds+'" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">';
+            wew += '<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>';
+            wew += '<h3 id="myModalLabel">Add Bed</h3></div><div class="modal-body">';
+            wew += '<form id="add-bed" class="form-horizontal" method = "POST" action=".">{% csrf_token %}';
+            wew += '<fieldset><div class ="control-group"><label class="control-label" for="bednumber">Room #</label><div class="controls"><select class ="span2">';
 
 
+                                                                  {% for r in rooms %}
 
+                                                                     wew += '<option value="{{r.idRoom}}">{{r.roomNumber}}</option>'
 
-                                      '</div>'+
-                                        '</fieldset>'+
+                                                                  {% endfor %}
 
-
-
-
-
-
-                                      '</div>'+
-                                      '<div class="modal-footer">'+
-                                        '<button type="button" class="btn btn-primary" onclick="addBed('+ bedsArray[q].idBeds+');">Save</button>'+
-                                        '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
-                                      '</div>'+
-                                      '</form>'+
-                                    '</div>'+
-
-
-
-
-
-                   '</th>'+
-                 '</tr>'+
-               '</tfoot>'+
-             '</table>'+
-           '</div>'+
-         '</div>'+
-       '</div>';
+            wew += '<select></div></div><div class="control-group"><label class="control-label" for="bednumber">Bed #</label><div class="controls">';
+            wew += '<input type="number" class="span1" value="'+bedNumber+'" name = "bednumber" id="bed'+idBeds+'" value="">';
+            wew += '</div></div></fieldset></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>';
+            wew += '<button type="button" class="btn btn-primary" onclick="addBed('+idBeds+');">Save</button></div></form>';
+            wew += '</div></th></tr></tfoot></table></div></div></div>';
+                    
       }
 
-         $("#bedRow").html(wew);
+         // $("#bedRow").html(wew);
 
     }
   });

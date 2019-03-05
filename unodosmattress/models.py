@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from django.db import connection
 
 
 # Create your models here.
@@ -61,7 +62,15 @@ class Room(models.Model):
 	def get_unavailable_size(self):
 		return len(Beds.objects.filter(idRoom_id=self.idRoom,bedStatus="Unavailable"))
 
+	@property
+	def get_all_pending_beds(self):
+		return Beds.objects.filter(bedStatus="Pending")
 
+	@property
+	def get_pending_size(self):
+		return len(self.get_all_pending_beds)
+	
+	
 	
 
 
@@ -126,7 +135,66 @@ class Patient(models.Model):
 		return Temperature.objects.filter(idPatient_id = self.idPatient).select_related("idPatient").order_by('date','time')
 
 
+	@property
+	def get_changes_in_position(self):
+		p = self.get_all_position
+		wew = []
+		for x in range(1, len(p) - 1):
+			
+
+			prevTemp = p[x - 1].position
+			nextTemp = p[x].position
+			if prevTemp != nextTemp:
+				wew.append({"idPosition":p[x].idPosition, "position":prevTemp,"time":p[x].time,"date":p[x].date})
+
+		return wew
+
+	@property
+	def getQFifteenHeartRate(self):
+		cursor = connection.cursor()
+		cursor.execute("SELECT *,FLOOR(UNIX_TIMESTAMP(time)/(15*60)) as timekey FROM unodosmattress_heartrate WHERE idPatient_id = %s group by timekey",[self.pk])
+		hr = cursor.fetchall()
+		heartRate_list = []
+		for x in range(0, len(hr)):
+			heartRate_list.append({"idHeartRate":hr[x][0], "heartRate": hr[x][1],"time":hr[x][2], "date":hr[x][3], "idPatient":hr[x][4]})
+		return heartRate_list
 	
+	
+	
+	@property
+	def getQFifteenTemperature(self):
+		cursor = connection.cursor()
+		cursor.execute("SELECT *,FLOOR(UNIX_TIMESTAMP(time)/(15*60)) as timekey FROM unodosmattress_temperature WHERE idPatient_id = %s group by timekey",[self.pk])
+		temp = cursor.fetchall()
+		temp_list = []
+		for x in range(0, len(temp)):
+			temp_list.append({"idTemperature":temp[x][0], "temperature": temp[x][1],"time":temp[x][2], "date":temp[x][3], "idPatient":temp[x][4]})
+		return temp_list
+		
+
+	@property
+	def getQOneHeartRate(self):
+		cursor = connection.cursor()
+		cursor.execute("SELECT *,FLOOR(UNIX_TIMESTAMP(time)/(1*60)) as timekey FROM unodosmattress_heartrate WHERE idPatient_id = %s group by timekey",[self.pk])
+		hr = cursor.fetchall()
+		heartRate_list = []
+		for x in range(0, len(hr)):
+			heartRate_list.append({"idHeartRate":hr[x][0], "heartRate": hr[x][1],"time":hr[x][2], "date":hr[x][3], "idPatient":hr[x][4]})
+		return heartRate_list
+	
+	@property
+	def getQOneTemperature(self):
+		cursor = connection.cursor()
+		cursor.execute("SELECT *,FLOOR(UNIX_TIMESTAMP(time)/(11*60)) as timekey FROM unodosmattress_temperature WHERE idPatient_id = %s group by timekey",[self.pk])
+		temp = cursor.fetchall()
+		temp_list = []
+		for x in range(0, len(temp)):
+			temp_list.append({"idTemperature":temp[x][0], "temperature": temp[x][1],"time":temp[x][2], "date":temp[x][3], "idPatient":temp[x][4]})
+		return temp_list
+		
+
+	
+
 	@property
 	def toCompareHR(self):
 
