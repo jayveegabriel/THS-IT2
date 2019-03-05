@@ -95,8 +95,11 @@ class Patient(models.Model):
 	contactNum = models.CharField(max_length=11) #changethis
 	bedNumber = models.ForeignKey(Beds, on_delete=models.CASCADE)
 	status = models.CharField(max_length=45)
+	procedure = models.CharField(max_length=45)
 	restrictions = models.CharField(max_length=20, default="false")
-	count = models.IntegerField(default=0)
+	countHR = models.IntegerField(default=0)
+	countT = models.IntegerField(default=0)
+
 	@property
 	def get_position(self):
 		return Position.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').position
@@ -108,6 +111,22 @@ class Patient(models.Model):
 	@property
 	def get_temperature(self):
 		return Temperature.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').temperature
+	
+	@property
+	def get_all_position(self):
+		return Position.objects.filter(idPatient_id = self.idPatient).select_related("idPatient").order_by('date','time')
+
+
+	@property
+	def get_all_heartrate(self):
+		return HeartRate.objects.filter(idPatient_id = self.idPatient).select_related("idPatient").order_by('date','time')
+
+
+	@property
+	def get_all_temperature(self):
+		return Temperature.objects.filter(idPatient_id = self.idPatient).select_related("idPatient").order_by('date','time')
+
+
 	
 	@property
 	def toCompareHR(self):
@@ -136,21 +155,54 @@ class Patient(models.Model):
 
 
 		return toCompareTEMP
-	
+
 	@property
 	def get_patient_condition(self):
 		# normal, warning, critical
 		condition = "normal"
 		
-		if self.toCompareHR < 0 or self.toCompareTEMP < 0:
+		if self.toCompareTEMP < 0:
 			condition = "critical"
-		elif self.toCompareHR <= 10 and self.toCompareHR >= 0 or self.toCompareTEMP <= 0.3 and self.toCompareTEMP >= 0:
+		elif self.toCompareTEMP <= 0.3 and self.toCompareTEMP >= 0 or self.toCompareHR <= 10 and self.toCompareHR >= 0:
 			condition = "warning"
 		else:
 			condition = "normal"
 		if self.status == "STARTING":
 			condition = "starting"
 		return condition
+	
+	@property
+	def get_patient_conditionHR(self):
+		# normal, warning, critical
+		condition = "normal"
+		
+		if self.toCompareHR < 0:
+			condition = "critical"
+		elif self.toCompareHR <= 10 and self.toCompareHR >= 0:
+			condition = "warning"
+		else:
+			condition = "normal"
+		if self.status == "STARTING":
+			condition = "starting"
+		return condition
+
+	@property
+	def get_patient_conditionT(self):
+		# normal, warning, critical
+		condition = "normal"
+		
+		if self.toCompareTEMP < 0:
+			condition = "critical"
+		elif self.toCompareTEMP <= 0.3 and self.toCompareTEMP >= 0:
+			condition = "warning"
+		else:
+			condition = "normal"
+		if self.status == "STARTING":
+			condition = "starting"
+		return condition
+	
+
+
 	
 
 class Position(models.Model):
@@ -210,8 +262,9 @@ class Doctor(models.Model):
 class Patient_Doctors(models.Model):
 	#patientNumber = models.IntegerField(default=0)
 	#doctorsID = models.IntegerField(default=0)
-	Patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-	Doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+	idPatientDoctor = models.AutoField(primary_key=True, default=None)
+	idPatient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+	idDoctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
 
 class Patient_Table(models.Model):
 	idPatientTable = models.AutoField(primary_key=True)

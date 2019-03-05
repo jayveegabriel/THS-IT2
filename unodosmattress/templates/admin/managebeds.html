@@ -273,6 +273,7 @@ overflow-y: auto;
                   <div class ="widget-content">
                     <select class ="span2 roomDropdown" id="editBedsDropdown">
                       <option disabled>Select Room No.</option>
+
                       {% for r in rooms %}
                         <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
                       {% endfor %}
@@ -300,6 +301,7 @@ overflow-y: auto;
 
 								<div class="plan-actions">
                   <ol data-draggable="target" id="Available">
+
                   {% for bed in default_room.get_available_beds %}
                     <li data-draggable="item" id="{{bed.idBeds}}">Bed #{{bed.bedNumber}}</li>
                   {% endfor %}
@@ -343,7 +345,7 @@ overflow-y: auto;
                 <br>
                 <div align = "center">
                   <button type="button" class="btn btn-primary" id="saveButton">Save</button>
-                  <button class="btn">Cancel</button>
+                  <button class="btn" id="cancelBtn">Cancel</button>
                 </div>
                 <br>
                 </div>
@@ -924,7 +926,7 @@ function draggableMaker(idBeds, bedNumber){
 }
 
 $(".roomDropdown").change(function(){
-    temp = this.value;
+    var temp = this.value;
     $("#viewbedsDropdown").val(temp);
     $("#editBedsDropdown").val(temp);
 
@@ -933,6 +935,11 @@ $(".roomDropdown").change(function(){
 
 
 
+});
+
+$("#cancelBtn").click(function(){
+  var temp = $("#viewbedsDropdown").val();
+  refresh(temp); 
 });
 
 function refresh(temp){

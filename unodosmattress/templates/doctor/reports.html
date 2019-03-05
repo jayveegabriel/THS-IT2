@@ -167,7 +167,7 @@
       		</div> <!-- /span4 -->
 					<div class="span4">
 						<div class="widget">
-	      		<div id="target-3" class="widget">
+	      		<!-- <div id="target-3" class="widget">
 	      			<div class="widget-content" align ="center">
 			      		<h4>Choose a QD</h4>
 								<br>
@@ -179,13 +179,12 @@
 											<option value ="1">q1min</option>
 											<option value ="2">q15min</option>
 									 	<select>
-								 	</div>	<!-- /controls -->
-									  <!-- /control-group -->
+								 	</div>	
 								</fieldset>
-								<!-- <img src="{% static 'img/blank.png'%}"  / >!-->
+							
 								</form>
-		      		</div> <!-- /widget-content -->
-	      		</div> <!-- /widget -->
+		      		</div> 
+	      		</div>  -->
       		</div> <!-- /span4 -->
 					</div>
 					<div class="span2">
@@ -197,7 +196,9 @@
 
 
 				<div class ="row">
+
  	      	<div class="span12">
+
  						<div class="widget" id="heartRateWidget">
  					     <div class="widget-content" >
  									<div class ="timeline-wrapper" id="hr" style="min-height: 400px; min-width: 380px">
@@ -211,6 +212,7 @@
 
 				<div class ="row">
 					<div class ="span12">
+
 						<div class="widget" id="temperatureWidget">
 							 <div class="widget-content" >
 								<div id="temp" style="height: 400px; min-width: 380px"></div>
@@ -233,6 +235,7 @@
 
 
 				</div>
+
 
 
 <!--
@@ -314,16 +317,8 @@
 						</div>
 
 										</div>
+-->
 
-										</div>
-
-
-
-
-         </div>
-         </div>
-
-	  	  <!-- /row -->
 
 
 
@@ -398,7 +393,206 @@
 	}
 
 	function displayCharts(heartRateData, temperatureData){
+		heartRateChart(heartRateData);
+		tempChart(temperatureData);
+
+		positionChart();
+
+	}
+
+	function positionChart(positionList){
+
+		var updatedData = new Array();
+
+		for(var i = 0; i < positionList.length; i++){
+
+			var date = positionList[i].date.split("-");
+			var time = positionList[i].time.split(":");
+
+			var y = 0;
+			var symbol = 'url(../../../static/img/tlnone.PNG)';
+			if(positionList[i].position == "BACK"){
+				symbol = 'url(../../../static/img/tlback.PNG)';
+				y = 1;
+			}
+			else if(positionList[i].position == "LEFT SIDE"){
+				y = 2;
+				symbol = 'url(../../../static/img/tlside.PNG)';
+			}
+			else if(positionList[i].position == "LEFT FETAL"){
+				y = 3;
+
+				symbol = 'url(../../../static/img/tlfetal.PNG)';
+			}
+			else if(positionList[i].position == "RIGHT SIDE"){
+				y = 4;
+				symbol = 'url(../../../static/img/tlrightside.PNG)';
+			}
+			
+			else if(positionList[i].position == "RIGHT FETAL"){
+				symbol = 'url(../../../static/img/tlrightfetal.PNG)';
+				y = 5;
+			}
+			updatedData.push({x:Date.UTC(date[0], date[1] -1, date[2], time[0], time[1],time[2]),y:y,marker: {
+	                symbol: symbol
+	            },});
+
+		}
+		
+
+		 // {
+   //          	x: Date.UTC(2013, 3, 22, 1, 15),
+	  //           y: 1,
+	  //           marker: {
+	  //               symbol: 'url(../../../static/img/tlback.PNG)'
+	  //           }
+	  //       },
+
+
+		Highcharts.chart('container', {
+	  chart: {
+	    type: 'spline',
+	    scrollablePlotArea: {
+	      minWidth: 600,
+	      scrollPositionX: 1
+	    }
+	  },
+	  title: {
+	    text: 'Changes in position over time'
+	  },
+	  
+	  xAxis: {
+	    type: 'datetime',
+	    labels: {
+	      overflow: 'justify'
+	    },
+	    dateTimeLabelFormats : {
+	        hour: '%I %p',
+	        minute: '%I:%M %p'
+	    }
+	  },
+	  yAxis: {
+	    title: {
+	      text: 'Positions'
+	    },
+	    minorGridLineWidth: 0,
+	    gridLineWidth: 0,
+	    alternateGridColor: null,
+
+	    plotBands: [{ // Light air
+	      from: -0.5,
+	      to: 0.5
+	      ,
+	      color: 'rgba(68, 170, 213, 0.1)',
+	      label: {
+	        text: 'NONE',
+	        style: {
+	          color: '#606060'
+	        }
+	      }
+	    }, { // Light breeze
+	      from: 0.5,
+	      to: 1.5,
+	      color: 'rgba(0, 0, 0, 0)',
+	      label: {
+	        text: 'BACK',
+	        style: {
+	          color: '#606060'
+	        }
+	      }
+	    }, { // Gentle breeze
+	      from: 1.5,
+	      to: 2.5,
+	      color: 'rgba(68, 170, 213, 0.1)',
+	      label: {
+	        text: 'LEFT SIDE',
+	        style: {
+	          color: '#606060'
+	        }
+	      }
+	    }, { // Moderate breeze
+	      from: 2.5,
+	      to: 3.5,
+	      color: 'rgba(0, 0, 0, 0)',
+	      label: {
+	        text: 'LEFT FETAL',
+	        style: {
+	          color: '#606060'
+	        }
+	      }
+	    }, { // Fresh breeze
+	      from: 3.5,
+	      to: 4.5,
+	      color: 'rgba(68, 170, 213, 0.1)',
+	      label: {
+	        text: 'RIGHT SIDE',
+	        style: {
+	          color: '#606060'
+	        }
+	      }
+	    }, { // Strong breeze
+	      from: 4.5,
+	      to: 5.5,
+	      color: 'rgba(0, 0, 0, 0)',
+	      label: {
+	        text: 'RIGHT FETAL',
+	        style: {
+	          color: '#606060'
+	        }
+	      }
+	    }, 
+	    ]
+	  },
+	  tooltip: {
+		    formatter: function() {
+		        return ''+
+		                "" +
+		                'Time: '+ Highcharts.dateFormat('%I:%M %p', this.x);
+		    }
+		},
+	  plotOptions: {
+	  	step: 'left',
+	    spline: {
+	    	marker: {
+                radius: 4,
+                lineColor: '#666666',
+                lineWidth: 1
+            },
+	      lineWidth: 4,
+	      states: {
+	        hover: {
+	          lineWidth: 5
+	        }
+	      },
+	      pointInterval: 3600000, // one hour
+	      pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
+	    }	,
+	  },
+	  series: [{
+	    name: 'Time',
+	    marker: {
+            symbol: 'square'
+        },
+	    data: updatedData
+	        
+
+	  }, 
+	  ],
+	  navigation: {
+	    menuItemStyle: {
+	      fontSize: '10px'
+	    }
+	  }
+	});
+
+
+
+
+	}
+	function heartRateChart(heartRateData){	
+
 		console.log(heartRateData);
+
 		// Data retrieved from http://vikjavev.no/ver/index.php?spenn=2d&sluttid=16.06.2015.
 
 Highcharts.chart('container', {
@@ -545,6 +739,22 @@ Highcharts.chart('container', {
     }
   }
 });
+
+		var heartRateList = new Array();
+
+		heartRateData.forEach(function(a){
+
+			var date = a.date.split("-");
+			var time = a.time.split(":");
+
+			heartRateList.push([Date.UTC(date[0], date[1] -1, date[2], time[0], time[1],time[2]),a.heartRate],);
+			
+
+			
+
+		});
+		console.log(heartRateList);
+
 		Highcharts.chart('hr', {
 
 				title: {
@@ -553,26 +763,20 @@ Highcharts.chart('container', {
 				subtitle: {
 						text: '2018-11-26'
 				},
-				// xAxis: {
-				// 		type: 'datetime',
-				// 		labels: {
-				// 				overflow: 'justify'
-				// 		}
-				// },
 				xAxis: {
-			        type: 'time',
-			        // dateTimeLabelFormats: { // don't display the dummy year
-			        //     month: '%e. %b',
-			        //     year: '%b'
-			        // },
-			        title: {
-			            text: 'Date'
-			        }
+			        type: 'datetime',
+				    labels: {
+				      overflow: 'justify'
+				    },
+				    dateTimeLabelFormats : {
+				        hour: '%I %p',
+				        minute: '%I:%M %p'
+				    }
 			    },
 				yAxis: {
-						title: {
-								text: 'Heart Rate (BPM)'
-						},
+					title: {
+							text: 'Heart Rate (BPM)'
+					},
 
 				},
 				tooltip: {
@@ -595,19 +799,29 @@ Highcharts.chart('container', {
 					color: Highcharts.getOptions().colors[5],
 					fillOpacity: 0.5,
 						name: "{{firstName}}",
-						data: [["00:00:10", 70],
-						["00:00:10", 70],
-						["00:00:20", 70],
-						["00:00:30", 70],
-						["00:00:40", 70],
-						["00:00:50", 70],
-						["00:00:60", 70],]
+						data: heartRateList
+						
+
 
 				}, ],
 
 		});
+	}
+	function tempChart(temperatureData){
 
+		var tempList = new Array();
 
+		temperatureData.forEach(function(a){
+
+			var date = a.date.split("-");
+			var time = a.time.split(":");
+
+			tempList.push([Date.UTC(date[0], date[1] -1, date[2], time[0], time[1],time[2]),a.temperature],);
+			
+
+			
+
+		});
 		Highcharts.chart('temp', {
 				chart: {
 						type: 'spline',
@@ -703,7 +917,7 @@ Highcharts.chart('container', {
 					color: Highcharts.getOptions().colors[3],
 					fillOpacity: 0.5,
 						name: "{{firstName}}",
-						data: temperatureData
+						data: tempList
 
 				}, ],
 				navigation: {
@@ -713,471 +927,146 @@ Highcharts.chart('container', {
 				}
 		});
 	}
-	function changeQ(){
-		var selected = $("#selectqd").val();
-		if(selected == 1){
+	// function changeQ(){
+	// 	var selected = $("#selectqd").val();
+	// 	if(selected == 1){
 
-			var i = "{{patient.idPatient}}";
-			$.ajax({
-				url: '/ajax/ajaxGetEveryMinHeartRate/',
-				data: {
-					"idPatient":i
-				},
-				dataType: 'json',
-				success: function (data){
-					var heartRateData = new Array();
-					var temperatureData = new Array();
-					var heartRateBody = "";
-					var temperatureBody = "";
-					for(var w = 0; w < data['heartRateList'].length; w++){
+	// 		var i = "{{patient.idPatient}}";
+	// 		$.ajax({
+	// 			url: '/ajax/ajaxGetEveryMinHeartRate/',
+	// 			data: {
+	// 				"idPatient":i
+	// 			},
+	// 			dataType: 'json',
+	// 			success: function (data){
+	// 				var heartRateData = new Array();
+	// 				var temperatureData = new Array();
+	// 				var heartRateBody = "";
+	// 				var temperatureBody = "";
+	// 				for(var w = 0; w < data['heartRateList'].length; w++){
 
-							heartRateData.push(data['heartRateList'][w].heartRate);
+	// 						heartRateData.push(data['heartRateList'][w].heartRate);
 
-							heartRateBody += '<tr>'+
+	// 						heartRateBody += '<tr>'+
 
-								'<td>' + data['heartRateList'][w].idHeartRate + '</td>'+
-								'<td>' + data['heartRateList'][w].heartRate + '</td>'+
-								'<td>' + data['heartRateList'][w].date + '</td>'+
-								'<td>' + data['heartRateList'][w].time + '</td>'+
-							'</tr>';
-					}
+	// 							'<td>' + data['heartRateList'][w].idHeartRate + '</td>'+
+	// 							'<td>' + data['heartRateList'][w].heartRate + '</td>'+
+	// 							'<td>' + data['heartRateList'][w].date + '</td>'+
+	// 							'<td>' + data['heartRateList'][w].time + '</td>'+
+	// 						'</tr>';
+	// 				}
 
-					for(var w = 0; w < data['temperatureList'].length; w++){
+	// 				for(var w = 0; w < data['temperatureList'].length; w++){
 
-							temperatureData.push(data['temperatureList'][w].temperature);
-							temperatureBody += '<tr>'+
+	// 						temperatureData.push(data['temperatureList'][w].temperature);
+	// 						temperatureBody += '<tr>'+
 
-								'<td>' + data['temperatureList'][w].idTemperature + '</td>'+
-								'<td>' + data['temperatureList'][w].temperature + '</td>'+
-								'<td>' + data['temperatureList'][w].date + '</td>'+
-								'<td>' + data['temperatureList'][w].time + '</td>'+
-							'</tr>';
+	// 							'<td>' + data['temperatureList'][w].idTemperature + '</td>'+
+	// 							'<td>' + data['temperatureList'][w].temperature + '</td>'+
+	// 							'<td>' + data['temperatureList'][w].date + '</td>'+
+	// 							'<td>' + data['temperatureList'][w].time + '</td>'+
+	// 						'</tr>';
 
-					}
-					$("#heartRateBody").html(heartRateBody);
-					$("#temperatureBody").html(temperatureBody);
+	// 				}
+	// 				$("#heartRateBody").html(heartRateBody);
+	// 				$("#temperatureBody").html(temperatureBody);
 
-					displayCharts(heartRateData,temperatureData);
+	// 				displayCharts(heartRateData,temperatureData);
 
-				}
-			});
-		}
-		else{
-			var i = "{{patient.idPatient}}";
-			$.ajax({
-				url: '/ajax/ajaxGetEveryMinHeartRate/',
-				data: {
-					"idPatient":i
-				},
-				dataType: 'json',
-				success: function (data){
-					var heartRateData = new Array();
-					var temperatureData = new Array();
+	// 			}
+	// 		});
+	// 	}
+	// 	else{
+	// 		var i = "{{patient.idPatient}}";
+	// 		$.ajax({
+	// 			url: '/ajax/ajaxGetEveryMinHeartRate/',
+	// 			data: {
+	// 				"idPatient":i
+	// 			},
+	// 			dataType: 'json',
+	// 			success: function (data){
+	// 				var heartRateData = new Array();
+	// 				var temperatureData = new Array();
 
-					var heartRateBody = "";
-					var temperatureBody = "";
-					var counter = 1;
-					for(var w = 0; w < data['heartRateList'].length; w++){
-						if(w == 0 || w % 15 === 0){
-							heartRateData.push(data['heartRateList'][w].heartRate);
-							heartRateBody += '<tr>'+
+	// 				var heartRateBody = "";
+	// 				var temperatureBody = "";
+	// 				var counter = 1;
+	// 				for(var w = 0; w < data['heartRateList'].length; w++){
+	// 					if(w == 0 || w % 15 === 0){
+	// 						heartRateData.push(data['heartRateList'][w].heartRate);
+	// 						heartRateBody += '<tr>'+
 
-								// '<td>' + data['heartRateList'][w].idHeartRate + '</td>'+
-								'<td>' + counter + '</td>'+
-								'<td>' + data['heartRateList'][w].heartRate + '</td>'+
-								'<td>' + data['heartRateList'][w].date + '</td>'+
-								'<td>' + data['heartRateList'][w].time + '</td>'+
-							'</tr>';
-							counter += 1;
-						}
-					}
-					counter = 1;
-					for(var w = 0; w < data['temperatureList'].length; w++){
-						if(w == 0 || w % 15 === 0){
-							temperatureData.push(data['temperatureList'][w].temperature);
-							temperatureBody += '<tr>'+
+	// 							// '<td>' + data['heartRateList'][w].idHeartRate + '</td>'+
+	// 							'<td>' + counter + '</td>'+
+	// 							'<td>' + data['heartRateList'][w].heartRate + '</td>'+
+	// 							'<td>' + data['heartRateList'][w].date + '</td>'+
+	// 							'<td>' + data['heartRateList'][w].time + '</td>'+
+	// 						'</tr>';
+	// 						counter += 1;
+	// 					}
+	// 				}
+	// 				counter = 1;
+	// 				for(var w = 0; w < data['temperatureList'].length; w++){
+	// 					if(w == 0 || w % 15 === 0){
+	// 						temperatureData.push(data['temperatureList'][w].temperature);
+	// 						temperatureBody += '<tr>'+
 
-								// '<td>' + data['temperatureList'][w].idTemperature + '</td>'+
-								'<td>' + counter + '</td>'+
-								'<td>' + data['temperatureList'][w].temperature + '</td>'+
-								'<td>' + data['temperatureList'][w].date + '</td>'+
-								'<td>' + data['temperatureList'][w].time + '</td>'+
-							'</tr>';
-							counter += 1;
-						}
-					}
-					$("#heartRateBody").html(heartRateBody);
-					$("#temperatureBody").html(temperatureBody);
-					displayCharts(heartRateData,temperatureData);
+	// 							// '<td>' + data['temperatureList'][w].idTemperature + '</td>'+
+	// 							'<td>' + counter + '</td>'+
+	// 							'<td>' + data['temperatureList'][w].temperature + '</td>'+
+	// 							'<td>' + data['temperatureList'][w].date + '</td>'+
+	// 							'<td>' + data['temperatureList'][w].time + '</td>'+
+	// 						'</tr>';
+	// 						counter += 1;
+	// 					}
+	// 				}
+	// 				$("#heartRateBody").html(heartRateBody);
+	// 				$("#temperatureBody").html(temperatureBody);
+	// 				displayCharts(heartRateData,temperatureData);
 
-				}
-			});
-		}
-		$('#fex').DataTable();
-	  $('#fexx').DataTable();
-	}
-	</script>
+	// 			}
+	// 		});
+	// 	}
+	// 	$('#fex').DataTable();
+	//   $('#fexx').DataTable();
+	// }
+
+</script>
 <script type="text/javascript">
+
 	$(document).ready(function(){
 		var i = "{{patient.idPatient}}";
 		$.ajax({
-			url: '/ajax/ajaxGetEveryMinHeartRate/',
+			url: '/ajax/ajaxLoadData/',
 			data: {
 				"idPatient":i
 			},
 			dataType: 'json',
 			success: function (data){
-				var heartRateData = new Array();
-				var temperatureData = new Array();
 
-				for(var w = 0; w < data['heartRateList'].length; w++){
-					heartRateData.push(data['heartRateList'][w].heartRate);
-				}
+				var heartRateList = data.heartrateList;
+				var temperatureList = data.temperatureList;
+				var positionList = data.positionList;
 
-				for(var w = 0; w < data['temperatureList'].length; w++){
-					temperatureData.push(data['temperatureList'][w].temperature);
-				}
 
-				displayCharts(heartRateData,temperatureData);
+				// var heartRate = data.heartRateList;
+				// var heartRate = data.heartRateList;
+				// var heartRate = data.heartRateList;
+				// console.log(heartRateList);
+				// console.log(heartRateList[0].date.split("-"));
+				// console.log(heartRateList[0].time.split(":"));
+
+				positionChart(positionList);
+				heartRateChart(heartRateList);
+				tempChart(temperatureList);
 
 			}
 		});
 	});
 
 
-// Data generated from http://www.bikeforums.net/professional-cycling-fans/1113087-2017-tour-de-france-gpx-tcx-files.html
-var elevationData = [
-		[1, 225],
-		[2, 226],
-		[3, 228],
-		[4, 228],
-		[5, 229],
-		[6, 195],
-		[7, 195],
-		[8, 196],
-		[9, 192],
-		[10, 200],
-		[11, 197],
-		[12, 194],
-		[13, 194],
-    [14, 228],
-    [15, 228],
-    [16, 229],
-    [17, 195],
-    [18, 195],
-    [19, 196],
-    [20, 192],
-    [21, 200],
-    [22, 197],
-    [23, 194],
-    [24, 194],
 
-
-
-];
-
-// Now create the chart
-Highcharts.chart('cont', {
-
-    chart: {
-        type: 'area',
-        zoomType: 'x',
-        panning: true,
-        panKey: 'shift',
-        scrollablePlotArea: {
-            minWidth: 600
-        }
-    },
-
-    title: {
-        text: 'Heart Rate Report'
-    },
-
-    subtitle: {
-        text: '2018-11-11'
-    },
-
-    annotations: [{
-        labelOptions: {
-            backgroundColor: 'rgba(255,255,0,0.3)',
-            verticalAlign: 'top',
-            y: 15
-        },
-        labels: [{
-            point: {
-                xAxis: 0,
-                yAxis: 0,
-                x: 2,
-                y: 226
-            },
-            text: 'Warning'
-        }, {
-            point: {
-                xAxis: 0,
-                yAxis: 0,
-                x: 45.5,
-                y: 611
-            },
-            text: 'Montrond'
-        }, {
-            point: {
-                xAxis: 0,
-                yAxis: 0,
-                x: 63,
-                y: 651
-            },
-            text: 'Mont-sur-Monnet'
-        }, {
-            point: {
-                xAxis: 0,
-                yAxis: 0,
-                x: 84,
-                y: 789
-            },
-            x: -10,
-            text: 'Bonlieu'
-        }, {
-            point: {
-                xAxis: 0,
-                yAxis: 0,
-                x: 129.5,
-                y: 382
-            },
-            text: 'Chassal'
-        }, {
-            point: {
-                xAxis: 0,
-                yAxis: 0,
-                x: 159,
-                y: 443
-            },
-            text: 'Saint-Claude'
-        }]
-    }, {
-
-        labelOptions: {
-            shape: 'connector',
-            align: 'right',
-            justify: false,
-            crop: true,
-            style: {
-                fontSize: '0.8em',
-                textOutline: '1px white'
-            }
-        },
-        labels: [{
-            point: {
-                xAxis: 0,
-                yAxis: 0,
-                x: 96.2,
-                y: 783
-            },
-            text: '6.1 km climb<br>4.6% on avg.'
-        }, {
-            point: {
-                xAxis: 0,
-                yAxis: 0,
-                x: 134.5,
-                y: 540
-            },
-            text: '7.6 km climb<br>5.2% on avg.'
-        }, {
-            point: {
-                xAxis: 0,
-                yAxis: 0,
-                x: 172.2,
-                y: 925
-            },
-            text: '11.7 km climb<br>6.4% on avg.'
-        }]
-    }],
-
-    xAxis: {
-
-        labels: {
-
-            format: '{value} AM/PM'
-        },
-        minRange: 5,
-        title: {
-            text: 'Time'
-        },
-					type: 'datetime'
-    },
-
-    yAxis: {
-        startOnTick: true,
-        endOnTick: false,
-        maxPadding: 0.35,
-        title: {
-            text: null
-        },
-        labels: {
-            format: '{value} BPM'
-        },
-
-				plotBands: [{ // normal ba or warning and danger
-						from: 210,
-						to: 220,
-						color: 'rgba(68, 170, 213, 0.1)',
-						label: {
-								text: 'Normal',
-								style: {
-										color: '#606060'
-								}
-						}
-				},
-				]
-
-
-    },
-
-    tooltip: {
-        headerFormat: 'Status: <br>',
-        pointFormat: 'HR: {point.y} BPM<br>',
-
-        shared: true
-    },
-
-    legend: {
-        enabled: false
-    },
-
-    series: [{
-        data: elevationData,
-        lineColor: Highcharts.getOptions().colors[5],
-        color: Highcharts.getOptions().colors[5],
-        fillOpacity: 0.5,
-
-        marker: {
-            enabled: false
-        },
-        threshold: null
-    }]
-
-});
 		</script>
-
-<script>
-
-	var ctxL = document.getElementById("lineChart").getContext('2d');
-	  var myLineChart = new Chart(ctxL, {
-	    type: 'line',
-	    data: {
-	      labels: ["January", "February", "March", "April", "May", "June", "July"],
-	      datasets: [{
-	          label: "My First dataset",
-	          data: [65, 59, 80, 81, 56, 55, 40],
-	          backgroundColor: [
-	            'rgba(105, 0, 132, .2)',
-	          ],
-	          borderColor: [
-	            'rgba(200, 99, 132, .7)',
-	          ],
-	          borderWidth: 2
-	        },
-	        {
-	          label: "My Second dataset",
-	          data: [28, 48, 40, 19, 86, 27, 90],
-	          backgroundColor: [
-	            'rgba(0, 137, 132, .2)',
-	          ],
-	          borderColor: [
-	            'rgba(0, 10, 130, .7)',
-	          ],
-	          borderWidth: 2
-	        }
-	      ]
-	    },
-	    options: {
-	      responsive: true
-	    }
-	  });
-
-	function myFunction() {
-		if (document.getElementById("selectmoment").value != "0"){
-			var z = new Image();
-			z = "{% static 'img/check.png'%}";
-			document.getElementById("moment").src=z;
-		}
-		else if  (document.getElementById("selectmoment").value = "0"){
-			var z = new Image();
-			z = "{% static 'img/blank.png'%}";
-			document.getElementById("moment").src=z;
-		}
-
-
-
-	}
-	$( function() {
-	 $( "#datepicker" ).datepicker();
-
- } );
-
-    var pieData = [
-				{
-				    value: 30,
-				    color: "#F38630"
-				},
-				{
-				    value: 50,
-				    color: "#E0E4CC"
-				},
-				{
-				    value: 100,
-				    color: "#69D2E7"
-				}
-
-			];
-
-    var myPie = new Chart(document.getElementById("pie-chart").getContext("2d")).Pie(pieData);
-
-    var barChartData = {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
-        datasets: [
-				{
-				    fillColor: "rgba(220,220,220,0.5)",
-				    strokeColor: "rgba(220,220,220,1)",
-				    data: [65, 59, 90, 81, 56, 55, 40]
-				},
-				{
-				    fillColor: "rgba(151,187,205,0.5)",
-				    strokeColor: "rgba(151,187,205,1)",
-				    data: [28, 48, 40, 19, 96, 27, 100]
-				}
-			]
-
-    }
-
-    var myLine = new Chart(document.getElementById("bar-chart").getContext("2d")).Bar(barChartData);
-	var myLine = new Chart(document.getElementById("bar-chart1").getContext("2d")).Bar(barChartData);
-	var myLine = new Chart(document.getElementById("bar-chart2").getContext("2d")).Bar(barChartData);
-	var myLine = new Chart(document.getElementById("bar-chart3").getContext("2d")).Bar(barChartData);
-	var lineChartData = {
-             labels: ["1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00"
-						 , "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"],
-             datasets: [
- 				{
- 				    fillColor: "rgba(220,220,220,0.5)",
- 				    strokeColor: "rgba(220,220,220,1)",
- 				    pointColor: "rgba(220,220,220,1)",
- 				    pointStrokeColor: "#fff",
- 				    data: [65, 59, 90, 81, 56, 55, 40]
- 				},
- 				{
- 				    fillColor: "rgba(151,187,205,0.5)",
- 				    strokeColor: "rgba(151,187,205,1)",
- 				    pointColor: "rgba(151,187,205,1)",
- 				    pointStrokeColor: "#fff",
- 				    data: [28, 48, 40, 19, 96, 27, 100]
- 				}
- 			]
-
-         }
-
-         var myLine = new Chart(document.getElementById("area-chart1").getContext("2d")).Line(lineChartData);
-				 var myLine = new Chart(document.getElementById("area-chart2").getContext("2d")).Line(lineChartData);
-	</script>
 
 
 
