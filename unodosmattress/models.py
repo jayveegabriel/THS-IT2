@@ -104,6 +104,7 @@ class Patient(models.Model):
 	contactNum = models.CharField(max_length=11) #changethis
 	bedNumber = models.ForeignKey(Beds, on_delete=models.CASCADE)
 	status = models.CharField(max_length=45)
+	procedure = models.CharField(max_length=45)
 	restrictions = models.CharField(max_length=20, default="false")
 	countHR = models.IntegerField(default=0)
 	countT = models.IntegerField(default=0)

@@ -79,7 +79,8 @@
 									{% for patient in patients_list %}
                   <tr>
 
-                    <td style ="text-align:center;">Hair cut</td>
+                    <td style ="text-align:center;">{{ patient.procedure}}</td>
+
                     <td style ="text-align:center;">{{ patient.lastName }}</td>
                     <td style ="text-align:center;">{{ patient.firstName}}</td>
                     <td style ="text-align:center;">{{ patient.middleName}}</td>
@@ -119,7 +120,7 @@
 
 <script src="{% static 'js/bootstrap.js'%}"></script>
 <script src="{% static 'js/base.js'%}"></script>
-<script type="text/javascript" charset="utf8" src="{% static 'js/dataTables.js'%}"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/dataTable.min.js'%}"></script>
 <script>
 $(document).ready(function() {
     $('#fexample').DataTable();

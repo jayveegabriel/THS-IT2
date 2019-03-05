@@ -21,7 +21,22 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
-<body>
+<style>
+.logoutbtn {
+  border: none;
+    background-color: inherit;
+    font-size: 12px;
+    padding-bottom: 3px;
+    cursor: pointer;
+    display: inline-block;
+}
+.success {color: green;}
+.info {color: dodgerblue;}
+.warning {color: orange;}
+.danger {color: red;}
+.default {color: white;}
+</style>
+<body onload = "startTime()">
 <div class="navbar navbar-fixed-top" >
   <div class="navbar-inner">
     <div class="container">
@@ -29,7 +44,7 @@
       <div class="nav-collapse">
         <ul class="nav pull-right">
 
-          <a class =""href="{% url 'unodosmattress:login' %}"><i class="icon-signout"></i> Logout</a>
+          <button onclick="location.href='{% url 'unodosmattress:login' %}';" type ="submit"  class="logoutbtn default  dropdown-toggle"><i class="icon-signout"></i> Logout</button>
 
         </ul>
         <!--<form class="navbar-search pull-right">
@@ -59,6 +74,7 @@
   </div>
   <!-- /subnavbar-inner -->
 </div>
+
 <!-- /subnavbar -->
 {% block content %}
 {% endblock content %}

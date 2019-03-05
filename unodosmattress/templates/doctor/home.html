@@ -3,10 +3,17 @@
 {% load static %}
 
 <!DOCTYPE html>
+
 <div class="main">
+  <div class ="container" align ="center">
+    <br>
+    <h1 id="welcome"></h1>
+    <h2    id="time"><h2>
+    <br>
+  </div>
   <div class="main-inner" align ="center">
-    <img src="{% static 'img/loginlogo.png'%}" class ="animated bounceInDown" / >
-    <h1 class ="animated bounceInDown" >Welcome Dr. {{doctor.firstName}} {{doctor.lastName}}!</h1>
+    <!--<img src="{% static 'img/loginlogo.png'%}" class ="animated bounceInDown" / >
+    <h1 class ="animated bounceInDown" >Welcome Dr. {{doctor.firstName}} {{doctor.lastName}}!</h1>-->
 
     <div class="container">
       <hr>
@@ -107,7 +114,31 @@
 
 <script src="js/base.js"></script>
 <script>
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  var ampm = today.getHours();
+  m = checkTime(m);
+  ampm = check(ampm);
+  s = checkTime(s);
+  document.getElementById('time').innerHTML =
+  h + ":" + m + ":" + s + " " + ampm;
+  document.getElementById('welcome').innerHTML =
+  "Welcome Doctor!";
 
+  var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+function check(i) {
+  if (i < 12) {i = "AM"}
+  else if (i >= 12) {i = "PM"};
+  return i;
+}
         var lineChartData = {
             labels: ["January", "February", "March", "April", "May", "June", "July"],
             datasets: [

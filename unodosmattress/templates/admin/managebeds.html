@@ -6,6 +6,30 @@
   font-family: 'Open Sans';
 
 }
+.txtbtn {
+border: none;
+background-color: inherit;
+padding: 5px 60px;
+font-size: 13px;
+cursor: pointer;
+display: inline-block;
+
+
+}
+
+.txtbtn:hover {background: #eee;}
+
+.success {color: green;}
+.info {color: dodgerblue;}
+.warning {color: orange;}
+.danger {color: red;}
+.default {color: black;}
+.switch {
+position: relative;
+display: inline-block;
+width: 60px;
+height: 34px;
+}
 .bt {
 
 	width: 225px;
@@ -127,10 +151,10 @@ overflow-y: auto;
                         {% if default_room.get_occupied_size > 0 %}
                           {% for bed in default_room.get_occupied_beds %}
                           <tr>
-                            <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                            <td style="width:20%;text-align:center;"><img src="{% static 'img/iconbed.png'%}"/ ></td>
                             <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
                           </tr>
-                          {% endfor %}  
+                          {% endfor %}
                         {% endif%}
                       </tbody>
                     </table>
@@ -169,7 +193,7 @@ overflow-y: auto;
                         {% if default_room.get_available_size > 0 %}
                           {% for bed in default_room.get_available_beds %}
                           <tr>
-                          <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                          <td style="width:20%;text-align:center;"><img src="{% static 'img/iconbed.png'%}"/ ></td>
                           <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
                           </tr>
                           {% endfor %}
@@ -210,7 +234,7 @@ overflow-y: auto;
                         {% if default_room.get_unavailable_size > 0 %}
                           {% for bed in default_room.get_unavailable_beds %}
                           <tr>
-                          <td style="width:20%;text-align:center;"><img src="{% static 'img/bedicon.png'%}"/ ></td>
+                          <td style="width:20%;text-align:center;"><img src="{% static 'img/iconbed.png'%}"/ ></td>
                           <td style="width:80%; font-size:15px;">Bed #{{bed.bedNumber}}</td>
                           </tr>
                           {% endfor %}
@@ -253,7 +277,7 @@ overflow-y: auto;
                       {% for r in rooms %}
                         <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
                       {% endfor %}
-                      
+
                     <select>
                     <h4>List of Beds at Room No. <span class="roomNumberSpan">{{default_room.roomNumber}}</span></h4>
                     <hr>
@@ -356,7 +380,79 @@ overflow-y: auto;
                       {% if pendingBedsSize > 0 %}
 										   <div class ="row" id="bedRow">
                             {% for bed in beds_list %}
-											<!-- 
+
+<!--
+												<div class = "span3" align ="center" id = "spanBed{{bed.idBeds}}">
+ 												 <div class="widget widget-table action-table" >
+
+ 												
+
+
+ 													 <div class="widget-content" align = "center" id="bed">
+
+ 														 <img src="{% static 'img/bed.png'%}"/ >
+ 														 <table class="table " align ="center">
+                               <thead>
+                                 <tr>
+
+  						                     <th></th>
+                                   </tr>
+                                 </thead>
+                                 <tbody>
+
+ 															 <tfoot align ="center" >
+ 																 <tr>
+ 																	 <th>  <th  style="text-align:center"> <button  href="#addModal{{bed.idBeds}}"  data-toggle="modal"  class="txtbtn default"><b> ADD</b></button>
+    
+                                                    <div id="addModal{{bed.idBeds}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                      <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        <h3 id="myModalLabel">Add Bed</h3>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <form id="add-bed" class="form-horizontal" method = "POST" action=".">
+                                 												 {% csrf_token %}
+                                                         <fieldset>
+                                                           <div class="control-group">
+                                                             <label class="control-label" for="bednumber">Bed #</label>
+                                                             <div class="controls">
+                                                               <input type="number" class="span1" value="{{bed.bedNumber}}" name = "bednumber" id="bed{{ bed.pk }}" value="">
+                                                             </div> 
+
+
+
+
+                                                        </div>
+                                                        </fieldset>
+
+
+
+
+
+
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                                        <button type="button" class="btn btn-primary" onclick="addBed({{ bed.pk }});">Save</button>
+                                                      </div>
+                                                      </form>
+                                                    </div>
+
+
+
+
+
+                                   </th>
+ 																 </tr>
+ 															 </tfoot>
+ 														 </table>
+ 													 </div>
+ 												 </div>
+ 											 </div>
+                       </div>
+-->
+                      {% endfor %}
+
                         <div class = "span2" align ="center" id = "spanBed{{bed.idBeds}}">
                          <div class="widget widget-table action-table" >
 
@@ -376,7 +472,7 @@ overflow-y: auto;
 
                                <tfoot align ="center" >
                                  <tr>
-                                    <th  style="text-align:center"> <a href="#addModal{{bed.idBeds}}"  data-toggle="modal"><i class="icon-plus-sign"></i> ADD</a>
+                                    <th  style="text-align:center"> <button  href="#addModal{{bed.idBeds}}"  data-toggle="modal"  class="txtbtn default"><b> ADD</b></button>
 
                                                     <div id="addModal{{bed.idBeds}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                       <div class="modal-header">
@@ -706,7 +802,7 @@ function updateBeds(){
 
 <script>
 
-  
+
 
 
 
@@ -780,18 +876,18 @@ function tableMakerNoBeds(){
 
 function draggableMaker(idBeds, bedNumber){
     wew = '<li data-draggable="item" id="' + idBeds + '">Bed #' + bedNumber +'</li>';
-    return wew;     
+    return wew;
 
 }
 
 $(".roomDropdown").change(function(){
     var temp = this.value;
     $("#viewbedsDropdown").val(temp);
-    $("#editBedsDropdown").val(temp); 
+    $("#editBedsDropdown").val(temp);
 
-    $(".roomNumberSpan").html($("#viewbedsDropdown option:selected").text()); 
+    $(".roomNumberSpan").html($("#viewbedsDropdown option:selected").text());
     refresh(temp);
-    
+
 
 
 });
@@ -836,7 +932,7 @@ function refresh(temp){
             occupiedBedsBody += tableMaker(a.bedNumber);
           });
         }
-        
+
         if(data.availableBedsSize == '0'){
           availableBedsBody += tableMakerNoBeds();
         }
@@ -875,8 +971,8 @@ function refresh(temp){
 
 function reset(){
   (function(){
-    if(!document.querySelectorAll || !('draggable' in document.createElement('span')) || window.opera){ 
-      return; 
+    if(!document.querySelectorAll || !('draggable' in document.createElement('span')) || window.opera){
+      return;
     }
     for(var items = document.querySelectorAll('[data-draggable="item"]'), len = items.length, i = 0; i < len; i ++){
         items[i].setAttribute('draggable', 'true');
@@ -934,8 +1030,8 @@ $(document).ready(function() {
         dataType: 'json',
         success: function (data){
           alert("The status of the bed is successfully updated!");
-          
-          var temp = $("#editBedsDropdown").val(); 
+
+          var temp = $("#editBedsDropdown").val();
           refresh(temp);
         }
       });

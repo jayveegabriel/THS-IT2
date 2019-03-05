@@ -28,7 +28,19 @@
     <![endif]-->
 </head>
 <style>
-
+.logoutbtn {
+  border: none;
+    background-color: inherit;
+    font-size: 12px;
+    padding-bottom: 3px;
+    cursor: pointer;
+    display: inline-block;
+}
+.success {color: green;}
+.info {color: dodgerblue;}
+.warning {color: orange;}
+.danger {color: red;}
+.default {color: white;}
 	.badge1 {
 	   position:relative;
 	}
@@ -105,7 +117,7 @@
       <div class="nav-collapse">
         <ul class="nav pull-right">
 
-          <a class =""href="{% url 'unodosmattress:login' %}"><i class="icon-signout"></i> Logout</a>
+          <button onclick="location.href='{% url 'unodosmattress:login' %}';" type ="submit"  class="logoutbtn default  dropdown-toggle"><i class="icon-signout"></i> Logout</button>
 
         </ul>
         <!--<form class="navbar-search pull-right">
@@ -154,11 +166,11 @@
 	<div class="main-inner">
 	    <div class="container">
 
-				<h2 class ="animated slideInUp" align ="center"><b>View Patient: {{ patient.lastName}}, {{patient.firstName}} </b></h2><br>
+				<h3 class ="animated slideInUp" align ="center"><b>View Patient: {{ patient.lastName}}, {{patient.firstName}} </b></h3><br>
 						<div class="center animated fadeIn" align ="center">
 							<p><b>PATIENT INFORMATION</b></p>
 							<p>STATUS: <b>{{ patient.status }}</b></p>
-							<select  id="sel1"> Change Status:
+							<select  id="sel1" class ="span2"> Change Status:
 								<!-- <option selected disabled>Select Status..	</option> -->
 								{% if patient.status == "RESERVED" %}
 
@@ -170,7 +182,16 @@
 								{% if patient.status == "ON BED" %}
 
 									<option selected>ON BED</option>
-									<option>FINISHED</option>
+									<option>TRANSFERRED TO WARD</option>
+									<option>TRANSFERRED TO ROOM </option>
+									<option>TRANSFERRED TO OPERATING RM </option>
+
+								{% endif %}
+								{% if patient.status == "TRANSFERRED TO OPERATING RM" %}
+
+									<option>ON BED</option>
+									<option selected="">TRANSFERRED TO OPERATING RM </option>
+
 								{% endif %}
 
 								{% if patient.status == "STARTING" %}
@@ -178,9 +199,13 @@
 									<option selected>STARTING</option>
 								{% endif %}
 
-								{% if patient.status == "FINISHED" %}
+								{% if patient.status == "TRANSFERRED TO WARD" %}
 
-									<option selected disabled>FINISHED</option>
+									<option selected disabled>TRANSFERRED TO WARD</option>
+								{% endif %}
+								{% if patient.status == "TRANSFERRED TO ROOM" %}
+
+									<option selected disabled>TRANSFERRED TO ROOM</option>
 								{% endif %}
 							</select>
 
@@ -196,6 +221,11 @@
 								</thead>
 								<tbody>
 									<tr>
+										<td>PROCEDURE</td>
+										<td>{{patient.procedure}}</td>
+
+									</tr>
+									<tr>
 										<td>LAST NAME</td>
 										<td>{{patient.lastName}}</td>
 
@@ -210,7 +240,7 @@
 										<td>{{patient.middleName}}</td>
 
 									</tr>
-									
+
 									<tr>
 
 										<td>BIRTHDAY</td>
@@ -254,7 +284,7 @@
 										<td></td>
 
 									</tr>
-									{% if patient.status == "FINISHED" %}
+									{% if patient.status == "TRANSFERRED TO WARD" or patient.status == "TRANSFERRED TO ROOM"  %}
 									<tr>
 										<td>MINIMUM</td>
 										<td>  <input disabled type="range" min="1" max="120" value="{{ patient.minHeartRate }}" class="slider" id="minheartrateslide"></td>
@@ -272,7 +302,7 @@
 									</tr>
 									{% endif %}
 
-									{% if patient.status != "FINISHED" %}
+									{% if patient.status != "TRANSFERRED TO WARD" or patient.status == "TRANSFERRED TO ROOM" %}
 									<tr>
 										<td>MINIMUM</td>
 										<td>  <input type="range" min="1" max="120" value="{{ patient.minHeartRate }}" class="slider" id="minheartrateslide"></td>
@@ -293,19 +323,29 @@
 								</tbody>
 							</table>
 
+
 							 <a class="btn" href="{% url 'unodosmattress:managepatients' %}"><i class="icon-arrow-left"></i> BACK</a>
-						 		{% if patient.status != "FINISHED" %}
+						 		{% if patient.status != "TRANSFERRED TO WARD" or patient.status == "TRANSFERRED TO ROOM" %}
 
 							 		<a class="btn btn-primary" id="saveButton"> SAVE</a>
 								{% endif %}
 
-							 <br></br>
 
 
 
 	      </div> <!-- /row -->
 
 	    </div> <!-- /container -->
+      <br>
+      <div class ="container" align ="center">
+      <a class="btn" href="{% url 'unodosmattress:managepatients' %}"> Back</a>
+       {% if patient.status != "FINISHED" %}
+
+         <a class="btn btn-primary" id="saveButton"> Save</a>
+       {% endif %}
+
+      <br></br>
+    </div>
 
 	</div>
 <br>

@@ -11,6 +11,89 @@
 	.disableBtns {
 		display: none;
 	}
+	.txtbtn {
+  border: none;
+  background-color: inherit;
+  padding: 10px 25px;
+  font-size: 15px;
+  cursor: pointer;
+  display: inline-block;
+
+
+}
+
+.txtbtn:hover {background: #eee;}
+
+.success {color: green;}
+.info {color: dodgerblue;}
+.warning {color: orange;}
+.danger {color: red;}
+.default {color: black;}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 25px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 25px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
 <div class="main">
 	<div class="main-inner">
@@ -39,13 +122,15 @@
 								<div class="control-group">
 									<br>
 
-								
+
 									<div class ="controls" align ="right">
 
-										<button class ="btn btn-danger disableBtns" id="cancelUserBtn">Cancel</button>
-										<a href="#myModal" data-toggle="modal"><button class ="btn btn-success disableBtns" id="saveUserBtn" onclick="updateModalContent()">Save</button></a>
+
 										<!-- <a href="#myModal" type="button" role="button" class="btn btn-success disableBtns" data-toggle="modal">Save</a> -->
-										<button class ="btn btn-primary" id="disableUserBtn" onclick="showButtons()">Disable Users</button>
+										<!--<button class="txtbtn info"  id="disableUserBtn" onclick="showButtons()">Disable Users</button>-->
+
+
+
 
      <!-- Modal -->
 			                            <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -65,7 +150,7 @@
 			                              				</tr>
 			                              			</thead>
 			                              			<tbody id="modalBody">
-			                              				
+
 			                              			</tbody>
 			                              		</table>
 
@@ -105,15 +190,15 @@
 
 												<td style="text-align:center;">
 													{% if user.accountStatus == "Active" %}
-													
+
 														<input class="checkedUsers" onclick="addToList('{{user.id}}')" checked type="checkbox">
 													{% endif %}
 													{% if user.accountStatus == "Inactive" %}
-													
+
 														<input class="checkedUsers" onclick="addToList('{{user.id}}')" type="checkbox">
 													{% endif %}
 
-<!-- 
+<!--
 
 													<div class="modal fade" id="myModal" role="dialog">
 											 			<div class="modal-dialog">
@@ -143,9 +228,16 @@
 										 {% endfor %}
 										</tbody>
 									</table>
-								</div> 
+								</div>
 							</div>
-							<br></br>
+
+						</div>
+						<br>
+						<div class ="container" align ="center">
+							<button class ="btn btn-default disableBtns" id="cancelUserBtn">Cancel</button>
+							<a href="#myModal" data-toggle="modal"><button class ="btn btn-primary disableBtns" id="saveUserBtn" onclick="updateModalContent()">Save</button></a>
+							<button class ="btn btn-primary" id="disableUserBtn" onclick="showButtons()">Disable Users</button>
+
 						</div>
 					</div>
 						<div class="tab-pane" id="adduser">
@@ -247,7 +339,7 @@
 															</div>
 															<div id="collapseOne" class="accordion-body collapse" align ="center">
 																<div class="accordion-inner">
-																	<img id="imageTag" src="{% static 'img/scanid.png'%}" class ="animated bounce"/ >
+																	<img id="imageTag" src="{% static 'img/tapid.png'%}" class ="animated bounce"/ >
 
 
 																</div>
@@ -260,12 +352,14 @@
 											</fieldset>
 											</div>
 											</div>
+
+											<form>
+											</div>
+											<br>
 											<div align = "center">
 												<button id="addButton" type="button" class="btn btn-primary">Add</button>
 												<a href= "{% url 'unodosmattress:manageusers' %}"><button type="button" class="btn">Cancel</button></a>
 											</div> <!-- /form-actions -->
-											<form>
-											</div>
 											</div>
 											<br></br>
 
@@ -356,9 +450,10 @@
 			},
 			dataType: 'json',
 			success: function(data){
+				
 
 				$("#confirmModal").modal('show');
-				
+		
 			}
 		});
 
@@ -383,7 +478,7 @@
 
 			var firstname =$("#"+checked[i])[0].children[0].innerHTML;
 			var lastname =$("#"+checked[i])[0].children[1].innerHTML;
-			
+
 			var usertype =$("#"+checked[i])[0].children[3].innerHTML;
 			var isChecked = $("#"+checked[i])[0].children[4].children[0].checked;
 			if(isChecked){
@@ -400,7 +495,7 @@
 	}
 
 	var table = $('#example').DataTable();
-	
+
 	$(function()
 	{
 	  $('#chkCodeudor').click(function()
@@ -421,7 +516,7 @@
 
 function showButtons(){
 	$(".disableBtns").show();
-	$("#disableUserBtn").hide();	
+	$("#disableUserBtn").hide();
 
 		table.columns( [4] ).visible( true );
 
@@ -493,7 +588,7 @@ $("#acc").click(function(){
 
 						document.getElementById("myAudio").play();
 						isScanned = true;
-						document.getElementById("imageTag").src = "{% static 'img/icon.png' %}";
+						document.getElementById("imageTag").src = "{% static 'img/successid.png' %}";
 					}
 					console.log("SCANNED"); //INSERT PIC SAANA
 
