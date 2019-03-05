@@ -383,7 +383,7 @@ input:checked + .slider:before {
 
 
 
-	<div class="modal fade" id="confirmModal" role="dialog">
+	<div class="modal fade" id="confirmModalReload" role="dialog">
 			<div class="modal-dialog">
  			<div class="modal-content">
 	 			<div class="modal-header">
@@ -391,7 +391,7 @@ input:checked + .slider:before {
 				 <h4 class="modal-title">Success!</h4>
 			 </div>
 			 <div class="modal-body">
-			 		<h2>SUCCESS!</h2>
+			 		<h2 id="bodyContentReload">SUCCESS!</h2>
 			 </div>
 			 <div class="modal-footer">
 
@@ -400,6 +400,28 @@ input:checked + .slider:before {
 		 </div>
 	 		</div>
 		</div>
+
+
+<div class="modal fade" id="confirmModal" role="dialog">
+			<div class="modal-dialog">
+ 			<div class="modal-content">
+	 			<div class="modal-header">
+				 <button type="button" class="close" >&times;</button>
+				 <h4 class="modal-title">Success!</h4>
+			 </div>
+			 <div class="modal-body">
+			 		<h2 id="bodyContent">Please select the user type!</h2>
+			 </div>
+			 <div class="modal-footer">
+
+				 <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
+			 </div>
+		 </div>
+	 		</div>
+		</div>
+
+
+
 
 
 
@@ -413,6 +435,127 @@ input:checked + .slider:before {
 	<source src="{% static 'sounds/tap.mp3' %}" type="audio/mpeg">
 </audio>
 <script>
+
+$("#addButton").click(function(){
+
+		userType = 	$( "#userType" ).val();
+		firstName = document.getElementById("firstname").value;
+		middleName = document.getElementById("middlename").value;
+		lastName = document.getElementById("lastname").value;
+		contactNum = document.getElementById("contactnum").value;
+		username = document.getElementById("username").value;
+		password = document.getElementById("password").value;
+		password2 = document.getElementById("cpassword").value;
+
+		var isOkay = true;
+		if(userType == ""){
+			// alert("Please select the user type");
+			$("#bodyContent").text("Please select the user type");
+			$("#confirmModal").modal("show");
+			var isOkay = false;
+		}
+		if(firstName == ""){
+			// alert("Please enter the first name");
+
+			$("#bodyContent").text("Please enter the firstname");
+			$("#confirmModal").modal("show");
+			var isOkay = false;
+		}
+		else if(middleName == ""){
+			// alert("Please enter the middle name");
+
+			$("#bodyContent").text("Please enter the middle name");
+			$("#confirmModal").modal("show");
+			var isOkay = false;
+		}
+		else if(lastName == ""){
+			// alert("Please enter the last name");
+
+			$("#bodyContent").text("Please enter the last name");
+			$("#confirmModal").modal("show");
+
+			var isOkay = false;
+		}
+		else if(contactNum == ""){
+			// alert("Please enter the contact number");
+
+			$("#bodyContent").text("Please enter the contact number");
+			$("#confirmModal").modal("show");
+			var isOkay = false;
+		}
+		else if(username == ""){
+			// alert("Please enter the username");
+
+			$("#bodyContent").text("Please enter the user type");
+			$("#confirmModal").modal("show");
+
+			var isOkay = false;
+		}
+		else if(password == ""){
+			// alert("Please enter the password");
+
+			$("#bodyContent").text("Please enter the password");
+			$("#confirmModal").modal("show");
+
+
+			var isOkay = false;
+		}
+		else if(password2 == ""){
+			// alert("Please confirm the password");
+
+			$("#bodyContent").text("Please confirm the password");
+			$("#confirmModal").modal("show");
+
+			var isOkay = false;
+		}
+		else if(password != password2){
+			// alert("The passwords do not match.");
+
+			$("#bodyContent").text("Passwords do not match");
+			$("#confirmModal").modal("show");
+			var isOkay = false;
+		}
+
+		if(isOkay){
+			$.ajax({
+				url: '/ajax/checkUser/',
+				data: {
+					'userType':userType,
+					'firstName':firstName,
+					'middleName':middleName,
+					'lastName':lastName,
+					'contactNum':contactNum,
+					'username':username,
+					'password':password,
+					'password2': password2
+				},
+				dataType: 'json',
+				success: function(data){
+					if (data.is_existing) {
+							document.getElementById("error").innerHTML = "Username is already Existing"
+							document.getElementById("password").value = "";
+							document.getElementById("cpassword").value = "";
+					}
+					else if (data.is_match == false){
+							document.getElementById("error2").innerHTML = "Passwords did not match"
+							document.getElementById("password").value = "";
+							document.getElementById("cpassword").value = "";
+					}
+					else{
+						 $(".error").remove();
+						 // alert("New user is successfully added!");
+						 $("#bodyContentReload").text("New user is successfully added");
+						$("#confirmModalReload").modal("show");
+						 // location.reload();
+					}
+				}
+			});
+		}
+
+
+});
+
+
 
 	var checked = new Array();
 	function addToList(id){
@@ -452,8 +595,9 @@ input:checked + .slider:before {
 			success: function(data){
 				
 
-				$("#confirmModal").modal('show');
-		
+				 $("#bodyContentReload").text("The account status is successfully updated!");
+				$("#confirmModalReload").modal("show");
+
 			}
 		});
 
@@ -598,91 +742,7 @@ $("#acc").click(function(){
 		});
 	},2000);
 } );
-$("#addButton").click(function(){
 
-		userType = 	$( "#userType" ).val();
-		firstName = document.getElementById("firstname").value;
-		middleName = document.getElementById("middlename").value;
-		lastName = document.getElementById("lastname").value;
-		contactNum = document.getElementById("contactnum").value;
-		username = document.getElementById("username").value;
-		password = document.getElementById("password").value;
-		password2 = document.getElementById("cpassword").value;
-
-		var isOkay = true;
-		if(userType == ""){
-			alert("Please select the user type");
-			var isOkay = false;
-		}
-		if(firstName == ""){
-			alert("Please enter the first name");
-			var isOkay = false;
-		}
-		else if(middleName == ""){
-			alert("Please enter the middle name");
-			var isOkay = false;
-		}
-		else if(lastName == ""){
-			alert("Please enter the last name");
-			var isOkay = false;
-		}
-		else if(contactNum == ""){
-			alert("Please enter the contact number");
-			var isOkay = false;
-		}
-		else if(username == ""){
-			alert("Please enter the username");
-			var isOkay = false;
-		}
-		else if(password == ""){
-			alert("Please enter the password");
-			var isOkay = false;
-		}
-		else if(password2 == ""){
-			alert("Please confirm the password");
-			var isOkay = false;
-		}
-		else if(password != password2){
-			alert("The passwords do not match.");
-			var isOkay = false;
-		}
-
-		if(isOkay){
-			$.ajax({
-				url: '/ajax/checkUser/',
-				data: {
-					'userType':userType,
-					'firstName':firstName,
-					'middleName':middleName,
-					'lastName':lastName,
-					'contactNum':contactNum,
-					'username':username,
-					'password':password,
-					'password2': password2
-				},
-				dataType: 'json',
-				success: function(data){
-					if (data.is_existing) {
-							document.getElementById("error").innerHTML = "Username is already Existing"
-							document.getElementById("password").value = "";
-							document.getElementById("cpassword").value = "";
-					}
-					else if (data.is_match == false){
-							document.getElementById("error2").innerHTML = "Passwords did not match"
-							document.getElementById("password").value = "";
-							document.getElementById("cpassword").value = "";
-					}
-					else{
-						 $(".error").remove();
-						 alert("New user is successfully added!");
-						 location.reload();
-					}
-				}
-			});
-		}
-
-
-});
 </script>
 
 

@@ -325,10 +325,7 @@
 
 
 							 <a class="btn" href="{% url 'unodosmattress:managepatients' %}"><i class="icon-arrow-left"></i> BACK</a>
-						 		{% if patient.status != "TRANSFERRED TO WARD" or patient.status == "TRANSFERRED TO ROOM" %}
-
-							 		<a class="btn btn-primary" id="saveButton"> SAVE</a>
-								{% endif %}
+						 		
 
 
 
@@ -339,10 +336,10 @@
       <br>
       <div class ="container" align ="center">
       <a class="btn" href="{% url 'unodosmattress:managepatients' %}"> Back</a>
-       {% if patient.status != "FINISHED" %}
+       {% if patient.status != "TRANSFERRED TO WARD" or patient.status == "TRANSFERRED TO ROOM" %}
 
-         <a class="btn btn-primary" id="saveButton"> Save</a>
-       {% endif %}
+							 		<a class="btn btn-primary" id="saveButton"> SAVE</a>
+								{% endif %}
 
       <br></br>
     </div>
@@ -352,6 +349,26 @@
 </div>
 
  <!-- /main -->
+
+
+<!-- Patient info is successfully updated -->
+<div class="modal fade" id="confirmModalPatientUpdated" role="dialog">
+			<div class="modal-dialog">
+ 			<div class="modal-content">
+	 			<div class="modal-header">
+				 <button type="button" class="close" >&times;</button>
+				 <h4 class="modal-title">Success!</h4>
+			 </div>
+			 <div class="modal-body">
+			 		<h2>Patient info is successfully updated!</h2>
+			 </div>
+			 <div class="modal-footer">
+
+				 <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" onclick="window.location = '/dashboard/managepatients/' ">Confirm</button>
+			 </div>
+		 </div>
+	 		</div>
+		</div>
 
 
 
@@ -420,7 +437,7 @@ $(document).ready(function(){
 			},
 			dataType: 'json',
 			success: function(data){
-				alert("Patient info is successfully updated!");
+				$("#confirmModalPatientUpdated").modal("show");
 			}
 		});
 	});
