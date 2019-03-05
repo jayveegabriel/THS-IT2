@@ -522,7 +522,7 @@ def ajaxUpdateStatusPatient(request):
 	maxTemp = request.GET.get('maxTemp')
 	minHeartRate = request.GET.get('minHeartRate')
 	maxHeartRate = request.GET.get('maxHeartRate')
-	satus = request.GET.get('status')
+	status = request.GET.get('status')
 	p1 = Patient.objects.get(pk=id)
 	p1.minTemp = minTemp
 	p1.maxTemp = maxTemp
