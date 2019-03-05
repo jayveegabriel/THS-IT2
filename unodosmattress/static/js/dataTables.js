@@ -10191,7 +10191,7 @@
 		 *      } );
 		 *    } );
 		 */
-		"aLengthMenu": [ 10, 25, 50, 100 ],
+		"aLengthMenu": [ 5 , 10, 30, 50 ],
 
 
 		/**
@@ -11617,7 +11617,7 @@
 			 *      $('#example').dataTable( {
 			 *        "language": {
 			 *          "lengthMenu": 'Display <select>'+
-			 *            '<option value="10">10</option>'+
+			 *            '<option value="5"></option>'+
 			 *            '<option value="20">20</option>'+
 			 *            '<option value="30">30</option>'+
 			 *            '<option value="40">40</option>'+

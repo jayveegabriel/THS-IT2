@@ -46,6 +46,19 @@
    border-radius:50%;
    box-shadow:0 0 1px #333;
 }
+.logoutbtn {
+  border: none;
+    background-color: inherit;
+    font-size: 12px;
+    padding-bottom: 3px;
+    cursor: pointer;
+    display: inline-block;
+}
+.success {color: green;}
+.info {color: dodgerblue;}
+.warning {color: orange;}
+.danger {color: red;}
+.default {color: white;}
 </style>
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
@@ -53,8 +66,9 @@
       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></span><span class="icon-bar"></span></span> </a><a class="brand" href="{% url 'unodosmattress:dashboard' %}"></a>
       <div class="nav-collapse">
         <ul class="nav pull-right" >
+          <button onclick="location.href='{% url 'unodosmattress:login' %}';" type ="submit"  class="logoutbtn default dropdown-toggle "><i class="icon-signout"></i> Logout</button>
 
-          <a class ="dropdown-toggle" data-toggle="dropdown" href="{% url 'unodosmattress:login' %}"><i class="icon-signout"></i> Logout</a>
+        <!--  <a class ="dropdown-toggle" data-toggle="dropdown" href="{% url 'unodosmattress:login' %}"><i class="icon-signout"></i> Logout</a>-->
 
         </ul>
 
@@ -105,7 +119,7 @@
 </body>
 <script>
   $(document).ready(function(){
-    
+
   });
 </script>
 </html>

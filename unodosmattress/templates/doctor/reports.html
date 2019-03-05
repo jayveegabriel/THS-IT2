@@ -132,7 +132,7 @@
 <div class="main" align ="center">
 	<h3 class ="animated slideInUp" align ="center"><b>Reports for {{patient.lastName}}, {{patient.firstName}} {{patient.middleName}}.</b></h3>
 
-	<a class ="animated slideInUp" href="{% url 'unodosmattress:patients' %}"><i class="icon-arrow-left"></i> Back</a>
+	<a class ="animated slideInUp" href="{% url 'unodosmattress:patients' %}"><b> Back</b></a>
 
 	<div class="main-inner">
 		<br>
@@ -197,7 +197,7 @@
 
 
 				<div class ="row">
- 	      	<div class="span7">
+ 	      	<div class="span12">
  						<div class="widget" id="heartRateWidget">
  					     <div class="widget-content" >
  									<div class ="timeline-wrapper" id="hr" style="min-height: 400px; min-width: 380px">
@@ -206,79 +206,18 @@
  						</div>
 					</div>
 
-					<div class="span5">
- 						<div class="widget" id="heartRateWidget2">
- 					     <div class="widget-content"  style = "overflow-y:auto;height:400px;">
-								 <div class ="" align ="center">
-									 <h4> Heart Rate Records </h4>
-									</div>
-									<table class="table table-bordered" id="fex">
-										<thead >
-											<tr>
 
-												<th style ="text-align:center;">No</th>
-												<th style ="text-align:center;">heart rate</th>
-												<th style ="text-align:center;">date </th>
-												<th style ="text-align:center;">time </th>
-											</tr>
-										</thead>
-										<tbody id = "heartRateBody">
-											{% for h in heartRateList %}
-											<tr>
-
-												<td style ="text-align:center;">{{h.idHeartRate}}</td>
-												<td style ="text-align:center;">{{h.heartRate}}</td>
-												<td style ="text-align:center;">{{h.date}}</td>
-												<td style ="text-align:center;">{{h.time}}</td>
-											</tr>
-											{% endfor %}
-
-										</tbody>
-									</table>
- 						   </div>
- 						</div>
-					</div>
 				</div>
 
 				<div class ="row">
-					<div class ="span7">
+					<div class ="span12">
 						<div class="widget" id="temperatureWidget">
 							 <div class="widget-content" >
 								<div id="temp" style="height: 400px; min-width: 380px"></div>
 									</div>
 					  </div>
 					</div>
-					<div class ="span5">
-						<div class="widget" id="temperatureWidget2">
-							 <div class="widget-content" style = "overflow-y:auto;height:400px;" >
-								 <div class ="" align ="center">
-									<h4> Temperature Records </h4>
-								 </div>
-								<table class="table table-bordered" id="fexx">
-									<thead >
-										<tr>
-											<th style ="text-align:center;">No</th>
-											<th style ="text-align:center;">temperature</th>
-											<th style ="text-align:center;">date </th>
-											<th style ="text-align:center;">time </th>
-										</tr>
-									</thead>
-									<tbody id = "temperatureBody">
-										{% for t in temperatureList %}
-										<tr>
 
-											<td style ="text-align:center;">{{t.idTemperature}}</td>
-											<td style ="text-align:center;">{{t.temperature}}</td>
-											<td style ="text-align:center;">{{t.date}}</td>
-											<td style ="text-align:center;">{{t.time}}</td>
-										</tr>
-										{% endfor %}
-
-									</tbody>
-								</table>
-									</div>
-					  </div>
-					</div>
  				</div>
 
 
@@ -366,7 +305,7 @@
 																	<span>None</span>
 																</a>
 															</div>
-														</div> 
+														</div>
 
 													</div>
 
@@ -565,11 +504,12 @@ Highcharts.chart('container', {
     valueSuffix: ' m/s'
   },
   plotOptions: {
+
     spline: {
-      lineWidth: 4,
+      lineWidth: 1,
       states: {
         hover: {
-          lineWidth: 5
+          lineWidth: 1
         }
       },
       marker: {

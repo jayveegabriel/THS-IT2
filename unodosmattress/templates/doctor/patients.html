@@ -58,10 +58,10 @@
 	<div class="main-inner">
 	    <div class="container" align = "center">
 
-        <h2 class ="animated slideInUp"><b>List of Patients</b></h2><br>
+        <h3 class ="animated slideInUp"><b>List of Patients</b></h3><br>
 
-						<div class="center animated fadeIn" align ="center">
-							<h3><b>Choose a Patient</b></h3>
+						<div class="center animated fadeIn" >
+							<h4 align ="center"><b>Choose a Patient</b></h4>
 
               <table class="table table-bordered" id="fexample">
                 <thead >
@@ -120,7 +120,7 @@
 
 <script src="{% static 'js/bootstrap.js'%}"></script>
 <script src="{% static 'js/base.js'%}"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/dataTable.min.js'%}"></script>
 <script>
 $(document).ready(function() {
     $('#fexample').DataTable();
