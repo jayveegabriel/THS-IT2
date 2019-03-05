@@ -29,10 +29,10 @@ newNotificationList = []
 
 
 
-SMS=sim800.SIM800('COM9', 9600)
-while (SMS.gsmReset()!=1):
-   time.sleep(0.5)
-print ('SIM800 reset')
+# SMS=sim800.SIM800('COM9', 9600)
+# while (SMS.gsmReset()!=1):
+#    time.sleep(0.5)
+# print ('SIM800 reset')
 #time.sleep(0.5)
 
 
@@ -45,8 +45,8 @@ print ('SIM800 reset')
 # print("All message deleted!")
 # time.sleep(0.5)
 
-
-SMS.smsSend("+639176492934", "Patient ")
+# 
+# SMS.smsSend("+639176492934", "Patient ")
 
 
 
@@ -83,11 +83,8 @@ def readRFID():
 
 
 t = threading.Thread(target=readRFID)
-<<<<<<< HEAD
-# t.start()
-=======
-#t.start()
->>>>>>> fe59ce5ac1a592e4274fc3f89b1a62160d62762b
+
+t.start()
 
 
 def ajaxGetCurrentRFIDs(request):
@@ -528,7 +525,7 @@ def ajaxUpdateStatusPatient(request):
 	maxTemp = request.GET.get('maxTemp')
 	minHeartRate = request.GET.get('minHeartRate')
 	maxHeartRate = request.GET.get('maxHeartRate')
-	satus = request.GET.get('status')
+	status = request.GET.get('status')
 	p1 = Patient.objects.get(pk=id)
 	p1.minTemp = minTemp
 	p1.maxTemp = maxTemp
@@ -1327,6 +1324,6 @@ def ajaxLoadData(request):
 		"heartrateList": p.getQOneHeartRate,
 		"temperatureList": p.getQOneTemperature,
 	}
-	
+
 	return JsonResponse(context, safe=False)
 

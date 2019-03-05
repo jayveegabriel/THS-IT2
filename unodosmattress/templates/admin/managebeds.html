@@ -366,7 +366,7 @@ overflow-y: auto;
                       <div class ="container" hidden="" id ="noPendingBedsDiv">
                         <h3>NO PENDING BEDS</h3>
                         <h4>Please press the button to add a bed!</h4>
-                        <hr>
+                        
                         </div>
 
 
@@ -379,80 +379,11 @@ overflow-y: auto;
                       {% endif %} -->
                       {% if pendingBedsSize > 0 %}
 										   <div class ="row" id="bedRow">
+                        <hr>
                             {% for bed in beds_list %}
 
+
 <!--
-												<div class = "span3" align ="center" id = "spanBed{{bed.idBeds}}">
- 												 <div class="widget widget-table action-table" >
-
- 												
-
-
- 													 <div class="widget-content" align = "center" id="bed">
-
- 														 <img src="{% static 'img/bed.png'%}"/ >
- 														 <table class="table " align ="center">
-                               <thead>
-                                 <tr>
-
-  						                     <th></th>
-                                   </tr>
-                                 </thead>
-                                 <tbody>
-
- 															 <tfoot align ="center" >
- 																 <tr>
- 																	 <th>  <th  style="text-align:center"> <button  href="#addModal{{bed.idBeds}}"  data-toggle="modal"  class="txtbtn default"><b> ADD</b></button>
-    
-                                                    <div id="addModal{{bed.idBeds}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                      <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                        <h3 id="myModalLabel">Add Bed</h3>
-                                                      </div>
-                                                      <div class="modal-body">
-                                                        <form id="add-bed" class="form-horizontal" method = "POST" action=".">
-                                 												 {% csrf_token %}
-                                                         <fieldset>
-                                                           <div class="control-group">
-                                                             <label class="control-label" for="bednumber">Bed #</label>
-                                                             <div class="controls">
-                                                               <input type="number" class="span1" value="{{bed.bedNumber}}" name = "bednumber" id="bed{{ bed.pk }}" value="">
-                                                             </div> 
-
-
-
-
-                                                        </div>
-                                                        </fieldset>
-
-
-
-
-
-
-                                                      </div>
-                                                      <div class="modal-footer">
-                                                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                                                        <button type="button" class="btn btn-primary" onclick="addBed({{ bed.pk }});">Save</button>
-                                                      </div>
-                                                      </form>
-                                                    </div>
-
-
-
-
-
-                                   </th>
- 																 </tr>
- 															 </tfoot>
- 														 </table>
- 													 </div>
- 												 </div>
- 											 </div>
-                       </div>
--->
-                      {% endfor %}
-
                         <div class = "span2" align ="center" id = "spanBed{{bed.idBeds}}">
                          <div class="widget widget-table action-table" >
 

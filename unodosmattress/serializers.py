@@ -94,14 +94,23 @@ class PositionSerializer(serializers.HyperlinkedModelSerializer):
 			schema = client.get("http://192.168.100.214:8000/docs")
 			action = ["patient","list"]
 			result = client.action(schema, action)
-			patient = result[0]['idPatient']
-			todo = Position(
-	        	position = (validated_data.get('position', '')).upper(),
+			if result:
+				patient = result[0]['idPatient']
+				todo = Position(
+		        	position = (validated_data.get('position', '')).upper(),
+		        	date=date,
+		        	time=time,
+					idPatient_id = patient,
+					)
+				todo.save()
+			else:
+				todo = Position(
+	        	position= (validated_data.get('position', '')).upper(),
 	        	date=date,
 	        	time=time,
-				idPatient_id = patient,
+				idPatient_id = 10,
 				)
-			todo.save()
+				todo.save()
 		
 		return todo
 
@@ -143,13 +152,22 @@ class HeartRateSerializer(serializers.HyperlinkedModelSerializer):
 			action = ["patient","list"]
 			result = client.action(schema, action)
 			patient = result[0]['idPatient']
-			hr = HeartRate(
-		    	heartRate=validated_data.get('heartRate', ''),
-		    	date=validated_data.get('date', ''),
-		    	time=validated_data.get('time', ''),
-				idPatient_id = patient,
-			)
-			hr.save()
+			if patient:
+				hr = HeartRate(
+			    	heartRate=validated_data.get('heartRate', ''),
+			    	date=validated_data.get('date', ''),
+			    	time=validated_data.get('time', ''),
+					idPatient_id = patient,
+				)
+				hr.save()
+			else:
+				hr = HeartRate(
+	        	heartRate=validated_data.get('heartRate', ''),
+	        	date=date,
+	        	time=time,
+				idPatient_id = 10,
+				)
+				hr.save()
 		return hr
 
 class TemperatureEveryMinSerializer(serializers.HyperlinkedModelSerializer):
