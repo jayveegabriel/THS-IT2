@@ -29,30 +29,26 @@ newNotificationList = []
 
 
 
-##SMS=sim800.SIM800('COM9', 9600)
-#while (SMS.gsmReset()!=1):
-#   time.sleep(0.5)
-#print ('SIM800 reset')
-#time.sleep(0.5)
 
 
 
-
-
-#while (SMS.smsInit() != 1):
-#    time.sleep(0.5)
-#print ('SIM800 SMS initialized')
-#time.sleep(2)
-
-#SMS.smsDelete_All()
-#print("All message deleted!")
-#time.sleep(0.5)
+# SMS=sim800.SIM800('COM13', 9600)
+# while (SMS.gsmReset()!=1):
+#     time.sleep(0.5)
+# print ('SIM800 reset')
+# time.sleep(0.5)
 
 
 
+# while (SMS.smsInit() != 1):
+#     time.sleep(0.5)
+# print ('SIM800 SMS initialized')
+# time.sleep(2)
 
- 
-#SMS.smsSend("+639176492934", "Patient ")
+# SMS.smsDelete_All()
+# print("All message deleted!")
+# time.sleep(0.5)
+# SMS.smsSend("+639176492934", "Patient ")
 
 
 def readRFID():
@@ -89,11 +85,11 @@ def readRFID():
 
 t = threading.Thread(target=readRFID)
 
-#t.start()
+# t.start()
 
 
 def ajaxGetCurrentRFIDs(request):
-	temp = RFID.objects.all()
+	temp = RFID.objects.all()	
 
 	latest = temp.latest("idRFID")
 
@@ -1173,7 +1169,7 @@ def ajaxGetUpdatedDashboard(request):
 		patient = beds[x].get_current_patient.idPatient
 		tempCount = patient.countT
 		HRCount = patient.countHR
-		if patient.get_patient_conditionT == "warning":
+		if patient.get_patient_conditionT == "warning" or patient.get_patient_conditionT  == "critical":
 			tempCount += 1
 			patient.countT = tempCount
 			print ("TempCount: ", tempCount)
@@ -1184,7 +1180,7 @@ def ajaxGetUpdatedDashboard(request):
 			patient.countT = tempCount
 			patient.save()
 
-		if patient.get_patient_conditionHR == "warning":
+		if patient.get_patient_conditionHR == "warning" or patient.get_patient_conditionHR == "critical":
 			HRCount += 1
 			patient.countHR = HRCount
 			print ("HRCount", HRCount)
@@ -1209,7 +1205,7 @@ def ajaxGetUpdatedDashboard(request):
 		patientsArray.append({"idPatient":patient.idPatient, "firstName":patient.firstName,"lastName":patient.lastName,"bedNumber":patient.bedNumber.bedNumber
 			,"heartRate":patient.get_heartrate, "temperature":patient.get_temperature, "position":patient.get_position,
 			"mint":patient.minTemp, "maxt":patient.maxTemp, "minhr":patient.minHeartRate,"maxhr":patient.maxHeartRate,"condition":patient.get_patient_condition,
-			"toCompareHR":patient.toCompareHR,"toCompareTEMP":patient.toCompareTEMP})
+			"toCompareHR":patient.toCompareHR,"toCompareTEMP":patient.toCompareTEMP,"is_warning":patient.is_warning})
 
 	return JsonResponse({"patients":patientsArray}, safe=False)
 
@@ -1294,6 +1290,25 @@ def ajaxGetQOne(request):
 	idPatient = request.GET.get("idPatient")
 	p = Patient.objects.get(pk=idPatient)
 	context = {"heartRateList":p.getQOneHeartRate, "temperatureList":p.getQOneTemperature}
+	return JsonResponse(context, safe=False)
+
+
+def ajaxGetLatestHeartRate(request):
+
+	idPatient = request.GET.get("idPatient")
+
+	context = {
+		"heartrate":Patient.objects.get(pk=idPatient).get_heartrate,
+	}
+	return JsonResponse(context, safe=False)
+
+def ajaxGetLatestTemperature(request):
+
+	idPatient = request.GET.get("idPatient")
+
+	context = {
+		"heartrate":Patient.objects.get(pk=idPatient).get_temperature,
+	}
 	return JsonResponse(context, safe=False)
 
 

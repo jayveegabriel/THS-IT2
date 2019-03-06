@@ -1,4 +1,4 @@
-<!-- 
+
 {% block content %} -->
 
 {% load static %}
@@ -232,9 +232,6 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
-.topnav-right {
-  float: right;
-}
 </style>
 
 <body onload = "startTime()">
@@ -282,14 +279,7 @@ input:checked + .slider:before {
 
                   </ul>
                 </li>
-
-
-
-
-
-
       </ul>
-
     </div>
     <!-- /container -->
   </div>
@@ -298,7 +288,7 @@ input:checked + .slider:before {
 
 <div class="main">
 
-
+    <h1 id="time" align ="center"></h1>
 
   <div id="mySidenav" class="sidenav">
 
@@ -329,25 +319,9 @@ input:checked + .slider:before {
 
   <div class="main-inner">
     <div class="container">
-      <select class ="span2 roomDropdown">
-        <option disabled>Select Room No.</option>
-        {% for r in rooms %}
-          <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
-        {% endfor %}
 
-      </select>
-
-
-
-
-      <div class ="form">
-      <div class="checkbox-container">
-         <label class ="switch"><input type="checkbox" id="checkboxAutoAdjust" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"> Prioritization Feature</label>
-        </div>
-      </div>
       <div class ="tabbable">
         <br>
-
                   <select class ="span2 roomDropdown">
                     <option disabled>Select Room No.</option>
                     {% for r in rooms %}
@@ -357,9 +331,11 @@ input:checked + .slider:before {
                   </select>
                   <div class ="form">
                   <div class="checkbox-container">
-                     <label class ="switch"><input type="checkbox" id="checkboxAutoAdjust" onchange="sortCards()" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"> Prioritization Feature</label>
+                     <label class ="switch"><input type="checkbox" id="checkboxAutoAdjust" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"> Prioritization Feature</label>
                     </div>
                   </div>
+
+
 
 
         <ul class ="nav nav-tabs">
@@ -373,33 +349,73 @@ input:checked + .slider:before {
          <div class="tab-pane active" id="tileview">
                  <div class="row" id="tileTable">
 
-
         {% for bed in default_room.get_occupied_beds_dashboard %}
           {% with bed.get_current_patient.idPatient as patient %}
-               <div class = "span3 dashboardCard" id="divClass{{patient.pk}}">
+               <div class = "span3">
                  <div class="widget " id = "{{patient.idPatient_id }}">
                  <div class="widget-header" > <i class="icon-user"></i>
                    <h3>Bed #{{ bed.bedNumber }}</h3>
-
+                   <!-- <span class="badge badge-danger"></span> -->
                 </div>
+                <!-- /widget-header -->
                               <div class="widget-content" align = "center" id ="bed">
                                    <p><b>{{bed.get_current_patient.idPatient.lastName}}, {{bed.get_current_patient.idPatient.firstName}}</b></p>
-                                 
-                                    <div id="heartRatechart{{patient.idPatient}}" class="chartHeartRate" style="height:100px;"></div>
-                                    <div id="temperatureChart{{patient.idPatient}}" class="chartTemperature" style="height:100px;"></div>
+                                  <!--  {% if patient.get_position == "RIGHT SIDE" %}
+                                        <img src="{% static 'img/rightsidepos.png'%}"/ >
+                                    {% endif %}
+                                    {% if patient.get_position == "RIGHT FETAL" %}
+                                        <img src="{% static 'img/rightfetalpos.png'%}"/ >
+                                    {% endif %}
+                                    {% if patient.get_position == "LEFT SIDE" %}
+                                        <img src="{% static 'img/leftsidepos.png'%}"/ >
+                                    {% endif %}
+                                    {% if patient.get_position == "LEFT FETAL" %}
+                                        <img src="{% static 'img/leftfetalpos.png'%}"/ >
+                                    {% endif %}
+                                    {% if patient.get_position == "BACK" %}
+                                        <img src="{% static 'img/backpos.png'%}"/ >
+                                    {% endif %}
+                                    {% if patient.get_position == "NONE" %}
+                                        <img src="{% static 'img/none.png'%}"/ >
+                                    {% endif %}-->
                                     <div class ="widget-table action-table">
                                                     <table class=" widget-table table" >
 
-                                                      <thead>
+                                                      <thead >
                                                         <tr>
-                                                          <th id="position{{patient.idPatient}}"  style="text-align:center; font-size:15px;">{{patient.get_position}}</th>
+                                                          <th  style="text-align:center; font-size:15px;">{{patient.get_position}}</th>
 
                                                         </tr>
                                                       </thead>
                                                       <tbody>
                                                       </tbody>
                                                     </table>
-                                               
+                                                    <table class="widget-table table" >
+
+                                                      <thead >
+                                                        <tr>
+                                                          <th width="50%" style="text-align:center;font-size:15px">{{ patient.get_heartrate }} BPM</th>
+                                                          <th width="50%"  style="text-align:center;font-size:15px">{{ patient.get_temperature }}˚C</th>
+
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                      </tbody>
+                                                  </table>
+                                                  <table class="widget-table table" >
+
+                                                    <thead >
+                                                      <tr>
+                                                        <th  width="25%"  style="text-align:center; font-size:10px;">{{ patient.minHeartRate }} BPM <br><span style="color:grey;"> MIN</span> </th>
+                                                        <th  width="25%" style="text-align:center; font-size:10px;">{{ patient.maxHeartRate }} BPM <br><span style="color:grey;"> MAX </span></th>
+                                                        <th  width="25%" style="text-align:center;  font-size:10px;">{{ patient.minTemp }}˚C <br><span style="color:grey;"> MIN </span></th>
+                                                        <th  width="25%" style="text-align:center;  font-size:10px;">{{ patient.maxTemp }}˚C <br><span style="color:grey;"> MAX  </span></th>
+                                                      </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
 
                                     </div>
                         </div>
@@ -420,23 +436,24 @@ input:checked + .slider:before {
     </div>
 
 
-<!-- 
 
 
 
+<!--  -->
             <div class = "span3">
               <div class="widget " id = "{{patient.idPatient_id }}">
               <div class="widget-header" > <i class="icon-user"></i>
                 <h3>Bed #{{ bed.bedNumber }}</h3>
-              
+                <!-- <span class="badge badge-danger"></span> -->
 
              </div>
-
+             <!-- /widget-header -->
              <div class="widget-content" align = "center" id ="bed">
 
                   <p><b>Domingo, Jayvee</b></p>
 
                   <div id="chart1" style="height:100px;"></div>
+                  <div id="chart2" style="height:100px;"></div>
                    <div class ="widget-table action-table">
                                    <table class=" widget-table table" >
 
@@ -450,22 +467,45 @@ input:checked + .slider:before {
 
                                      </tbody>
                                    </table>
-                                  
+                                   <table>
+                                     <thead>
+                                     <tr>
+                                      <!-- <th id = "container"></th>-->
+                                      </tr>
+                                      </thead>
+                                      <tbody>
+
+                                      </tbody>
+                                     </table>
 
 
 
 
 
 
-                               
+                                 <table class="widget-table table" >
+
+                                   <thead >
+                                     <tr>
+                                       <th  width="25%"  style="text-align:center; font-size:10px;">60 BPM <br><span style="color:grey;"> MIN</span> </th>
+                                       <th  width="25%" style="text-align:center; font-size:10px;">120 BPM <br><span style="color:grey;"> MAX </span></th>
+                                       <th  width="25%" style="text-align:center;  font-size:10px;">36˚C <br><span style="color:grey;"> MIN </span></th>
+                                       <th  width="25%" style="text-align:center;  font-size:10px;">42˚C <br><span style="color:grey;"> MAX  </span></th>
+                                     </tr>
+                                   </thead>
+
+                                   <tbody>
+                                   </tbody>
+                               </table>
+
                    </div>
        </div>
        </div>
-       </div> -->
+       </div>
 
 
 
-
+<!--  -->
        
 
 
@@ -557,214 +597,85 @@ input:checked + .slider:before {
 <script src="{% static 'js/base.js'%}"></script>
 <script>
 
+
 $(document).ready(function(){
-  var classChart = $(".chartHeartRate");
-  var classChartTemp = $(".chartTemperature");
-  for(var i = 0; i < classChart.length; i++){
-    makeHighchartHeartrate(classChart[i].id); 
-  }
-
-  for(var i = 0; i < classChartTemp.length; i++){
-    makeHighchartTemp(classChartTemp[i].id);
-  }
-
+  tryWEW(1);
+  tryWEW(2);
 });
-function makeHighchartHeartrate(pk){
-  var id = pk.substring(14);
-  var latest;
-Highcharts.chart( pk , {
-  chart: {
-    type: 'spline',
-    animation: Highcharts.svg, // don't animate in old IE
-    marginRight: 10,
-    events: {
-      load: function () {
 
-        // set up the updating of the chart each second
-        var series = this.series[0];
-        setInterval(function () {
-          
+function tryWEW(aw){
+  
 
-          $.ajax({
-            url: '/ajax/ajaxGetLatestHeartRate/',
-            data: {
+    Highcharts.chart(  "chart"+aw , {
+      chart: {
+        type: 'spline',
+        animation: Highcharts.svg, // don't animate in old IE
+        marginRight: 10,
+        events: {
+          load: function () {
 
-              "idPatient":id,
-            },
-            dataType: 'json',
-            success: function(data){
+            // set up the updating of the chart each second
+            var series = this.series[0];
+            setInterval(function () {
+              var x = (new Date()).getTime(), // current time
+                y = Math.random();
 
-              var y = data.heartrate;
-              if(latest != y){
-                var x = (new Date()).getTime(); // current time
-            // y = Math.random();
-                series.addPoint([x, y], true, true);
-                          }
-                // latest = y; 
-              }
-              
+              series.addPoint([x, y], true, true);
+            }, 1000);
+          }
+        }
+      },
 
-          });
+      time: {
+        useUTC: false
+      },
 
+      title: {
+        text: null
+      },
+      xAxis: {
+        type: 'datetime',
+        tickPixelInterval: 150
+      },
+      yAxis: {
+        title: {
+          text: null
+        },
+        plotLines: [{
+          value: 0,
+          width: 1,
+          color: '#808080'
+        }]
+      },
+      tooltip: {
+        headerFormat: '<b>{series.name}</b><br/>',
+        pointFormat: '{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}'
+      },
+      legend: {
+        enabled: false
+      },
+      exporting: {
+        enabled: false
+      },
+      series: [{
+        name: 'BPM',
+        data: (function () {
+          // generate an array of random data
+          var data = [],
+            time = (new Date()).getTime(),
+            i;
 
-
-          
-        }, 1000);
-      }
-    }
-  },
-
-  time: {
-    useUTC: false
-  },
-
-  title: {
-    text: null
-  },
-  xAxis: {
-    type: 'datetime',
-    tickPixelInterval: 150
-  },
-  yAxis: {
-    title: {
-      text: null
-    },
-    plotLines: [{
-      value: 0,
-      width: 1,
-      color: '#808080'
-    }]
-  },
-  tooltip: {
-    headerFormat: '<b>{series.name}</b><br/>',
-    pointFormat: '{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}'
-  },
-  legend: {
-    enabled: false
-  },
-  exporting: {
-    enabled: false
-  },
-  series: [{
-    name: 'BPM',
-    data: (function () {
-      // generate an array of random data
-      var data = [],
-        time = (new Date()).getTime(),
-        i;
-
-      for (i = -19; i <= 0; i += 1) {
-        data.push({
-          x: time + i * 1000,
-          y: Math.random()
-        });
-      }
-      return data;
-    }())
-  }]
-  });
+          for (i = -19; i <= 0; i += 1) {
+            data.push({
+              x: time + i * 1000,
+              y: Math.random()
+            });
+          }
+          return data;
+        }())
+      }]
+    });
 }
-
-
-function makeHighchartTemp(pk){
-  var id = pk.substring(16);
-  console.log(pk);
-  var latest;
-Highcharts.chart( pk , {
-  chart: {
-    type: 'spline',
-    animation: Highcharts.svg, // don't animate in old IE
-    marginRight: 10,
-    events: {
-      load: function () {
-
-        // set up the updating of the chart each second
-        var series = this.series[0];
-        setInterval(function () {
-          
-
-          $.ajax({
-            url: '/ajax/ajaxGetLatestTemperature/',
-            data: {
-
-              "idPatient":id,
-            },
-            dataType: 'json',
-            success: function(data){
-
-              var y = data.heartrate;
-              if(latest != y){
-                var x = (new Date()).getTime(); // current time
-            // y = Math.random();
-                series.addPoint([x, y], true, true);
-                          }
-                // latest = y; 
-              }
-              
-
-          });
-
-
-
-          
-        }, 1000);
-      }
-    }
-  },
-
-  time: {
-    useUTC: false
-  },
-
-  title: {
-    text: null
-  },
-  xAxis: {
-    type: 'datetime',
-    tickPixelInterval: 150
-  },
-  yAxis: {
-    title: {
-      text: null
-    },
-    plotLines: [{
-      value: 0,
-      width: 1,
-      color: '#808080'
-    }]
-  },
-  tooltip: {
-    headerFormat: '<b>{series.name}</b><br/>',
-    pointFormat: '{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}'
-  },
-  legend: {
-    enabled: false
-  },
-  exporting: {
-    enabled: false
-  },
-  series: [{
-    name: 'BPM',
-    data: (function () {
-      // generate an array of random data
-      var data = [],
-        time = (new Date()).getTime(),
-        i;
-
-      for (i = -19; i <= 0; i += 1) {
-        data.push({
-          x: time + i * 1000,
-          y: Math.random()
-        });
-      }
-      return data;
-    }())
-  }]
-  });
-}
-
-
-
   function startTime() {
     var today = new Date();
     var h = today.getHours();
@@ -809,28 +720,33 @@ Highcharts.chart( pk , {
     // preload();
     $(".roomDropdown").change(function(){
       var idRoom = this.value;
-      refreshByRoom(idRoom);
+      updateDashboard(idRoom);
+
 
 
     });
       
     window.setInterval(function(){
+      console.log("WEW")
       updateDashboard($(".roomDropdown").val());
+
     }, 1000);
   });
 
-  function listMaker(bedNumber,lastName,firstName,heartRate,temperature, position,condition,is_warning){
-        if(condition == "starting"){
+  function listMaker(bedNumber,lastName,firstName,heartRate,temperature, position,condition){
 
-           var wew = '<tr style="box-shadow:0px 0px 4px 2px grey">';
-        }
-        else if(is_warning){
-          var wew = '<tr style="box-shadow:0px 0px 4px 2px red">';
-        }
-        else if(!is_warning){
-           var wew = '<tr>';
-        }
-
+       if(condition == "critical"){
+        wew = '<tr style="box-shadow:0px 0px 4px 2px red">';
+       }
+       else if(condition == "warning"){
+        wew = '<tr style="box-shadow:0px 0px 4px 2px orange">';
+       }
+       else if(condition == "starting"){
+        wew = '<tr style="box-shadow:0px 0px 4px 2px grey">';
+       }
+       else{
+        wew = '<tr>';
+       }
        wew +='<td style="text-align:center;"><span class="badge badge-danger" style ="text-align:right;">3</span></td>'+
              '<td style="text-align:center;">' + bedNumber + '</td>'+
              '<td style="text-align:center;">' + lastName + ',' + firstName + '</td>' +
@@ -840,17 +756,20 @@ Highcharts.chart( pk , {
              '<td style="text-align:center;">Normal</td></tr>';
       return wew;
  }
-  function tileMaker(idPatient, bedNumber,firstName,lastName,position,heartRate,temperature,minHeartRate,maxHeartRate, minTemp,maxTemp,condition,is_warning){
-      var waw = '<div class = "span3 dashboardCard" id="divClass'+idPatient+'">';
+  function tileMaker(idPatient, bedNumber,firstName,lastName,position,heartRate,temperature,minHeartRate,maxHeartRate, minTemp,maxTemp,condition){
+      waw = '<div class = "span3">';
 
-      if(condition == "starting"){
+      if(condition == "critical"){
+        waw += '<div class="widget" style="box-shadow:0px 0px 10px 4px red" id = "'+ idPatient+'">';
+      }
+      else if(condition == "warning"){
+        waw += '<div class="widget" style="box-shadow:0px 0px 10px 4px orange" id = "'+ idPatient+'">';
+      }
+      else if(condition == "starting"){
 
-        waw += '<div class="widget" id = "'+ idPatient+'">';
+        waw += '<div class="widget" style="box-shadow:0px 0px 10px 4px grey" id = "'+ idPatient+'">';
       }
-      else if(is_warning){
-         waw += '<div class="widget" id = "'+ idPatient+'">';
-      }
-      else if(!is_warning){
+      else{
 
         waw += '<div class="widget" id = "'+ idPatient+'">';
       }
@@ -858,29 +777,42 @@ Highcharts.chart( pk , {
       waw += '</div><div class="widget-content" align = "center" id ="bed"><p>';
       waw += '<b>'+ lastName+', '+firstName+'</b></p>';
 
-      waw += '<div id="heartRatechart'+idPatient+'" class="chartHeartRate" style="height:100px;"></div>';
-      waw += '<div id="temperatureChart'+idPatient+'" class="chartTemperature" style="height:100px;"></div>';
+      if(position == "RIGHT SIDE"){
+        image = rightSidePos;
+      }
+      if(position == "RIGHT FETAL"){
+        image = rightFetalPos;
+      }
+      if(position == "LEFT SIDE"){
+        image = leftSidePos;
+      }
+      if(position == "LEFT FETAL"){
+        image = leftFetalPos ;
+      }
+      if(position == "BACK"){
+        image = backPos;
+      }
+      if(position == "NONE"){
+        image = nonePos;
+      }
+
+      waw += '<img src="'+image.src+'" />';
+      // waw += image;
       waw += '<div class ="widget-table action-table"><table class=" widget-table table" >';
-      waw += '<thead><tr><th id="position'+idPatient+'" style="text-align:center; font-size:15px;">' + position+'</th>';
+      waw += '<thead><tr><th style="text-align:center; font-size:15px;">' + position+'</th>';
+      waw += '</tr></thead><tbody></tbody></table><table class="widget-table table"><thead><tr>';
+      waw += '<th width="50%" style="text-align:center;font-size:15px">'+heartRate+' BPM</th>';
+      waw += '<th width="50%"  style="text-align:center;font-size:15px">'+temperature+'˚C</th>';
+      waw += '</tr></thead><tbody></tbody></table><table class="widget-table table"><thead ><tr>';
+      waw += '<th  width="25%"  style="text-align:center; font-size:10px;">'+minHeartRate+ 'BPM <br><span style="color:grey;"> MIN</span></th>';
+      waw += '<th  width="25%" style="text-align:center; font-size:10px;">'+maxHeartRate+' BPM <br><span style="color:grey;"> MAX </span></th>';
+      waw += '<th  width="25%" style="text-align:center;  font-size:10px;">'+minTemp+'˚C <br><span style="color:grey;"> MIN </span></th>';
+      waw += '<th  width="25%" style="text-align:center;  font-size:10px;">'+maxTemp+'˚C <br><span style="color:grey;"> MAX  </span></th>';
       waw += '</tr></thead><tbody></tbody></table></div></div></div></div>';
       return waw;
 
   }
-
-  function sortCards(){
-    var contacts = $('#tileTable'), cont = contacts.children('.dashboardCard');
-
-      cont.detach().sort(function(a, b) {
-
-                  var astts = $(a).data('id');
-                  var bstts = $(b).data('id');
-                  //return astts - bstts;
-                  return (astts > bstts) ? (astts > bstts) ? 1 : 0 : -1;
-              });
-
-      contacts.append(cont);
-  }
-  function patientobject(idPatient, toCompareHR, toCompareTEMP, status,firstName,lastName, heartRate,temperature,bedNumber, minTemp, maxTemp, minHeartRate, maxHeartRate, positionPatient,is_warning){
+  function patientobject(idPatient, toCompareHR, toCompareTEMP, status,firstName,lastName, heartRate,temperature,bedNumber, minTemp, maxTemp, minHeartRate, maxHeartRate, positionPatient){
     this.idPatient = idPatient;
     this.score = 0;
     this.toCompareHR = toCompareHR;
@@ -896,7 +828,6 @@ Highcharts.chart( pk , {
     this.minHeartRate = minHeartRate;
     this.maxHeartRate = maxHeartRate;
     this.positionPatient = positionPatient;
-    this.is_warning = is_warning;
   }
   function updateDashboard(idRoom){
 
@@ -914,41 +845,16 @@ Highcharts.chart( pk , {
 
             if(!isChecked){
               data.patients.forEach(function(a){
-                listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.position,a.condition,a.is_warning);
-                // tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.position, a.heartRate, a.temperature, a.minhr,a.maxhr, a.mint,a.maxt,a.condition,a.is_warning);
-                if(a.is_warning){
-
-                  $("#divClass"+a.idPatient).css("box-shadow","0px 0px 10px 4px red");
-                }
-                else{
-
-                  $("#divClass"+a.idPatient).css("box-shadow","");
-
-                }
+                listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.position,a.condition);
+                tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.position, a.heartRate, a.temperature, a.minhr,a.maxhr, a.mint,a.maxt,a.condition);
                });
-
-
             }
 
             else{
-              data.patients.forEach(function(a){
-                if(a.is_warning){
-
-
-                  $("#divClass"+a.idPatient).css("box-shadow","0px 0px 10px 4px red");
-                  $("#divClass"+a.idPatient).prependTo("#tileTable");
-                }
-                else{
-
-                  $("#divClass"+a.idPatient).css("box-shadow","");
-
-                }
-              });
-
               var patientList = new Array();
               var patient = data.patients;
               data.patients.forEach(function(a){
-                var p1 = new patientobject(a.idPatient, a.toCompareHR, a.toCompareTEMP, a.condition,a.firstName, a.lastName, a.heartRate, a.temperature, a.bedNumber, a.mint, a.maxt, a.minhr, a.maxhr, a.position, a.is_warning);
+                var p1 = new patientobject(a.idPatient, a.toCompareHR, a.toCompareTEMP, a.condition,a.firstName, a.lastName, a.heartRate, a.temperature, a.bedNumber, a.mint, a.maxt, a.minhr, a.maxhr, a.position);
                 patientList.push(p1);
               });
                 //arranges from lowest to highest
@@ -1001,8 +907,8 @@ Highcharts.chart( pk , {
               }
               patientList.forEach(function(a){
                 if(a.status == "warning" || a.status == "critical"){
-                  listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status,a.is_warning);
-                  // tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status);
+                  listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status);
+                  tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status);
                 }
               });
 
@@ -1010,159 +916,17 @@ Highcharts.chart( pk , {
 
               patientList.forEach(function(a){
                 if(a.status == "normal" || a.status == "starting"){
-                  listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status,a.is_warning);
-                  // tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status);
-                }
-              });
-
-            }
-            // $("#tileTable").html(tileTable);
-
-
-            $("#listTable").html(listTable);
-            data.patients.forEach(function(a){
-              $("#position"+ a.idPatient).text(""+a.position)
-            });
-            // var aw = $(".dashboardCard");
-            
-            // swap(aw[0],aw[1]);
-
-
-        }
-      });
-  }
-
-
-function refreshByRoom(idRoom){
-   $.ajax({
-        url: '/ajax/ajaxGetUpdatedDashboard/',
-        data: {
-          "idRoom":idRoom,
-        },
-        dataType: 'json',
-        success: function (data){
-            var isChecked = $("#checkboxAutoAdjust").prop("checked");
-            var tileTable = "";
-            var listTable = "";
-
-            if(!isChecked){
-              data.patients.forEach(function(a){
-                listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.position,a.condition,a.is_warning);
-                tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.position, a.heartRate, a.temperature, a.minhr,a.maxhr, a.mint,a.maxt,a.condition,a.is_warning);
-              
-               });
-
-
-            }
-
-            else{
-
-
-              var patientList = new Array();
-              var patient = data.patients;
-              data.patients.forEach(function(a){
-                var p1 = new patientobject(a.idPatient, a.toCompareHR, a.toCompareTEMP, a.condition,a.firstName, a.lastName, a.heartRate, a.temperature, a.bedNumber, a.mint, a.maxt, a.minhr, a.maxhr, a.position, a.is_warning);
-                patientList.push(p1);
-              });
-                //arranges from lowest to highest
-              for(var i = 0; i < patientList.length; i++){
-                for(var j = 0; j < patientList.length - 1; j++){
-                  if(patientList[i].toCompareHR < patientList[j].toCompareHR){
-                    var temp = patientList[j];
-                    patientList[j] = patientList[i];
-                    patientList[i] = temp;
-                  }
-                }
-              }
-              //assigning if critical or warning
-              for(var i=0; i < patientList.length; i++){
-                if(patientList[i].toCompareHR < 0){
-                  patientList[i].score = patientList[i].score + (patient.length - i)*2;
-                }
-                else{
-                  patientList[i].score = patientList[i].score + patient.length - i;
-                }
-              }
-               //arranges from lowest to highest
-              for(var i = 0; i < patientList.length; i++){
-                for(var j = 0; j < patientList.length - 1; j++){
-                  if(patientList[i].toCompareTEMP < patientList[j].toCompareTEMP){
-                    var temp = patientList[j];
-                    patientList[j] = patientList[i];
-                    patientList[i] = temp;
-                  }
-                }
-              }
-              //assigning if critical or warning
-              for(var i=0; i < patientList.length; i++){
-                if(patientList[i].toCompareTEMP < 0){
-                  patientList[i].score = patientList[i].score + (patient.length - i)*2;
-                }
-                else{
-                  patientList[i].score = patientList[i].score + patient.length - i;
-                }
-              }
-              //sorting using the final score.
-              for(var i = 0; i < patientList.length; i++){
-                for(var j = 0; j < patientList.length - 1; j++){
-                  if(patientList[i].score > patientList[j].score){
-                    var temp = patientList[j];
-                    patientList[j] = patientList[i];
-                    patientList[i] = temp;
-                  }
-                }
-              }
-              patientList.forEach(function(a){
-                if(a.status == "warning" || a.status == "critical"){
-                  listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status,a.is_warning);
-                  tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status,a.is_warning);
-                }
-              });
-
-              // });
-
-              patientList.forEach(function(a){
-                if(a.status == "normal" || a.status == "starting"){
-                  listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status,a.is_warning);
-                  tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status,a.is_warning);
+                  listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status);
+                  tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status);
                 }
               });
 
             }
             $("#tileTable").html(tileTable);
-
-
             $("#listTable").html(listTable);
-            var classChart = $(".chartHeartRate");
-            var classChartTemp = $(".chartTemperature");
-            for(var i = 0; i < classChart.length; i++){
-              makeHighchartHeartrate(classChart[i].id); 
-            }
-
-            for(var i = 0; i < classChartTemp.length; i++){
-              makeHighchartTemp(classChartTemp[i].id);
-            }
-
-
-            // var aw = $(".dashboardCard");
-            
-            // swap(aw[0],aw[1]);
-
-
         }
       });
-
-
-}
-// function swap(a,b){
-//   a = $(a);
-//   b = $(b);
-//   var tmp = $("<span>").hide();
-//   a.before(tmp);
-//   b.before(a);
-//   tmp.replaceWith(b);
-// }
-
+  }
 
 
 
@@ -1170,4 +934,3 @@ function refreshByRoom(idRoom){
 <!-- 
 
 {% endblock content %} 
- -->
