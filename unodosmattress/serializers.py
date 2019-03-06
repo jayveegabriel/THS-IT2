@@ -334,6 +334,7 @@ class BedSerializer(serializers.HyperlinkedModelSerializer):
 		bed = Beds(
         	bedNumber= bedNumber,
         	bedStatus='Pending',
+        	idRoom_id=1,
         	)
 		bed.save()
 
