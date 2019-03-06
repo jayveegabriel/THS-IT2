@@ -1,4 +1,4 @@
-<!-- 
+<!--
 {% block content %} -->
 
 {% load static %}
@@ -348,18 +348,6 @@ input:checked + .slider:before {
       <div class ="tabbable">
         <br>
 
-                  <select class ="span2 roomDropdown">
-                    <option disabled>Select Room No.</option>
-                    {% for r in rooms %}
-                      <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
-                    {% endfor %}
-
-                  </select>
-                  <div class ="form">
-                  <div class="checkbox-container">
-                     <label class ="switch"><input type="checkbox" id="checkboxAutoAdjust" onchange="sortCards()" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"> Prioritization Feature</label>
-                    </div>
-                  </div>
 
 
         <ul class ="nav nav-tabs">
@@ -384,7 +372,7 @@ input:checked + .slider:before {
                 </div>
                               <div class="widget-content" align = "center" id ="bed">
                                    <p><b>{{bed.get_current_patient.idPatient.lastName}}, {{bed.get_current_patient.idPatient.firstName}}</b></p>
-                                 
+
                                     <div id="heartRatechart{{patient.idPatient}}" class="chartHeartRate" style="height:100px;"></div>
                                     <div id="temperatureChart{{patient.idPatient}}" class="chartTemperature" style="height:100px;"></div>
                                     <div class ="widget-table action-table">
@@ -399,7 +387,7 @@ input:checked + .slider:before {
                                                       <tbody>
                                                       </tbody>
                                                     </table>
-                                               
+
 
                                     </div>
                         </div>
@@ -420,7 +408,7 @@ input:checked + .slider:before {
     </div>
 
 
-<!-- 
+<!--
 
 
 
@@ -428,7 +416,7 @@ input:checked + .slider:before {
               <div class="widget " id = "{{patient.idPatient_id }}">
               <div class="widget-header" > <i class="icon-user"></i>
                 <h3>Bed #{{ bed.bedNumber }}</h3>
-              
+
 
              </div>
 
@@ -450,14 +438,14 @@ input:checked + .slider:before {
 
                                      </tbody>
                                    </table>
-                                  
 
 
 
 
 
 
-                               
+
+
                    </div>
        </div>
        </div>
@@ -466,7 +454,7 @@ input:checked + .slider:before {
 
 
 
-       
+
 
 
     </div>
@@ -561,7 +549,7 @@ $(document).ready(function(){
   var classChart = $(".chartHeartRate");
   var classChartTemp = $(".chartTemperature");
   for(var i = 0; i < classChart.length; i++){
-    makeHighchartHeartrate(classChart[i].id); 
+    makeHighchartHeartrate(classChart[i].id);
   }
 
   for(var i = 0; i < classChartTemp.length; i++){
@@ -583,7 +571,7 @@ Highcharts.chart( pk , {
         // set up the updating of the chart each second
         var series = this.series[0];
         setInterval(function () {
-          
+
 
           $.ajax({
             url: '/ajax/ajaxGetLatestHeartRate/',
@@ -600,15 +588,15 @@ Highcharts.chart( pk , {
             // y = Math.random();
                 series.addPoint([x, y], true, true);
                           }
-                // latest = y; 
+                // latest = y;
               }
-              
+
 
           });
 
 
 
-          
+
         }, 1000);
       }
     }
@@ -681,7 +669,7 @@ Highcharts.chart( pk , {
         // set up the updating of the chart each second
         var series = this.series[0];
         setInterval(function () {
-          
+
 
           $.ajax({
             url: '/ajax/ajaxGetLatestTemperature/',
@@ -698,15 +686,15 @@ Highcharts.chart( pk , {
             // y = Math.random();
                 series.addPoint([x, y], true, true);
                           }
-                // latest = y; 
+                // latest = y;
               }
-              
+
 
           });
 
 
 
-          
+
         }, 1000);
       }
     }
@@ -813,7 +801,7 @@ Highcharts.chart( pk , {
 
 
     });
-      
+
     window.setInterval(function(){
       updateDashboard($(".roomDropdown").val());
     }, 1000);
@@ -1024,7 +1012,7 @@ Highcharts.chart( pk , {
               $("#position"+ a.idPatient).text(""+a.position)
             });
             // var aw = $(".dashboardCard");
-            
+
             // swap(aw[0],aw[1]);
 
 
@@ -1049,7 +1037,7 @@ function refreshByRoom(idRoom){
               data.patients.forEach(function(a){
                 listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.position,a.condition,a.is_warning);
                 tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.position, a.heartRate, a.temperature, a.minhr,a.maxhr, a.mint,a.maxt,a.condition,a.is_warning);
-              
+
                });
 
 
@@ -1136,7 +1124,7 @@ function refreshByRoom(idRoom){
             var classChart = $(".chartHeartRate");
             var classChartTemp = $(".chartTemperature");
             for(var i = 0; i < classChart.length; i++){
-              makeHighchartHeartrate(classChart[i].id); 
+              makeHighchartHeartrate(classChart[i].id);
             }
 
             for(var i = 0; i < classChartTemp.length; i++){
@@ -1145,7 +1133,7 @@ function refreshByRoom(idRoom){
 
 
             // var aw = $(".dashboardCard");
-            
+
             // swap(aw[0],aw[1]);
 
 
@@ -1167,7 +1155,7 @@ function refreshByRoom(idRoom){
 
 
 </script>
-<!-- 
+<!--
 
-{% endblock content %} 
+{% endblock content %}
  -->
