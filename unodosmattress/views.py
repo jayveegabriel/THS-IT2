@@ -36,29 +36,23 @@ newNotificationList = []
 #time.sleep(0.5)
 
 
-SMS=sim800.SIM800('COM9', 9600)
-while (SMS.gsmReset()!=1):
-    time.sleep(0.5)
-print ('SIM800 reset')
-time.sleep(0.5)
 
 
 
-while (SMS.smsInit() != 1):
-    time.sleep(0.5)
-print ('SIM800 SMS initialized')
-time.sleep(2)
+#while (SMS.smsInit() != 1):
+#    time.sleep(0.5)
+#print ('SIM800 SMS initialized')
+#time.sleep(2)
 
-SMS.smsDelete_All()
-print("All message deleted!")
-time.sleep(0.5)
+#SMS.smsDelete_All()
+#print("All message deleted!")
+#time.sleep(0.5)
 
 
 
-#SMS.smsSend("+639176492934", "Patient ")
 
  
-SMS.smsSend("+639176492934", "Patient ")
+#SMS.smsSend("+639176492934", "Patient ")
 
 
 def readRFID():

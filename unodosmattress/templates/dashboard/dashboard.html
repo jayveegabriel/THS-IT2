@@ -232,6 +232,9 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+.topnav-right {
+  float: right;
+}
 </style>
 
 <body onload = "startTime()">
@@ -279,7 +282,14 @@ input:checked + .slider:before {
 
                   </ul>
                 </li>
+
+
+
+
+
+
       </ul>
+
     </div>
     <!-- /container -->
   </div>
@@ -288,7 +298,7 @@ input:checked + .slider:before {
 
 <div class="main">
 
-    <h1 id="time" align ="center"></h1>
+
 
   <div id="mySidenav" class="sidenav">
 
@@ -319,21 +329,25 @@ input:checked + .slider:before {
 
   <div class="main-inner">
     <div class="container">
+      <select class ="span2 roomDropdown">
+        <option disabled>Select Room No.</option>
+        {% for r in rooms %}
+          <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
+        {% endfor %}
 
+      </select>
+
+
+
+
+      <div class ="form">
+      <div class="checkbox-container">
+         <label class ="switch"><input type="checkbox" id="checkboxAutoAdjust" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"> Prioritization Feature</label>
+        </div>
+      </div>
       <div class ="tabbable">
         <br>
-                  <select class ="span2 roomDropdown">
-                    <option disabled>Select Room No.</option>
-                    {% for r in rooms %}
-                      <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
-                    {% endfor %}
 
-                  </select>
-                  <div class ="form">
-                  <div class="checkbox-container">
-                     <label class ="switch"><input type="checkbox" id="checkboxAutoAdjust" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"> Prioritization Feature</label>
-                    </div>
-                  </div>
 
 
 
