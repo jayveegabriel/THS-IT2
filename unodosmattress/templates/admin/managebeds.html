@@ -500,6 +500,25 @@ overflow-y: auto;
 
 
 
+<!-- Bed is successfully added! -->
+<div class="modal fade" id="confirmModalReload" role="dialog">
+      <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+         <button type="button" class="close" >&times;</button>
+         <h4 class="modal-title">Success!</h4>
+       </div>
+       <div class="modal-body">
+          <h2 id="bodyContentReload">Bed is successfully added!!</h2>
+       </div>
+       <div class="modal-footer">
+
+         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true" onclick="window.location.reload()">Confirm</button>
+       </div>
+     </div>
+      </div>
+    </div>
+
 
 
 
@@ -659,8 +678,6 @@ function addBed(id){
   var wew = "#bed"+id+"";
   var roomNumber = $("#roomNumber").val();
   var bedNumber = $(wew).val();
-  alert(roomNumber);
-
 
   	$.ajax({
   		url: '/ajax/setBedAvailable/',
@@ -671,7 +688,11 @@ function addBed(id){
   		},
   		dataType: 'json',
   		success: function (data){
-        alert("Bed is successfully added!");
+        // alert("Bed is successfully added!");
+        $("#bodyContentReload").text("Bed is successfully added");
+        $("#confirmModalReload").modal("show");
+
+
 
         updateBeds();
   		}
@@ -963,7 +984,11 @@ $(document).ready(function() {
         },
         dataType: 'json',
         success: function (data){
-          alert("The status of the bed is successfully updated!");
+          // alert("The status of the bed is successfully updated!");
+          $("#bodyContentReload").text("The status of the bed is successfully updated");
+          $("#confirmModalReload").modal("show");
+
+        
 
           var temp = $("#editBedsDropdown").val();
           refresh(temp);

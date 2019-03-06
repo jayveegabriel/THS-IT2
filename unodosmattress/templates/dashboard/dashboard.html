@@ -564,8 +564,15 @@ input:checked + .slider:before {
 
 
 
+
       <!-- /row -->
     </div>
+
+
+
+
+
+
     </div>
 
     <div class="tab-pane" id="listview">
@@ -793,7 +800,7 @@ counter = counter + 1;
         wew = '<tr style="box-shadow:0px 0px 4px 2px grey">';
        }
        else{
-        wew = '<tr style="box-shadow:0px 0px 4px 2px">';
+        wew = '<tr>';
        }
        wew +='<td style="text-align:center;"><span class="badge badge-danger" style ="text-align:right;">3</span></td>'+
              '<td style="text-align:center;">' + bedNumber + '</td>'+
@@ -958,8 +965,10 @@ counter = counter + 1;
                   listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status);
                   tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.positionPatient, a.heartRate, a.temperature, a.minHeartRate,a.maxHeartRate, a.minTemp,a.maxTemp,a.status);
                 }
-
               });
+
+              // });
+
               patientList.forEach(function(a){
                 if(a.status == "normal" || a.status == "starting"){
                   listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.positionPatient,a.status);
@@ -1065,6 +1074,7 @@ var chart1 = new Highcharts.Chart({
     series:[{name:'Measure',pointWidth:10,data:[80]},
             {name:'Target',type: 'scatter',data:[90],}]
 });
+
 
 
 

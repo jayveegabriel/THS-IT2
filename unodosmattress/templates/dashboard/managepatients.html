@@ -552,8 +552,24 @@ overflow-y: auto;
 
 </div> <!-- /main -->
 
+<!-- No beds available -->
+<div class="modal fade" id="confirmModal" role="dialog">
+      <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+         <button type="button" class="close" >&times;</button>
+         <h4 class="modal-title">Error!</h4>
+       </div>
+       <div class="modal-body">
+          <h2 id="messageContent">No beds available!</h2>
+       </div>
+       <div class="modal-footer">
 
-
+         <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Confirm</button>
+       </div>
+     </div>
+      </div>
+    </div>
 
 
 
@@ -590,66 +606,100 @@ $(document).ready(function(){
         var isOkay = true;
         if(bednumber == ""){
           isOkay = false;
-          alert("No beds available");
+          // alert("No beds available");
+          $("#messageContent").text("No beds available");
+          $("#confirmModal").modal("show");
         }
         else if(firstname == ""){
           isOkay = false;
-          alert("Please enter the first name");
+          // alert("Please enter the first name");
+
+          $("#messageContent").text("Please enter the first name");
+          $("#confirmModal").modal("show");
         }
         else if(middlename == ""){
           isOkay = false;
-          alert("Please enter the middle name");
+          // alert("Please enter the middle name");
+
+          $("#messageContent").text("Please enter the middle name");
+          $("#confirmModal").modal("show");
         }
         else if(lastname == ""){
           isOkay = false;
-          alert("Please enter the last name");
+          // alert("Please enter the last name");
+
+          $("#messageContent").text("Please enter the last name");
+          $("#confirmModal").modal("show");
         }
         else if(procedure == ""){
           isOkay = false;
-          alert("Please enter the patient procedure");
+          // alert("Please enter the patient procedure");
+          $("#messageContent").text("Please enter the patient procedure");
+          $("#confirmModal").modal("show");
         }
         else if(birthday == ""){
           isOkay = false;
-          alert("Please enter the birthday");
+          // alert("Please enter the birthday");
+          $("#messageContent").text("Please enter the birthday");
+          $("#confirmModal").modal("show");
         }
 
         else if(contactperson == ""){
           isOkay = false;
-          alert("Please enter the contact person");
+          // alert("Please enter the contact person");
+          $("#messageContent").text("Please enter the first name");
+          $("#confirmModal").modal("show");
         }
 
         else if(contactnum == ""){
           isOkay = false;
-          alert("Please enter the contact number");
+          // alert("Please enter the contact number");
+          $("#messageContent").text("Please enter the contact person");
+          $("#confirmModal").modal("show");
         }
         else if(minhr == ""){
           isOkay = false;
-          alert("Please enter the minimum heart rate");
+          // alert("Please enter the minimum heart rate");
+          $("#messageContent").text("Please enter the minimum heart rate");
+          $("#confirmModal").modal("show");
         }
         else if(maxhr == ""){
           isOkay = false;
-          alert("Please enter the maximum heart rate");
+          // alert("Please enter the maximum heart rate");
+          $("#messageContent").text("Please enter the maximum heart rate");
+          $("#confirmModal").modal("show");
         }
         else if(mint == ""){
           isOkay = false;
-          alert("Please enter the minimum temperature");
+          // alert("Please enter the minimum temperature");
+          $("#messageContent").text("Please enter the minimum temperature");
+          $("#confirmModal").modal("show");
         }
 
         else if(maxt == ""){
           isOkay = false;
-          alert("Please enter the maximum temperature");
+          // alert("Please enter the maximum temperature");
+          $("#messageContent").text("Please enter the maximum temperature");
+          $("#confirmModal").modal("show");
         }
         else if(doctors.length == 0){
           isOkay = false;
-          alert("Please assign at least one doctor");
+          // alert("Please assign at least one doctor");
+          $("#messageContent").text("Please assign at least one doctor");
+          $("#confirmModal").modal("show");
+
         }
         else if(parseInt(minhr) >= parseInt(maxhr)){
           isOkay = false;
           alert("Minimum heart rate must be less than the maximum");
+          $("#messageContent").text("Minimum heart rate must be less than the maximum");
+          $("#confirmModal").modal("show");
         }
         else if(parseFloat(mint) >= parseFloat(maxt)){
           isOkay = false;
           alert("Minimum temperature must be less than the maximum");
+          $("#messageContent").text("Minimum temperature must be less than the maximum");
+          $("#confirmModal").modal("show");
         }
         // else if(!isTapped){
         //   isOkay = false;
