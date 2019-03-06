@@ -269,6 +269,11 @@ class Patient(models.Model):
 			condition = "starting"
 		return condition
 	
+	@property
+	def is_warning(self):
+		
+		return (self.countT >= 600 or self.countHR >= 600)
+	
 
 
 	
