@@ -136,17 +136,18 @@ input:checked + .slider:before {
 			                            <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			                              <div class="modal-header">
 			                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			                                <h3 align="left">Confirm dialog</h3>
+			                                <h3 align="left">Confirm</h3>
 			                              </div>
 			                              <div class="modal-body">
 
 			                              		<table class="table table-bordered">
 			                              			<thead>
 			                              				<tr>
-			                              					<th>Firstname</th>
-			                              					<th>Lastname</th>
-			                              					<th>Usertype</th>
-			                              					<th>Change status to</th>
+			                              					<th style="text-align:center;">Firstname</th>
+			                              					<th style="text-align:center;">Lastname</th>
+			                              					<th style="text-align:center;">Usertype</th>
+			                              					<th style="text-align:center;">Change status to</th>
+																							<th style="text-align:center;"></th>
 			                              				</tr>
 			                              			</thead>
 			                              			<tbody id="modalBody">
@@ -388,10 +389,10 @@ input:checked + .slider:before {
  			<div class="modal-content">
 	 			<div class="modal-header">
 				 <button type="button" class="close" >&times;</button>
-				 <h4 class="modal-title">Success!</h4>
+				 <h3 class="modal-title">Success!</h3>
 			 </div>
 			 <div class="modal-body">
-			 		<h2 id="bodyContentReload">SUCCESS!</h2>
+			 		<h4 id="bodyContentReload">SUCCESS!</h4>
 			 </div>
 			 <div class="modal-footer">
 
@@ -634,7 +635,7 @@ $("#addButton").click(function(){
 			else{
 				isChecked = "Inactive";
 			}
-			wew += '<tr id="modal+'+checked[i]+ '"><td>'+ firstname+'</td><td>'+ lastname+'</td><td>'+ usertype+'</td><td>'+ isChecked+'</td><td><button class="removeButtonModal" id="button'+checked[i]+'">X</button></td></tr>';
+			wew += '<tr id="modal+'+checked[i]+ '"><td style="text-align:center;">'+ firstname+'</td><td style="text-align:center;">'+ lastname+'</td><td style="text-align:center;">'+ usertype+'</td><td style="text-align:center;">'+ isChecked+'</td><td style="text-align:center;"><button style="text-align:center;" class="btn btn-danger removeButtonModal" id="button'+checked[i]+'">X</button></td></tr>';
 		}
 
 			$("#modalBody").html(wew);
