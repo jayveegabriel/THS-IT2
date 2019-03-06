@@ -261,13 +261,13 @@ def ajaxUpdateDashboard(request):
 	return JsonResponse (wew, safe=False)
 
 
-def get_client_ip(request):
-	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-	if x_forwarded_for:
-		ip = x_forwarded_for.split(',')[0]
-	else:
-		ip = request.META.get('REMOTE_ADDR')
-	return ip
+# def get_client_ip(request):
+# 	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+# 	if x_forwarded_for:
+# 		ip = x_forwarded_for.split(',')[0]
+# 	else:
+# 		ip = request.META.get('REMOTE_ADDR')
+# 	return ip
 
 
 def	loginUsername (request): #ADDED
@@ -405,7 +405,7 @@ def managepatients(request):
 			# age = (datetime.now().date() - bday).days / 365.25
 			print(bday)
 
-			patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = int(bedNumber), status = "RESERVED", procedure = procedure,restrictions=restrictions)
+			patient_var = Patient(firstName = firstName, middleName = middleName, lastName = lastName, birthDate = birthDate, minTemp = minTemp, maxTemp = maxTemp, minHeartRate = minHeartRate, maxHeartRate = maxHeartRate,contactperson=contactperson, contactNum = contactNum, bedNumber_id = bedNumber, status = "RESERVED", procedure = procedure,restrictions=restrictions)
 
 			patient_var.save()
 
@@ -478,11 +478,11 @@ def blocked(request):
 	return render(request, 'blocked.html')
 
 #Nurse
-def reports(request):
-	session_position = request.session.get('position','none')
-	if session_position == "NURSE":
-		return render(request, 'dashboard/reports.html')
-	return render(request, 'blocked.html')
+# def reports(request):
+# 	session_position = request.session.get('position','none')
+# 	if session_position == "NURSE":
+# 		return render(request, 'dashboard/reports.html')
+# 	return render(request, 'blocked.html')
 #Nurse
 def viewpatients(request, idPatient):
 	session_position = request.session.get('position','none')
@@ -732,8 +732,8 @@ def manageusers(request):
 	return render(request, 'admin/manageusers.html', context)
 
 
-def reports(request):
-	return render(request, 'dashboard/reports.html')
+# def reports(request):
+# 	return render(request, 'dashboard/reports.html')
 
 def viewusers(request, username):
 	d1 = Doctor.objects.filter(username=username).exists()

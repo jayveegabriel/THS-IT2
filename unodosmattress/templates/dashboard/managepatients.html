@@ -94,13 +94,22 @@ overflow-y: auto;
 }
 .containerwew{
 
-  position: fixed;
-  right: 5%;
+  position: absolute !important;
+  right: 1vw;
+  top: 20vh;
+  z-index: 999;
 
 }
 
 </style>
 <body>
+  <div class = "containerwew" id="containerDiv" style="position: absolute; right: 1vw; top: 20vh; height: 80vh; width: 20vw;">
+
+
+
+
+  </div>
+
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
@@ -122,6 +131,9 @@ overflow-y: auto;
   <!-- /navbar-inner -->
 </div>
 <!-- /navbar -->
+
+
+
 <div class="subnavbar">
   <div class="subnavbar-inner">
     <div class="container">
@@ -154,9 +166,7 @@ overflow-y: auto;
   </div>
   <!-- /subnavbar-inner -->
 </div>
-<div class = "containerwew" id="containerDiv">
 
-	</div>
 
 
 
@@ -572,7 +582,6 @@ overflow-y: auto;
 
 
 
-
 <script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
 <audio id="myAudio">
 	<source src="{% static 'sounds/notification.ogg' %}" type="audio/ogg">
@@ -768,7 +777,7 @@ function getCurrentSize(){
           for(var x = 0; x < data.length; x++){
             document.getElementById("myAudio").play();
             var temp = data[x].bedNumber;
-            var aw = '<div class="alert bedNo'+ temp + ' alert-danger alert-dismissable fade in" id="">'+
+            var aw = '<div class="alert bedNo'+ temp + ' alert-danger alert-dismissable fade in" style="width:60%" id="">'+
                 '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'+
                 'BED# ' + temp +
               '</div>';
@@ -917,7 +926,7 @@ $(document).ready(function() {
 							var aw = "";
 							aw += '<tr id="cancelRow' + data[0].idDoctor+ '">'+
 
-								'<td style="width:80%">'+ data[0].firstName + ' ' + data[0].lastName+ '<input type="text" name="doctors[]" value="'+data[0].idDoctor+'"></td>'+
+								'<td style="width:80%">'+ data[0].firstName + ' ' + data[0].lastName+ '<input type="hidden" name="doctors[]" value="'+data[0].idDoctor+'"></td>'+
 								'<td style="width:20%"><button type="button" class ="btn btn-danger" id="cancelButton'+ data[0].idDoctor+'">-</button></td>'+
 
 							'</tr>';

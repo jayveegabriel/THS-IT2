@@ -237,7 +237,7 @@ input:checked + .slider:before {
 }
 </style>
 
-<body onload = "startTime()">
+<body>
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
@@ -258,6 +258,11 @@ input:checked + .slider:before {
   <!-- /navbar-inner -->
 </div>
 <!-- /navbar -->
+
+<div class = "containerwew" id="containerDiv" style="position: absolute; right: 1vw; top: 30vh; height: 80vh; width: 20vw;"></div>
+
+
+
 <div class="subnavbar" >
   <div class="subnavbar-inner">
     <div class="container">
@@ -310,7 +315,7 @@ input:checked + .slider:before {
         <div class="table-wrapper-scroll-y">
         <table class="table table-bordered ">
 
-          <tbody id="logTable">
+          <tbody id="logTable" style="width: 10vw;">
             <!-- <tr>
               <td style="width:20%;"><button class="btn btn-warning">1</button></td>
               <td style="width:80%; font-size:10px;">13:19:00 PM</td>
@@ -336,13 +341,19 @@ input:checked + .slider:before {
         {% endfor %}
 
       </select>
+      
+        
+         <img id="offLight" style="width: 5vw; height: 5vw;" src="{% static 'img/off.jpg' %}">
+         <img id="onLight" hidden style="width: 5vw; height: 5vw;" src="{% static 'img/on.png' %}">
+
+      
 
 
 
 
       <div class ="form">
       <div class="checkbox-container">
-         <label class ="switch"><input type="checkbox" id="checkboxAutoAdjust" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"> Prioritization Feature</label>
+         <label class ="switch"><input type="checkbox" id="checkboxAutoAdjust" onchange="sortCards()" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"> Prioritization Feature</label>
         </div>
       </div>
       <div class ="tabbable">
@@ -546,6 +557,10 @@ input:checked + .slider:before {
 <script>
 
 $(document).ready(function(){
+  $("#clearTable").click(function(){
+      $("#logTable").html("");
+    });
+
   var classChart = $(".chartHeartRate");
   var classChartTemp = $(".chartTemperature");
   for(var i = 0; i < classChart.length; i++){
@@ -555,6 +570,101 @@ $(document).ready(function(){
   for(var i = 0; i < classChartTemp.length; i++){
     makeHighchartTemp(classChartTemp[i].id);
   }
+
+
+  window.setInterval(function(){
+      $.ajax({
+        url: '/ajax/ajaxGetClicked/',
+        data: {
+
+        },
+        dataType: 'json',
+        success: function (data){
+          $.ajax({
+            url: '/ajax/ajaxClearClicked/',
+            data: {
+
+            },
+            dataType: 'json',
+            success: function (data2){
+
+            }
+          });
+          var aw = "";
+          for(var x = 0; x < data.length; x++){
+            document.getElementById("myAudio").play();
+            var temp = data[x].bedNumber;
+            var aw = '<div class="alert bedNo'+ temp + ' alert-danger alert-dismissable fade in" style="width:60%" id="">'+
+                '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'+
+                'BED# ' + temp +
+              '</div>';
+
+              $("#containerDiv").append(aw);
+              setTimeout(function(){
+                $(".bedNo"+temp).alert('close');
+              },5000);
+
+          }
+
+
+
+        }
+      });
+    },2000);
+
+$("#dropdownLi").click(function(){
+        $.ajax({
+          url: '/ajax/ajaxClearNewNotifications/',
+          data: {
+
+          },
+          dataType: 'json',
+          success: function (data){
+
+            $("#badgeData").attr("data-badge",0);
+
+          }
+        });
+      });
+      window.setInterval(function(){
+        $.ajax({
+          url: '/ajax/ajaxGetNewNotificationsSize/',
+          data: {
+
+          },
+          dataType: 'json',
+          success: function (data){
+            var size = data[0].size;
+
+            $("#badgeData").attr("data-badge",size);
+
+          }
+        });
+        $.ajax({
+          url: '/ajax/ajaxGetNotifications/',
+          data: {
+
+          },
+          dataType: 'json',
+          success: function (data){
+            var qwe = "";
+            for(var l = 0; l < data.length; l++){
+              qwe += '<tr>'+
+                '<td style="width:30%;"><button class="btn btn-warning">Bed '+ data[l].bedNumber +'</button></td>'+
+                '<td style="width:70%; font-size:10px;">needs your assistance!</td>'+
+
+              '</tr>';
+
+            }
+            $("#notifBody").html(qwe);
+
+          }
+        });
+
+      },1000);
+
+
+
 
 });
 function makeHighchartHeartrate(pk){
@@ -635,6 +745,7 @@ Highcharts.chart( pk , {
   },
   series: [{
     name: 'BPM',
+    color: '#9400d3',
     data: (function () {
       // generate an array of random data
       var data = [],
@@ -732,7 +843,8 @@ Highcharts.chart( pk , {
     enabled: false
   },
   series: [{
-    name: 'BPM',
+    name: '°Celcius',
+    color: '#b03060',
     data: (function () {
       // generate an array of random data
       var data = [],
@@ -753,21 +865,20 @@ Highcharts.chart( pk , {
 
 
 
-  function startTime() {
-    var today = new Date();
-    var h = today.getHours();
-    var m = today.getMinutes();
-    var s = today.getSeconds();
-    var ampm = today.getHours();
-    m = checkTime(m);
-    ampm = check(ampm);
-    s = checkTime(s);
-    document.getElementById('time').innerHTML =
-    h + ":" + m + ":" + s + " " + ampm;
+  // function startTime() {
+  //   var today = new Date();
+  //   var h = today.getHours();
+  //   var m = today.getMinutes();
+  //   var s = today.getSeconds();
+  //   var ampm = today.getHours();
+  //   m = checkTime(m);
+  //   ampm = check(ampm);
+  //   s = checkTime(s);
+  //   document.getElementById('time').innerHTML =  h + ":" + m + ":" + s + " " + ampm;
 
 
-    var t = setTimeout(startTime, 500);
-  }
+  //   var t = setTimeout(startTime, 500);
+  // }
   function checkTime(i) {
     if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
     return i;
@@ -899,7 +1010,20 @@ Highcharts.chart( pk , {
             var isChecked = $("#checkboxAutoAdjust").prop("checked");
             var tileTable = "";
             var listTable = "";
-
+            var shouldTurnOn = false;
+            data.patients.forEach(function(w){
+              if(w.is_warning){
+                shouldTurnOn = true;
+              }
+            });
+            if(shouldTurnOn){
+              $("#onLight").show();
+              $("#offLight").hide();
+            }
+            else{
+              $("#onLight").hide();
+              $("#offLight").show();
+            }
             if(!isChecked){
               data.patients.forEach(function(a){
                 listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.position,a.condition,a.is_warning);
@@ -907,6 +1031,14 @@ Highcharts.chart( pk , {
                 if(a.is_warning){
 
                   $("#divClass"+a.idPatient).css("box-shadow","0px 0px 10px 4px red");
+
+                    var d = new Date();
+                   var tempText = '<tr>'+
+                      '<td style="width:20%;"><button class="btn btn-danger">'+ a.bedNumber+'</button></td>'+
+                      '<td style="width:80%; font-size:10px;">'+ d.toLocaleTimeString() + '</td>'+
+
+                    '</tr>';
+                    $("#logTable").prepend(tempText);
                 }
                 else{
 
@@ -925,6 +1057,14 @@ Highcharts.chart( pk , {
 
                   $("#divClass"+a.idPatient).css("box-shadow","0px 0px 10px 4px red");
                   $("#divClass"+a.idPatient).prependTo("#tileTable");
+
+                    var d = new Date();
+                   var tempText = '<tr>'+
+                      '<td style="width:20%;"><button class="btn btn-danger">'+ a.bedNumber+'</button></td>'+
+                      '<td style="width:80%; font-size:10px;">'+ d.toLocaleTimeString() + '</td>'+
+
+                    '</tr>';
+                    $("#logTable").prepend(tempText);
                 }
                 else{
 
