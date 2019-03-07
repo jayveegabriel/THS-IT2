@@ -426,11 +426,11 @@
 			}
 			else if(positionList[i].position == "RIGHT SIDE"){
 				y = 4;
-				symbol = 'url(../../../static/img/tlrightside.PNG)';
+				symbol = 'url(../../../static/img/tlrights.PNG)';
 			}
 			
 			else if(positionList[i].position == "RIGHT FETAL"){
-				symbol = 'url(../../../static/img/tlrightfetal.PNG)';
+				symbol = 'url(../../../static/img/tlrightfet.PNG)';
 				y = 5;
 			}
 			updatedData.push({x:Date.UTC(date[0], date[1] -1, date[2], time[0], time[1],time[2]),y:y,marker: {
@@ -459,7 +459,7 @@
 	    }
 	  },
 	  title: {
-	    text: 'Changes in position over time'
+	    text: 'Changes in Position over Time'
 	  },
 	  
 	  xAxis: {
@@ -557,16 +557,16 @@
 	    	marker: {
                 radius: 4,
                 lineColor: '#666666',
-                lineWidth: 1
+                lineWidth: 2
             },
-	      lineWidth: 4,
+	      lineWidth: 2,
 	      states: {
 	        hover: {
-	          lineWidth: 5
+	          lineWidth: 2
 	        }
 	      },
 	      pointInterval: 3600000, // one hour
-	      pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
+	      
 	    }	,
 	    series:{
 
@@ -618,9 +618,7 @@
 				title: {
 						text: 'Heart Rate Report'
 				},
-				subtitle: {
-						text: '2018-11-26'
-				},
+				
 				xAxis: {
 			        type: 'datetime',
 				    labels: {
@@ -640,7 +638,7 @@
 				tooltip: {
 
 
-						valueSuffix: ' BPM <br>Status: </br>'
+						valueSuffix: ' BPM <br>'
 
 				},
 				plotOptions: {
@@ -691,9 +689,7 @@
 				title: {
 						text: 'Temperature Report'
 				},
-				subtitle: {
-						text: '2018-11-26'
-				},
+			
 				xAxis: {
 						type: 'datetime',
 						labels: {
@@ -756,19 +752,20 @@
 				},
 				plotOptions: {
 						spline: {
-								lineWidth: 1,
+								lineWidth: 2,
 								states: {
 										hover: {
-												lineWidth: 1
+												lineWidth: 2
 										}
 								},
 								marker: {
 										enabled: false
 								},
 								pointInterval: 60000, // one hour 60000 if 1 second
-								pointStart: Date.UTC(2018, 1, 13, 0, 0, 0) // start day and time
-
+								
 						}
+
+
 				},
 				series: [{
 					lineColor: Highcharts.getOptions().colors[3],

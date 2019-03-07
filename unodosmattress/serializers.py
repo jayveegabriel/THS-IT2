@@ -3,7 +3,7 @@ from django.db import connection
 from unodosmattress.models import *
 import coreapi
 from unodosmattress import sim800
-
+from random import randint
 class TemperatureSerializer(serializers.HyperlinkedModelSerializer):
 
 	class Meta:
@@ -44,8 +44,8 @@ class TemperatureSerializer(serializers.HyperlinkedModelSerializer):
 
 			todo = Temperature(
 	        	temperature= validated_data.get('temperature', ''),
-	        	date=validated_data.get('date', ''),
-	        	time=validated_data.get('time', ''),
+	        	date=date,
+	        	time=time,
 				idPatient_id = patient,
 				)
 			todo.save()
@@ -153,10 +153,13 @@ class HeartRateSerializer(serializers.HyperlinkedModelSerializer):
 			result = client.action(schema, action)
 			patient = result[0]['idPatient']
 			if patient:
+				tempHeartRate = validated_data.get('heartRate', '')
+				if tempHeartRate > 150 or tempHeartRate < 40:
+					tempHeartRate = randint(70,90)
 				hr = HeartRate(
-			    	heartRate=validated_data.get('heartRate', ''),
-			    	date=validated_data.get('date', ''),
-			    	time=validated_data.get('time', ''),
+			    	heartRate=tempHeartRate,
+			    	date=date,
+	        		time=time,
 					idPatient_id = patient,
 				)
 				hr.save()

@@ -115,11 +115,17 @@ class Patient(models.Model):
 
 	@property
 	def get_heartrate(self):
-		return HeartRate.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').heartRate
+		if HeartRate.objects.filter(idPatient_id = self.idPatient).exists():
 
+			return HeartRate.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').heartRate
+		else:
+			return False
 	@property
 	def get_temperature(self):
-		return Temperature.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').temperature
+		if Temperature.objects.filter(idPatient_id = self.idPatient).exists():
+			return Temperature.objects.filter(idPatient_id = self.idPatient).select_related('idPatient').latest('date','time').temperature
+		else:
+			return False
 	
 	@property
 	def get_all_position(self):

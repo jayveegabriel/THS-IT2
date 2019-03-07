@@ -210,6 +210,7 @@
   transition: .4s;
 }
 
+
 input:checked + .slider {
   background-color: #2196F3;
 }
@@ -234,6 +235,11 @@ input:checked + .slider:before {
 }
 .topnav-right {
   float: right;
+}
+.idiotcontainer {
+	width: 500px;
+  margin: auto;
+
 }
 </style>
 
@@ -315,7 +321,7 @@ input:checked + .slider:before {
         <div class="table-wrapper-scroll-y">
         <table class="table table-bordered ">
 
-          <tbody id="logTable" style="width: 10vw;">
+          <tbody id="logTable" style="width: 15vw;">
             <!-- <tr>
               <td style="width:20%;"><button class="btn btn-warning">1</button></td>
               <td style="width:80%; font-size:10px;">13:19:00 PM</td>
@@ -334,18 +340,8 @@ input:checked + .slider:before {
 
   <div class="main-inner">
     <div class="container">
-      <select class ="span2 roomDropdown">
-        <option disabled>Select Room No.</option>
-        {% for r in rooms %}
-          <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
-        {% endfor %}
-
-      </select>
       
-        
-         <img id="offLight" style="width: 5vw; height: 5vw;" src="{% static 'img/off.jpg' %}">
-         <img id="onLight" hidden style="width: 5vw; height: 5vw;" src="{% static 'img/on.png' %}">
-
+      
       
 
 
@@ -353,8 +349,21 @@ input:checked + .slider:before {
 
       <div class ="form">
       <div class="checkbox-container">
-         <label class ="switch"><input type="checkbox" id="checkboxAutoAdjust" onchange="sortCards()" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"> Prioritization Feature</label>
+         <label class ="switch"><input type="checkbox" data-toggle="tooltip" data-placement="top" title="Hooray!" id="checkboxAutoAdjust" onchange="sortCards()" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"></label>
         </div>
+      </div>
+      <div class ="idiotcontainer" align ="center">
+      	<img id="offLight" style="width: 3vw; height: 3vw;" src="{% static 'img/offidiot.png' %}">
+         <img id="onLight" hidden style="width: 3vw; height: 3vw;" src="{% static 'img/onidiot.png' %}"><br></br>
+        <select class ="span1 roomDropdown">
+        <option disabled>Select Room No.</option>
+        {% for r in rooms %}
+          <option id="{{r.idRoom}}">{{r.roomNumber}}</option>
+        {% endfor %}
+
+      </select>
+        <h4>List of Beds at Room No. <span class="roomNumberSpan">{{default_room.roomNumber}}</span></h4>
+        
       </div>
       <div class ="tabbable">
         <br>
@@ -376,7 +385,7 @@ input:checked + .slider:before {
         {% for bed in default_room.get_occupied_beds_dashboard %}
           {% with bed.get_current_patient.idPatient as patient %}
                <div class = "span3 dashboardCard" id="divClass{{patient.pk}}">
-                 <div class="widget " id = "{{patient.idPatient_id }}">
+                 <div class="widget " id = "widget{{patient.pk}}" ">
                  <div class="widget-header" > <i class="icon-user"></i>
                    <h3>Bed #{{ bed.bedNumber }}</h3>
 
@@ -534,6 +543,7 @@ input:checked + .slider:before {
 ================================================== -->
 </body>
 <script src="{% static 'js/jquery-1.7.2.min.js'%}"></script>
+<script src="{% static 'js/jquery.js'%}"></script>
 <script src="{% static 'js/excanvas.min.js'%}"></script>
 <script src="{% static 'js/chart.min.js'%}" type="text/javascript"></script>
 <script src="{% static 'js/bootstrap.js'%}"></script>
@@ -560,7 +570,7 @@ $(document).ready(function(){
   $("#clearTable").click(function(){
       $("#logTable").html("");
     });
-
+   $('[data-toggle="tooltip"]').tooltip();   
   var classChart = $(".chartHeartRate");
   var classChartTemp = $(".chartTemperature");
   for(var i = 0; i < classChart.length; i++){
@@ -667,6 +677,7 @@ $("#dropdownLi").click(function(){
 
 
 });
+
 function makeHighchartHeartrate(pk){
   var id = pk.substring(14);
   var latest;
@@ -707,7 +718,7 @@ Highcharts.chart( pk , {
 
 
 
-        }, 1000);
+        }, 5000);
       }
     }
   },
@@ -745,7 +756,7 @@ Highcharts.chart( pk , {
   },
   series: [{
     name: 'BPM',
-    color: '#9400d3',
+    color: '#30CFD0',
     data: (function () {
       // generate an array of random data
       var data = [],
@@ -806,7 +817,7 @@ Highcharts.chart( pk , {
 
 
 
-        }, 1000);
+        }, 5000);
       }
     }
   },
@@ -844,7 +855,7 @@ Highcharts.chart( pk , {
   },
   series: [{
     name: '°Celcius',
-    color: '#b03060',
+    color: '#330867',
     data: (function () {
       // generate an array of random data
       var data = [],
@@ -944,14 +955,14 @@ Highcharts.chart( pk , {
 
       if(condition == "starting"){
 
-        waw += '<div class="widget" id = "'+ idPatient+'">';
+        waw += '<div class="widget" id = "widget'+ idPatient+'">';
       }
       else if(is_warning){
-         waw += '<div class="widget" id = "'+ idPatient+'">';
+         waw += '<div class="widget" id = "widget'+ idPatient+'">';
       }
       else if(!is_warning){
 
-        waw += '<div class="widget" id = "'+ idPatient+'">';
+        waw += '<div class="widget" id = "widget'+ idPatient+'">';
       }
       waw += '<div class="widget-header"><i class="icon-user"></i><h3>Bed #'+bedNumber+'</h3>';
       waw += '</div><div class="widget-content" align = "center" id ="bed"><p>';
@@ -1029,8 +1040,8 @@ Highcharts.chart( pk , {
                 listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.position,a.condition,a.is_warning);
                 // tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.position, a.heartRate, a.temperature, a.minhr,a.maxhr, a.mint,a.maxt,a.condition,a.is_warning);
                 if(a.is_warning){
-
-                  $("#divClass"+a.idPatient).css("box-shadow","0px 0px 10px 4px red");
+                  console.log($("#widget"+a.idPatient));
+                  $("#widget"+a.idPatient).css("box-shadow","0px 0px 10px 4px red");
 
                     var d = new Date();
                    var tempText = '<tr>'+
@@ -1042,7 +1053,7 @@ Highcharts.chart( pk , {
                 }
                 else{
 
-                  $("#divClass"+a.idPatient).css("box-shadow","");
+                  $("#widget"+a.idPatient).css("box-shadow","");
 
                 }
                });
@@ -1055,7 +1066,7 @@ Highcharts.chart( pk , {
                 if(a.is_warning){
 
 
-                  $("#divClass"+a.idPatient).css("box-shadow","0px 0px 10px 4px red");
+                  $("#widget"+a.idPatient).css("box-shadow","0px 0px 10px 4px red");
                   $("#divClass"+a.idPatient).prependTo("#tileTable");
 
                     var d = new Date();
@@ -1068,7 +1079,7 @@ Highcharts.chart( pk , {
                 }
                 else{
 
-                  $("#divClass"+a.idPatient).css("box-shadow","");
+                  $("#widget"+a.idPatient).css("box-shadow","");
 
                 }
               });
