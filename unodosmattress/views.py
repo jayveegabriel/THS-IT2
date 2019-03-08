@@ -32,7 +32,7 @@ newNotificationList = []
 
 
 
-SMS=sim800.SIM800('COM13', 9600)
+SMS=sim800.SIM800('/dev/ttyUSB0', 9600)
 while (SMS.gsmReset()!=1):
     time.sleep(0.5)
 print ('SIM800 reset')

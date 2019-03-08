@@ -1,0 +1,2 @@
+sudo chmod 777 /dev/ttyUSB0
+python3 manage.py runsslserver 192.168.100.222:8080 --certificate /home/admin/practice/certificate.crt --key /home/admin/practice/privateKey.key
