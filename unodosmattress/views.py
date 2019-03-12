@@ -32,11 +32,19 @@ newNotificationList = []
 
 
 
+<<<<<<< HEAD
 #SMS=sim800.SIM800('COM13', 9600)
 #while (SMS.gsmReset()!=1):
 #    time.sleep(0.5)
 #print ('SIM800 reset')
 #time.sleep(0.5)
+=======
+SMS=sim800.SIM800('/dev/ttyUSB0', 9600)
+while (SMS.gsmReset()!=1):
+    time.sleep(0.5)
+print ('SIM800 reset')
+time.sleep(0.5)
+>>>>>>> 1f58e81247f38d6f4fc3aefb70586a350f852486
 
 
 
@@ -54,7 +62,7 @@ newNotificationList = []
 def readRFID():
 
 
-	arduino = serial.Serial('COM4', 9600, timeout=.1)
+	arduino = serial.Serial('/dev/ttyUSB1', 9600, timeout=.1)
 
 	store = ""
 	value = ""
@@ -384,6 +392,8 @@ def managepatients(request):
 	session_position = request.session.get('position','none')
 	if session_position == "NURSE":
 		if request.method == "POST":
+			print("Dumaan sa post")
+
 			bedNumber = request.POST.get("bednumber")
 			firstName = request.POST.get("firstname")
 			middleName = request.POST.get("middlename")
@@ -439,8 +449,7 @@ def managepatients(request):
 			bed = Beds.objects.get(pk = bedNumber)
 			bed.bedStatus = "Occupied"
 			bed.save()
-
-
+			
 			return HttpResponseRedirect(reverse('unodosmattress:managepatients'))
 		else:
 			global notificationList

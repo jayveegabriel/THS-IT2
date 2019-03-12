@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -81,7 +82,7 @@ DATABASES = {
             'NAME': 'mattress',
             'USER': 'root',
             'PASSWORD': '',
-            'HOST': '127.0.0.1',
+            'HOST': '192.168.100.223',
             'PORT': '3306',
     }
 }
