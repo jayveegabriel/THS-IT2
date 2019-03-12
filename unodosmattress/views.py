@@ -32,23 +32,23 @@ newNotificationList = []
 
 
 
-SMS=sim800.SIM800('COM13', 9600)
-while (SMS.gsmReset()!=1):
-    time.sleep(0.5)
-print ('SIM800 reset')
-time.sleep(0.5)
+#SMS=sim800.SIM800('COM13', 9600)
+#while (SMS.gsmReset()!=1):
+#    time.sleep(0.5)
+#print ('SIM800 reset')
+#time.sleep(0.5)
 
 
 
-while (SMS.smsInit() != 1):
-    time.sleep(0.5)
-print ('SIM800 SMS initialized')
-time.sleep(2)
+#while (SMS.smsInit() != 1):
+#    time.sleep(0.5)
+#print ('SIM800 SMS initialized')
+#time.sleep(2)
 
-SMS.smsDelete_All()
-print("All message deleted!")
-time.sleep(0.5)
-SMS.smsSend("+639176492934", "Patient ")
+#SMS.smsDelete_All()
+#print("All message deleted!")
+#time.sleep(0.5)
+#SMS.smsSend("+639176492934", "Patient ")
 
 
 def readRFID():
@@ -1200,7 +1200,7 @@ def ajaxGetUpdatedDashboard(request):
 				
 				for x in range(0,len(doctors)):
 					print (doctors[x][3])
-					SMS.smsSend("+63" + doctors[x][3], "WARNING: Please check Bed #" + str(patient.bedNumber.bedNumber) + " - " + patient.procedure)
+					#SMS.smsSend("+63" + doctors[x][3], "WARNING: Please check Bed #" + str(patient.bedNumber.bedNumber) + " - " + patient.procedure)
 			
 
 			patientsArray.append({"idPatient":patient.idPatient, "firstName":patient.firstName,"lastName":patient.lastName,"bedNumber":patient.bedNumber.bedNumber
@@ -1308,7 +1308,7 @@ def ajaxGetLatestHeartRate(request):
 		}
 	else:
 		context = {
-			"heartrate":73,
+			"heartrate":Patient.objects.get(pk=idPatient).get_heartrate,
 		}
 	return JsonResponse(context, safe=False)
 
@@ -1325,7 +1325,7 @@ def ajaxGetLatestTemperature(request):
 		}
 	else:
 		context = {
-			"heartrate":35.3,
+			"heartrate":Patient.objects.get(pk=idPatient).get_temperature,
 		}
 
 	return JsonResponse(context, safe=False)
