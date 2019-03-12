@@ -275,7 +275,7 @@ input:checked + .slider:before {
       <ul class="mainnav">
         <li class="active"><a href="{% url 'unodosmattress:dashboard' %}"><i class="icon-dashboard"></i><span>Dashboard</span> </a> </li>
         <li><a href="{% url 'unodosmattress:managepatients' %}"><i class="icon-user"></i><span>Manage Patients</span> </a> </li>
-        <li class="dropdown" ><a href="javascript:;" id="dropdownLi"  class="dropdown-toggle" data-toggle="dropdown"> <i id="badgeData" class="icon-bell badge1" data-badge="{{newNotificationList }}"></i><span>Notifications</span><b class="caret"></b></a>
+        <li class="dropdown" ><a href="" id="dropdownLi"  class="dropdown-toggle" data-toggle="dropdown"> <i id="badgeData" class="icon-bell badge1" data-badge="{{newNotificationList }}"></i><span>Notifications</span><b class="caret"></b></a>
                   <ul class="dropdown-menu" style ="overflow-y: auto;width:300px;max-height: 200px;">
                     <li><table class="table table-bordered ">
 
@@ -293,9 +293,6 @@ input:checked + .slider:before {
 
                   </ul>
                 </li>
-
-
-
 
 
 
@@ -338,8 +335,8 @@ input:checked + .slider:before {
     </a>
     </div>
 
-  <div class="main-inner">
-    <div class="container">
+  <div class="main-inner" >
+    <div class="container" >
       
       
       
@@ -347,7 +344,7 @@ input:checked + .slider:before {
 
 
 
-      <div class ="form">
+      <div class ="form" >
       <div class="checkbox-container">
          <label class ="switch"><input type="checkbox" data-toggle="tooltip" data-placement="top" title="Hooray!" id="checkboxAutoAdjust" onchange="sortCards()" style="float:right;" value="html-news" name="user-age"> <span class ="slider round"></span></label><label for="HTML news" style= "padding-top: 3px;padding-left:3px;"></label>
         </div>
@@ -622,7 +619,7 @@ $(document).ready(function(){
       });
     },2000);
 
-$("#dropdownLi").click(function(){
+      $("#dropdownLi").click(function(){
         $.ajax({
           url: '/ajax/ajaxClearNewNotifications/',
           data: {

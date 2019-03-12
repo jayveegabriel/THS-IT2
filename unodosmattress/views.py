@@ -441,7 +441,6 @@ def managepatients(request):
 			bed.save()
 
 
-        	
 			return HttpResponseRedirect(reverse('unodosmattress:managepatients'))
 		else:
 			global notificationList
