@@ -384,6 +384,8 @@ def managepatients(request):
 	session_position = request.session.get('position','none')
 	if session_position == "NURSE":
 		if request.method == "POST":
+			print("Dumaan sa post")
+
 			bedNumber = request.POST.get("bednumber")
 			firstName = request.POST.get("firstname")
 			middleName = request.POST.get("middlename")
@@ -439,9 +441,7 @@ def managepatients(request):
 			bed = Beds.objects.get(pk = bedNumber)
 			bed.bedStatus = "Occupied"
 			bed.save()
-
-
-        	
+			print("HTTP RESPONSE")
 			return HttpResponseRedirect(reverse('unodosmattress:managepatients'))
 		else:
 			global notificationList
@@ -1308,7 +1308,7 @@ def ajaxGetLatestHeartRate(request):
 		}
 	else:
 		context = {
-			"heartrate":73,
+			"heartrate":Patient.objects.get(pk=idPatient).get_heartrate,
 		}
 	return JsonResponse(context, safe=False)
 
@@ -1325,7 +1325,7 @@ def ajaxGetLatestTemperature(request):
 		}
 	else:
 		context = {
-			"heartrate":35.3,
+			"heartrate":Patient.objects.get(pk=idPatient).get_temperature,
 		}
 
 	return JsonResponse(context, safe=False)
