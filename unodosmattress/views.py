@@ -54,7 +54,7 @@ SMS.smsSend("+639176492934", "Patient ")
 def readRFID():
 
 
-	arduino = serial.Serial('COM4', 9600, timeout=.1)
+	arduino = serial.Serial('/dev/ttyUSB1', 9600, timeout=.1)
 
 	store = ""
 	value = ""
