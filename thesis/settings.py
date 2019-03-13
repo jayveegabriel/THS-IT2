@@ -82,7 +82,7 @@ DATABASES = {
             'NAME': 'mattress',
             'USER': 'root',
             'PASSWORD': '',
-            'HOST': '192.168.100.223',
+            'HOST': 'localhost',
             'PORT': '3306',
     }
 }

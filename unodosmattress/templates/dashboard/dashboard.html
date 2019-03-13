@@ -15,8 +15,8 @@
 
 <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
 <link href="{% static 'css/bootstrap-responsive.min.css'%}" rel="stylesheet">
-<link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
-        rel="stylesheet">
+
+    <link href="{% static 'css/openSans.css' %}" rel="stylesheet">
 <link href="{% static 'css/font-awesome.css'%}" rel="stylesheet">
 <link href="{% static 'css/style.css'%}" rel="stylesheet">
 <link href="{% static 'css/dashboard.css'%}" rel="stylesheet">
@@ -381,6 +381,7 @@ input:checked + .slider:before {
 
         {% for bed in default_room.get_occupied_beds_dashboard %}
           {% with bed.get_current_patient.idPatient as patient %}
+            {% if patient.status == "ON BED" or patient.status == "STARTING" %}
                <div class = "span3 dashboardCard" id="divClass{{patient.pk}}">
                  <div class="widget " id = "widget{{patient.pk}}" ">
                  <div class="widget-header" > <i class="icon-user"></i>
@@ -411,6 +412,7 @@ input:checked + .slider:before {
         </div>
 
         </div>
+        {% endif %}
         {% endwith %}
             {% endfor %}
 
@@ -481,7 +483,7 @@ input:checked + .slider:before {
                       <table class="table table-bordered" id="example">
                         <thead >
                           <tr>
-                            <th style="text-align:center;"></th>
+
                             <th style="text-align:center;">Bed #</th>
                             <th style="text-align:center;">Name</th>
                             <th style="text-align:center;">Heart Rate</th>
@@ -497,7 +499,7 @@ input:checked + .slider:before {
                         {% with bed.get_current_patient.idPatient as patient %}
 
                           <tr style="border: 2px solid red;">
-                            <td style="text-align:center;"><span class="badge badge-danger" style ="text-align:right;">3</span></td>
+
                             <td style="text-align:center;">{{bed.bedNumber}}</td>
                             <td style="text-align:center;">{{patient.lastName}}, {{patient.firstName}}</td>
                             <td style="text-align:center;color:red;">{{patient.get_heartrate}} BPM</td>
@@ -939,8 +941,7 @@ Highcharts.chart( pk , {
            var wew = '<tr>';
         }
 
-       wew +='<td style="text-align:center;"><span class="badge badge-danger" style ="text-align:right;">3</span></td>'+
-             '<td style="text-align:center;">' + bedNumber + '</td>'+
+       wew +='<td style="text-align:center;">' + bedNumber + '</td>'+
              '<td style="text-align:center;">' + lastName + ',' + firstName + '</td>' +
              '<td style="text-align:center;color:red;">' + heartRate + 'BPM</td>'+
              '<td style="text-align:center;color:red;">'+ temperature + '℃</td>'+
@@ -1037,7 +1038,12 @@ Highcharts.chart( pk , {
               data.patients.forEach(function(a){
                 listTable += listMaker(a.bedNumber, a.lastName, a.firstName, a.heartRate, a.temperature, a.position,a.condition,a.is_warning);
                 // tileTable += tileMaker(a.idPatient, a.bedNumber, a.firstName, a.lastName, a.position, a.heartRate, a.temperature, a.minhr,a.maxhr, a.mint,a.maxt,a.condition,a.is_warning);
-                if(a.is_warning){
+                if(a.condition=="starting"){
+
+                  $("#widget"+a.idPatient).css("box-shadow","0px 0px 10px 4px grey");
+
+                }
+                else if(a.is_warning){
                   console.log($("#widget"+a.idPatient));
                   $("#widget"+a.idPatient).css("box-shadow","0px 0px 10px 4px red");
 
@@ -1061,7 +1067,13 @@ Highcharts.chart( pk , {
 
             else{
               data.patients.forEach(function(a){
-                if(a.is_warning){
+                if(a.condition=="starting"){
+
+                  $("#widget"+a.idPatient).css("box-shadow","0px 0px 10px 4px grey");
+
+                }
+
+                else if(a.is_warning){
 
 
                   $("#widget"+a.idPatient).css("box-shadow","0px 0px 10px 4px red");

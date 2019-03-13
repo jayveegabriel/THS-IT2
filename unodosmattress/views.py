@@ -5,7 +5,7 @@ from django.db import connection
 from . models import  *
 import coreapi
 from threading import Timer
-
+import os
 from rest_framework import generics
 from unodosmattress.serializers import *
 
@@ -32,37 +32,29 @@ newNotificationList = []
 
 
 
-<<<<<<< HEAD
-#SMS=sim800.SIM800('COM13', 9600)
-#while (SMS.gsmReset()!=1):
-#    time.sleep(0.5)
-#print ('SIM800 reset')
-#time.sleep(0.5)
-=======
+
 SMS=sim800.SIM800('/dev/ttyUSB0', 9600)
 while (SMS.gsmReset()!=1):
     time.sleep(0.5)
 print ('SIM800 reset')
 time.sleep(0.5)
->>>>>>> 1f58e81247f38d6f4fc3aefb70586a350f852486
 
 
 
-#while (SMS.smsInit() != 1):
-#    time.sleep(0.5)
-#print ('SIM800 SMS initialized')
-#time.sleep(2)
 
-#SMS.smsDelete_All()
-#print("All message deleted!")
-#time.sleep(0.5)
-#SMS.smsSend("+639176492934", "Patient ")
+while (SMS.smsInit() != 1):
+   time.sleep(0.5)
+print ('SIM800 SMS initialized')
+time.sleep(2)
+
+SMS.smsDelete_All()
+print("All message deleted!")
+time.sleep(0.5)
+SMS.smsSend("+639176492934", "Patient ")
 
 
 def readRFID():
-
-
-	arduino = serial.Serial('/dev/ttyUSB1', 9600, timeout=.1)
+	arduino = serial.Serial('/dev/ttyUSB1/', 9600, timeout=.1)
 
 	store = ""
 	value = ""
@@ -1173,49 +1165,51 @@ def ajaxGetUpdatedDashboard(request):
 	patientsArray = []
 
 	for x in range(0, len(beds)):
-		
-		patient = beds[x].get_current_patient.idPatient
-		tempCount = patient.countT
-		HRCount = patient.countHR
-		if patient.get_temperature != False and patient.get_heartrate != False:
-			if patient.get_patient_conditionT == "warning" or patient.get_patient_conditionT  == "critical":
-				tempCount += 1
-				patient.countT = tempCount
-				print ("TempCount: ", tempCount)
-				patient.save()
+		p = beds[x].get_current_patient
+		if p.idPatient.status == "ON BED" or p.idPatient.status == "STARTING":
+			print(p.idPatient.status)
+			patient = beds[x].get_current_patient.idPatient
+			tempCount = patient.countT
+			HRCount = patient.countHR
+			if patient.get_temperature != False and patient.get_heartrate != False:
+				if patient.get_patient_conditionT == "warning" or patient.get_patient_conditionT  == "critical":
+					tempCount += 1
+					patient.countT = tempCount
+					print ("TempCount: ", tempCount)
+					patient.save()
 
-			else:
-				tempCount = 0 
-				patient.countT = tempCount
-				patient.save()
+				else:
+					tempCount = 0 
+					patient.countT = tempCount
+					patient.save()
 
-			if patient.get_patient_conditionHR == "warning" or patient.get_patient_conditionHR == "critical":
-				HRCount += 1
-				patient.countHR = HRCount
-				print ("HRCount", HRCount)
-				patient.save()
+				if patient.get_patient_conditionHR == "warning" or patient.get_patient_conditionHR == "critical":
+					HRCount += 1
+					patient.countHR = HRCount
+					print ("HRCount", HRCount)
+					patient.save()
 
-			else:
-				HRCount = 0 
-				patient.countHR = HRCount
-				patient.save()
+				else:
+					HRCount = 0 
+					patient.countHR = HRCount
+					patient.save()
 
 
-			if  patient.countT >= 600 and patient.countT % 600 == 0 or patient.countHR >= 600 and patient.countHR  % 600 == 0:	
-				cursor1 = connection.cursor()
-				cursor1.execute("SELECT d.firstName, d.lastName, d.middleName, d.contactNum FROM unodosmattress_Patient_Doctors pd JOIN unodosmattress_doctor d ON d.idDoctor = pd.idDoctor_id WHERE pd.idPatient_id = %s",[patient.pk])
-				doctors = cursor1.fetchall()
+				if  patient.countT >= 600 and patient.countT % 600 == 0 or patient.countHR >= 600 and patient.countHR  % 600 == 0:	
+					cursor1 = connection.cursor()
+					cursor1.execute("SELECT d.firstName, d.lastName, d.middleName, d.contactNum FROM unodosmattress_Patient_Doctors pd JOIN unodosmattress_doctor d ON d.idDoctor = pd.idDoctor_id WHERE pd.idPatient_id = %s",[patient.pk])
+					doctors = cursor1.fetchall()
+					
+					for x in range(0,len(doctors)):
+						print (doctors[x][3])
+						#SMS.smsSend("+63" + doctors[x][3], "WARNING: Please check Bed #" + str(patient.bedNumber.bedNumber) + " - " + patient.procedure)
 				
-				for x in range(0,len(doctors)):
-					print (doctors[x][3])
-					#SMS.smsSend("+63" + doctors[x][3], "WARNING: Please check Bed #" + str(patient.bedNumber.bedNumber) + " - " + patient.procedure)
-			
 
-			patientsArray.append({"idPatient":patient.idPatient, "firstName":patient.firstName,"lastName":patient.lastName,"bedNumber":patient.bedNumber.bedNumber
-				,"heartRate":patient.get_heartrate, "temperature":patient.get_temperature, "position":patient.get_position,
-				"mint":patient.minTemp, "maxt":patient.maxTemp, "minhr":patient.minHeartRate,"maxhr":patient.maxHeartRate,"condition":patient.get_patient_condition,
-				"toCompareHR":patient.toCompareHR,"toCompareTEMP":patient.toCompareTEMP,"is_warning":patient.is_warning})
-
+				patientsArray.append({"idPatient":patient.idPatient, "firstName":patient.firstName,"lastName":patient.lastName,"bedNumber":patient.bedNumber.bedNumber
+					,"heartRate":patient.get_heartrate, "temperature":patient.get_temperature, "position":patient.get_position,
+					"mint":patient.minTemp, "maxt":patient.maxTemp, "minhr":patient.minHeartRate,"maxhr":patient.maxHeartRate,"condition":patient.get_patient_condition,
+					"toCompareHR":patient.toCompareHR,"toCompareTEMP":patient.toCompareTEMP,"is_warning":patient.is_warning})
+	print(patientsArray)
 	return JsonResponse({"patients":patientsArray}, safe=False)
 
 
@@ -1320,7 +1314,7 @@ def ajaxGetLatestHeartRate(request):
 		}
 	return JsonResponse(context, safe=False)
 
-def ajaxGetLatestTemperature(request):
+def ajaxGetLatestTemperature(request):	
 
 	idPatient = request.GET.get("idPatient")
 
@@ -1345,27 +1339,6 @@ def ajaxLoadData(request):
 	idPatient = request.GET.get("idPatient")
 	p = Patient.objects.get(pk=idPatient)
 	position = p.get_changes_in_position
-
-	# heartrate = p.get_all_heartrate
-	# temperature = p.get_all_temperature
-	# positionList = []
-	# heartrateList = []
-	# temperatureList = []
-
-	# for x in range(0, len(position)):
-	# 	tp = position[x]
-	# 	positionList.append({"idPosition":tp.idPosition, "position":tp.position,"time":tp.time,"date":tp.date})
-
-	# for x in range(0, len(heartrate)):
-	# 	tp = heartrate[x]
-	# 	heartrateList.append({"idHeartRate":tp.idHeartRate, "heartRate":tp.heartRate,"time":tp.time,"date":tp.date})
-
-	# for x in range(0, len(temperature)):
-	# 	tp = temperature[x]
-	# 	temperatureList.append({"idTemperature":tp.idTemperature, "temperature":tp.temperature,"time":tp.time,"date":tp.date})
-
-
-
 	context = {
 		"positionList": position,
 		"heartrateList": p.getQOneHeartRate,
@@ -1373,4 +1346,21 @@ def ajaxLoadData(request):
 	}
 
 	return JsonResponse(context, safe=False)
+
+def ajaxCheckDisconnected(request):
+	
+	
+	context = []
+	try:
+		client = coreapi.Client()
+		schema = client.get("http://192.168.100.214:8000/docs")
+		action = ["bed","list"]
+		result = client.action(schema,action)
+		beds = result[0]['idBeds']
+
+	except:
+		print("Error")
+		context.append({"idBeds": "1"});
+	aw = {"beds":context}
+	return JsonResponse(aw, safe=False)
 

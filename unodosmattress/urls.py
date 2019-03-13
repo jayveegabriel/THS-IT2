@@ -109,6 +109,7 @@ urlpatterns = [
     url(r'^ajax/ajaxGetLatestHeartRate/',views.ajaxGetLatestHeartRate, name="ajaxGetLatestHeartRate"),
 
     url(r'^ajax/ajaxGetLatestTemperature/',views.ajaxGetLatestTemperature, name="ajaxGetLatestTemperature"),
+    url(r'^ajax/ajaxCheckDisconnected/',views.ajaxCheckDisconnected, name="ajaxCheckDisconnected"),
 
     
 ]
